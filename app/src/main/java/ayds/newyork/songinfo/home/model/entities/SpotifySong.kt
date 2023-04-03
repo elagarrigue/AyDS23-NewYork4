@@ -1,5 +1,7 @@
 package ayds.newyork.songinfo.home.model.entities
 
+import ayds.newyork.songinfo.home.model.patterns.strategy.songs.*
+
 sealed class Song {
 
     data class SpotifySong(
@@ -8,12 +10,21 @@ sealed class Song {
         val artistName: String,
         val albumName: String,
         val releaseDate: String,
+        val releaseDatePrecision: String,
         val spotifyUrl: String,
         val imageUrl: String,
-        var isLocallyStored: Boolean = false
+        var isLocallyStored: Boolean = false,
     ) : Song() {
-
         val year: String = releaseDate.split("-").first()
+
+        private val releaseDatePrecisionStrategy : SpotifySongReleaseDateStrategy = when (releaseDatePrecision){
+           "year" -> SpotifySongReleaseDateByYearStrategy()
+           "month" -> SpotifySongReleaseDateByMonthStrategy()
+           "day" -> SpotifySongReleaseDateByDayStrategy()
+           else -> SpotifySongReleaseDateByDefaultStrategy()
+       }
+
+       fun printReleaseDate() = releaseDatePrecisionStrategy.printReleaseDate(releaseDate)
     }
 
     object EmptySong : Song()
