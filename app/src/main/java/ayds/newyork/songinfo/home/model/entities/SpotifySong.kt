@@ -19,8 +19,7 @@ sealed class Song {
             DatePrecision.DAY -> SpotifySongReleaseDateByYearStrategy()
             DatePrecision.MONTH -> SpotifySongReleaseDateByMonthStrategy()
             DatePrecision.YEAR -> SpotifySongReleaseDateByDayStrategy()
-            else -> SpotifySongReleaseDateByDefaultStrategy()
-       }
+        }
        fun printReleaseDate() = releaseDatePrecisionStrategy.printReleaseDate(releaseDate)
     }
 
