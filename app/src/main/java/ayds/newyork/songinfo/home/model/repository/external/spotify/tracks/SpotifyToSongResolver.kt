@@ -22,7 +22,7 @@ private const val URL = "url"
 private const val EXTERNAL_URL = "external_urls"
 private const val SPOTIFY = "spotify"
 
-internal class JsonToSongResolver(private val datePrecisionMapper: DatePrecisionMapperImpl) : SpotifyToSongResolver {
+internal class JsonToSongResolver(private val datePrecisionMapper: DatePrecisionMapper) : SpotifyToSongResolver {
 
     override fun getSongFromExternalData(serviceData: String?): SpotifySong? =
         try {
