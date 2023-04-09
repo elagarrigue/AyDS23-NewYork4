@@ -10,21 +10,18 @@ sealed class Song {
         val artistName: String,
         val albumName: String,
         val releaseDate: String,
-        val releaseDatePrecision: String,
+        val releaseDatePrecision: DatePrecision,
         val spotifyUrl: String,
         val imageUrl: String,
         var isLocallyStored: Boolean = false,
     ) : Song() {
         val year: String = releaseDate.split("-").first()
 
-        private val releaseDatePrecisionStrategy : SpotifySongReleaseDateStrategy = when (releaseDatePrecision){
-           "year" -> SpotifySongReleaseDateByYearStrategy()
-           "month" -> SpotifySongReleaseDateByMonthStrategy()
-           "day" -> SpotifySongReleaseDateByDayStrategy()
-           else -> SpotifySongReleaseDateByDefaultStrategy()
-       }
 
-       fun printReleaseDate() = releaseDatePrecisionStrategy.printReleaseDate(releaseDate)
+       fun printReleaseDate(){
+           val actualStrategy = SpotifySongReleaseDateStrategyInjector.getStrategy(releaseDatePrecision)
+           actualStrategy.printReleaseDate(releaseDate)
+       }
     }
 
     object EmptySong : Song()
