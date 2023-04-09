@@ -10,9 +10,9 @@ object SpotifySongReleaseDateStrategyInjector {
 
     fun getStrategy(releaseDatePrecision : DatePrecision) : SpotifySongReleaseDateStrategy{
         return when (releaseDatePrecision){
-            "year" -> yearStrategy
-            "month" -> monthStrategy
-            "day" -> dayStrategy
+            DatePrecision.DAY -> yearStrategy
+            DatePrecision.MONTH -> monthStrategy
+            DatePrecision.YEAR -> dayStrategy
             else -> defaultStrategy
         }
     }
