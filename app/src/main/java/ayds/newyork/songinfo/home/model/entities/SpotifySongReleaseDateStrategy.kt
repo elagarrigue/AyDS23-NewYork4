@@ -1,9 +1,8 @@
 package ayds.newyork.songinfo.home.model.entities
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 
 interface SpotifySongReleaseDateStrategy {
     fun printReleaseDate(releaseDate: String): String

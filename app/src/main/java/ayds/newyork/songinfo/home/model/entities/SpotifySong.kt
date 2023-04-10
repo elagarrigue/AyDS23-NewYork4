@@ -19,4 +19,5 @@ sealed class Song {
     }
 
     object EmptySong : Song()
+    
 }
