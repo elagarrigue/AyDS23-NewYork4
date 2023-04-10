@@ -8,7 +8,7 @@ sealed class Song {
         val artistName: String,
         val albumName: String,
         val releaseDate: String,
-        val releaseDatePrecision: String,
+        val releaseDatePrecision: DatePrecision,
         val spotifyUrl: String,
         val imageUrl: String,
         var isLocallyStored: Boolean = false,
