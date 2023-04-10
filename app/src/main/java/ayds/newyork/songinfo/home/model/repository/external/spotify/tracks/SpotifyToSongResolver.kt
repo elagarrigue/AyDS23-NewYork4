@@ -77,4 +77,5 @@ internal class JsonToSongResolver(private val datePrecisionMapper: DatePrecision
         val album = this[ALBUM].asJsonObject
         return datePrecisionMapper.getDatePrecision(album[RELEASE_DATE_PRECISION].asString)
     }
+
 }

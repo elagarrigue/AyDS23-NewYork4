@@ -13,15 +13,11 @@ sealed class Song {
         val imageUrl: String,
         var isLocallyStored: Boolean = false,
     ) : Song() {
-        val year: String = releaseDate.split("-").first()
-
         private val releaseDatePrecisionStrategy : SpotifySongReleaseDateStrategy = when (releaseDatePrecision){
-           "year" -> SpotifySongReleaseDateByYearStrategy()
-           "month" -> SpotifySongReleaseDateByMonthStrategy()
-           "day" -> SpotifySongReleaseDateByDayStrategy()
-           else -> SpotifySongReleaseDateByDefaultStrategy()
-       }
-
+            DatePrecision.DAY -> SpotifySongReleaseDateByYearStrategy()
+            DatePrecision.MONTH -> SpotifySongReleaseDateByMonthStrategy()
+            DatePrecision.YEAR -> SpotifySongReleaseDateByDayStrategy()
+        }
        fun printReleaseDate() = releaseDatePrecisionStrategy.printReleaseDate(releaseDate)
     }
 
