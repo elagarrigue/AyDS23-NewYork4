@@ -1,7 +1,5 @@
 package ayds.newyork.songinfo.home.model.entities
 
-import ayds.newyork.songinfo.home.model.patterns.strategy.songs.*
-
 sealed class Song {
 
     data class SpotifySong(
