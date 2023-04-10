@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,153 +26,143 @@ import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 
-
 public class OtherInfoWindow extends AppCompatActivity {
 
-  public final static String ARTIST_NAME_EXTRA = "artistName";
+    public final static String ARTIST_NAME_EXTRA = "artistName";
 
-  private TextView textPane2;
-  //private JPanel imagePanel;
- // private JLabel posterImageLabel;
+    private TextView textPane2;
+    // private JPanel imagePanel;
+    // private JLabel posterImageLabel;
 
-  @Override
-  protected void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-    setContentView(R.layout.activity_other_info);
+        setContentView(R.layout.activity_other_info);
 
-    textPane2 = findViewById(R.id.textPane2);
-
-
-    open(getIntent().getStringExtra("artistName"));
-  }
-
-  public void getARtistInfo(String artistName) {
-
-    // create
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://api.nytimes.com/svc/search/v2/")
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build();
-
-    NYTimesAPI NYTimesAPI = retrofit.create(NYTimesAPI.class);
+        textPane2 = findViewById(R.id.textPane2);
 
 
-    Log.e("TAG","artistName " + artistName);
+        open(getIntent().getStringExtra("artistName"));
+    }
 
-        new Thread(new Runnable() {
-          @Override
-          public void run() {
+    public void getArtistInfo(String artistName) {
+
+        // create
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.nytimes.com/svc/search/v2/")
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .build();
+
+        NYTimesAPI NYTimesAPI = retrofit.create(NYTimesAPI.class);
+
+
+        Log.e("TAG", "artistName " + artistName);
+
+        new Thread(() -> {
 
             String text = DataBase.getInfo(dataBase, artistName);
 
 
             if (text != null) { // exists in db
 
-              text = "[*]" + text;
+                text = "[*]" + text;
             } else { // get from service
-              Response<String> callResponse;
-              try {
-                callResponse = NYTimesAPI.getArtistInfo(artistName).execute();
+                Response<String> callResponse;
+                try {
+                    callResponse = NYTimesAPI.getArtistInfo(artistName).execute();
 
-                Log.e("TAG","JSON " + callResponse.body());
+                    Log.e("TAG", "JSON " + callResponse.body());
 
-                Gson gson = new Gson();
-                JsonObject jobj = gson.fromJson(callResponse.body(), JsonObject.class);
-                JsonObject response = jobj.get("response").getAsJsonObject();
-                JsonElement _abstract = response.get("docs").getAsJsonArray().get(0).getAsJsonObject().get("abstract");
-                JsonElement url = response.get("docs").getAsJsonArray().get(0).getAsJsonObject().get("web_url");
-
-
-
-                if (_abstract == null) {
-                  text = "No Results";
-                } else {
-                  text = _abstract.getAsString().replace("\\n", "\n");
-
-                  text = textToHtml(text, artistName);
+                    Gson gson = new Gson();
+                    JsonObject jobj = gson.fromJson(callResponse.body(), JsonObject.class);
+                    JsonObject response = jobj.get("response").getAsJsonObject();
+                    JsonElement _abstract = response.get("docs").getAsJsonArray().get(0).getAsJsonObject().get("abstract");
+                    JsonElement url = response.get("docs").getAsJsonArray().get(0).getAsJsonObject().get("web_url");
 
 
-                  // save to DB  <o/
+                    if (_abstract == null) {
+                        text = "No Results";
+                    } else {
+                        text = _abstract.getAsString().replace("\\n", "\n");
 
-                  DataBase.saveArtist(dataBase, artistName, text);
+                        text = textToHtml(text, artistName);
+
+
+                        // save to DB  <o/
+
+                        DataBase.saveArtist(dataBase, artistName, text);
+                    }
+
+
+                    final String urlString = url.getAsString();
+                    findViewById(R.id.openUrlButton).setOnClickListener(v -> {
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse(urlString));
+                        startActivity(intent);
+                    });
+
+                } catch (IOException e1) {
+                    Log.e("TAG", "Error " + e1);
+                    e1.printStackTrace();
                 }
-
-
-                final String urlString = url.getAsString();
-                findViewById(R.id.openUrlButton).setOnClickListener(new View.OnClickListener() {
-                  @Override
-                  public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse(urlString));
-                    startActivity(intent);
-                  }
-                });
-
-              } catch (IOException e1) {
-                Log.e("TAG", "Error " + e1);
-                e1.printStackTrace();
-              }
             }
 
 
             String imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVioI832nuYIXqzySD8cOXRZEcdlAj3KfxA62UEC4FhrHVe0f7oZXp3_mSFG7nIcUKhg&usqp=CAU";
 
-            Log.e("TAG","Get Image from " + imageUrl);
-
+            Log.e("TAG", "Get Image from " + imageUrl);
 
 
             final String finalText = text;
 
-            runOnUiThread( () -> {
-              Picasso.get().load(imageUrl).into((ImageView) findViewById(R.id.imageView));
+            runOnUiThread(() -> {
+                Picasso.get().load(imageUrl).into((ImageView) findViewById(R.id.imageView));
 
 
-              textPane2.setText(Html.fromHtml( finalText));
+                textPane2.setText(Html.fromHtml(finalText));
 
 
             });
 
 
-
-          }
         }).start();
 
-  }
+    }
 
-  private DataBase dataBase = null;
+    private DataBase dataBase = null;
 
-  private void open(String artist) {
-
-
-    dataBase = new DataBase(this);
-
-    DataBase.saveArtist(dataBase, "test", "sarasa");
+    private void open(String artist) {
 
 
-    Log.e("TAG", ""+ DataBase.getInfo(dataBase,"test"));
-    Log.e("TAG",""+ DataBase.getInfo(dataBase,"nada"));
+        dataBase = new DataBase(this);
 
-    getARtistInfo(artist);
-  }
+        DataBase.saveArtist(dataBase, "test", "sarasa");
 
-  public static String textToHtml(String text, String term) {
 
-    StringBuilder builder = new StringBuilder();
+        Log.e("TAG", "" + DataBase.getInfo(dataBase, "test"));
+        Log.e("TAG", "" + DataBase.getInfo(dataBase, "nada"));
 
-    builder.append("<html><div width=400>");
-    builder.append("<font face=\"arial\">");
+        getArtistInfo(artist);
+    }
 
-    String textWithBold = text
-            .replace("'", " ")
-            .replace("\n", "<br>")
-            .replaceAll("(?i)" + term, "<b>" + term.toUpperCase() + "</b>");
+    public static String textToHtml(String text, String term) {
 
-    builder.append(textWithBold);
+        StringBuilder builder = new StringBuilder();
 
-    builder.append("</font></div></html>");
+        builder.append("<html><div width=400>");
+        builder.append("<font face=\"arial\">");
 
-    return builder.toString();
-  }
+        String textWithBold = text
+                .replace("'", " ")
+                .replace("\n", "<br>")
+                .replaceAll("(?i)" + term, "<b>" + term.toUpperCase() + "</b>");
+
+        builder.append(textWithBold);
+
+        builder.append("</font></div></html>");
+
+        return builder.toString();
+    }
 
 }
