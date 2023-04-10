@@ -1,4 +1,4 @@
-package ayds.newyork.songinfo.home.model.patterns.strategy.songs
+package ayds.newyork.songinfo.home.model.entities
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -7,12 +7,6 @@ import java.util.*
 
 interface SpotifySongReleaseDateStrategy {
     fun printReleaseDate(releaseDate: String): String
-}
-
-object SpotifySongReleaseDateByDefaultStrategy: SpotifySongReleaseDateStrategy {
-    override fun printReleaseDate(releaseDate: String): String {
-        return ""
-    }
 }
 
 object SpotifySongReleaseDateByYearStrategy: SpotifySongReleaseDateStrategy {
