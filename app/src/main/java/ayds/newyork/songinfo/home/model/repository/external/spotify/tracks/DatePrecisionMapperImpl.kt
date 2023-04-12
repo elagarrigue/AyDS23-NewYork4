@@ -1,6 +1,6 @@
 package ayds.newyork.songinfo.home.model.repository.external.spotify.tracks
 
-import ayds.newyork.songinfo.home.model.entities.DatePrecision
+import ayds.newyork.songinfo.home.view.DatePrecision
 import java.lang.Exception
 
 private const val SPOTIFY_DAY = "day"

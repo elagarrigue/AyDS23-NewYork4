@@ -1,6 +1,5 @@
-package ayds.newyork.songinfo.home.model.entities
+package ayds.newyork.songinfo.home.view
 
-import android.icu.util.GregorianCalendar
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -8,18 +7,23 @@ interface SpotifySongReleaseDateStrategy {
     fun printReleaseDate(releaseDate: String): String
 }
 
-class ReleaseDateCalendar: GregorianCalendar() {
+enum class DatePrecision{
+    DAY, MONTH, YEAR
+}
 
-    companion object {
-        fun isLeapYear(year: Int): Boolean = isGregorianLeapYear(year)
-    }
+interface LeapYearCheck {
+    fun isLeapYear(year: Int): Boolean
 
+}
+
+internal class LeapYearCheckImpl() : LeapYearCheck  {
+    override fun isLeapYear(year: Int) = (year % 4 == 0) && (year % 100 != 0 || year % 400 == 0)
 }
 
 object SpotifySongReleaseDateByYearStrategy: SpotifySongReleaseDateStrategy {
     override fun printReleaseDate(releaseDate: String): String {
         val year = releaseDate.toInt()
-        return if(ReleaseDateCalendar.isLeapYear(year)){
+        return if(LeapYearCheckImpl().isLeapYear(year)){
             "$year (leap year)"
         } else {
             "$year (not a leap year)"

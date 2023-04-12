@@ -6,6 +6,7 @@ import ayds.newyork.songinfo.home.model.entities.Song.SpotifySong
 
 interface SongDescriptionHelper {
     fun getSongDescriptionText(song: Song = EmptySong): String
+    fun getSongReleaseDate(song: SpotifySong): String
 }
 
 internal class SongDescriptionHelperImpl : SongDescriptionHelper {
@@ -18,8 +19,9 @@ internal class SongDescriptionHelperImpl : SongDescriptionHelper {
                 }\n" +
                         "Artist: ${song.artistName}\n" +
                         "Album: ${song.albumName}\n" +
-                        "Release date: ${song.printReleaseDate()}\n"
+                        "Release date: ${getSongReleaseDate(song)}\n"
             else -> "Song not found"
         }
     }
+    override fun getSongReleaseDate(song: SpotifySong) : String = SpotifySongReleaseDateStrategyFactory.getStrategy(song.releaseDatePrecision).printReleaseDate(song.releaseDate)
 }

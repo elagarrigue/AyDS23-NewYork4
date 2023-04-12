@@ -1,7 +1,7 @@
 package ayds.newyork.songinfo.home.model.repository.local.spotify.sqldb
 
 import android.database.Cursor
-import ayds.newyork.songinfo.home.model.entities.DatePrecision
+import ayds.newyork.songinfo.home.view.DatePrecision
 import ayds.newyork.songinfo.home.model.entities.Song.SpotifySong
 import java.sql.SQLException
 
