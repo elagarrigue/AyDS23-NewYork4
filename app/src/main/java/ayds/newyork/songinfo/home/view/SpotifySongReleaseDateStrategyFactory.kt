@@ -1,11 +1,16 @@
 package ayds.newyork.songinfo.home.view
 
+private const val SPOTIFY_DAY = "day"
+private const val SPOTIFY_MONTH = "month"
+private const val SPOTIFY_YEAR = "year"
+
 object SpotifySongReleaseDateStrategyFactory {
-    fun getStrategy(releaseDatePrecision : DatePrecision) : SpotifySongReleaseDateStrategy {
+    fun getStrategy(releaseDatePrecision : String) : SpotifySongReleaseDateStrategy {
         return when (releaseDatePrecision){
-            DatePrecision.YEAR -> YearStrategyCreator().create()
-            DatePrecision.MONTH -> MonthStrategyCreator().create()
-            DatePrecision.DAY -> DayStrategyCreator().create()
+            SPOTIFY_YEAR -> YearStrategyCreator().create()
+            SPOTIFY_MONTH -> MonthStrategyCreator().create()
+            SPOTIFY_DAY -> DayStrategyCreator().create()
+            else -> DefaultStrategyCreator().create()
         }
     }
 }
@@ -31,3 +36,8 @@ class DayStrategyCreator : SpotifySongReleaseDateStrategyCreator {
     }
 }
 
+class DefaultStrategyCreator : SpotifySongReleaseDateStrategyCreator {
+    override fun create() : SpotifySongReleaseDateStrategy {
+        return SpotifySongReleaseDateByDefaultStrategy()
+    }
+}

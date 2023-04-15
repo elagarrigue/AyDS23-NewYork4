@@ -7,10 +7,6 @@ interface SpotifySongReleaseDateStrategy {
     fun printReleaseDate(releaseDate: String): String
 }
 
-enum class DatePrecision{
-    DAY, MONTH, YEAR
-}
-
 class SpotifySongReleaseDateByYearStrategy: SpotifySongReleaseDateStrategy {
     fun isLeapYear(year: Int) = (year % 4 == 0) && (year % 100 != 0 || year % 400 == 0)
 
@@ -39,5 +35,11 @@ class SpotifySongReleaseDateByDayStrategy: SpotifySongReleaseDateStrategy {
     override fun printReleaseDate(releaseDate: String): String {
         val info = releaseDate.split("-")
         return "${info[2]}/${info[1]}/${info[0]}"
+    }
+}
+
+class SpotifySongReleaseDateByDefaultStrategy: SpotifySongReleaseDateStrategy {
+    override fun printReleaseDate(releaseDate: String): String {
+        return ""
     }
 }

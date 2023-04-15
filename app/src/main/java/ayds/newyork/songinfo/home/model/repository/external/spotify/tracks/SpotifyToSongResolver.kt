@@ -1,6 +1,5 @@
 package ayds.newyork.songinfo.home.model.repository.external.spotify.tracks
 
-import ayds.newyork.songinfo.home.view.DatePrecision
 import com.google.gson.Gson
 import ayds.newyork.songinfo.home.model.entities.Song.SpotifySong
 import com.google.gson.JsonObject
@@ -22,7 +21,7 @@ private const val URL = "url"
 private const val EXTERNAL_URL = "external_urls"
 private const val SPOTIFY = "spotify"
 
-internal class JsonToSongResolver(private val datePrecisionMapper: DatePrecisionMapper) : SpotifyToSongResolver {
+internal class JsonToSongResolver() : SpotifyToSongResolver {
 
     override fun getSongFromExternalData(serviceData: String?): SpotifySong? =
         try {
@@ -73,9 +72,9 @@ internal class JsonToSongResolver(private val datePrecisionMapper: DatePrecision
         return externalUrl[SPOTIFY].asString
     }
 
-    private fun JsonObject.getReleaseDatePrecision(): DatePrecision {
+    private fun JsonObject.getReleaseDatePrecision(): String {
         val album = this[ALBUM].asJsonObject
-        return datePrecisionMapper.getDatePrecision(album[RELEASE_DATE_PRECISION].asString)
+        return album[RELEASE_DATE_PRECISION].asString
     }
 
 }
