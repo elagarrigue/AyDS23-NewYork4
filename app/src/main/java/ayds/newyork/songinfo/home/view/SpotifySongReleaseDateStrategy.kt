@@ -11,19 +11,12 @@ enum class DatePrecision{
     DAY, MONTH, YEAR
 }
 
-interface LeapYearCheck {
-    fun isLeapYear(year: Int): Boolean
-
-}
-
-internal class LeapYearCheckImpl() : LeapYearCheck  {
-    override fun isLeapYear(year: Int) = (year % 4 == 0) && (year % 100 != 0 || year % 400 == 0)
-}
-
 class SpotifySongReleaseDateByYearStrategy: SpotifySongReleaseDateStrategy {
+    fun isLeapYear(year: Int) = (year % 4 == 0) && (year % 100 != 0 || year % 400 == 0)
+
     override fun printReleaseDate(releaseDate: String): String {
         val year = releaseDate.toInt()
-        return if(LeapYearCheckImpl().isLeapYear(year)){
+        return if(isLeapYear(year)){
             "$year (leap year)"
         } else {
             "$year (not a leap year)"
