@@ -40,6 +40,6 @@ class SpotifySongReleaseDateByDayStrategy: SpotifySongReleaseDateStrategy {
 
 class SpotifySongReleaseDateByDefaultStrategy: SpotifySongReleaseDateStrategy {
     override fun printReleaseDate(releaseDate: String): String {
-        return ""
+        return "No se encontro fecha"
     }
 }
