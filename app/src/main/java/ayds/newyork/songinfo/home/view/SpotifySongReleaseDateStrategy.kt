@@ -4,13 +4,13 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 interface SpotifySongReleaseDateStrategy {
-    fun printReleaseDate(releaseDate: String): String
+    fun getFormattedReleaseDate(releaseDate: String): String
 }
 
 class SpotifySongReleaseDateByYearStrategy: SpotifySongReleaseDateStrategy {
-    fun isLeapYear(year: Int) = (year % 4 == 0) && (year % 100 != 0 || year % 400 == 0)
+    private fun isLeapYear(year: Int) = (year % 4 == 0) && (year % 100 != 0 || year % 400 == 0)
 
-    override fun printReleaseDate(releaseDate: String): String {
+    override fun getFormattedReleaseDate(releaseDate: String): String {
         val year = releaseDate.toInt()
         return if(isLeapYear(year)){
             "$year (leap year)"
@@ -21,7 +21,7 @@ class SpotifySongReleaseDateByYearStrategy: SpotifySongReleaseDateStrategy {
 }
 
 class SpotifySongReleaseDateByMonthStrategy: SpotifySongReleaseDateStrategy {
-    override fun printReleaseDate(releaseDate: String): String {
+    override fun getFormattedReleaseDate(releaseDate: String): String {
         val monthDate = SimpleDateFormat("MMMM, yyyy", Locale("en"))
         val info = releaseDate.split("-")
         val calendar = Calendar.getInstance()
@@ -32,14 +32,14 @@ class SpotifySongReleaseDateByMonthStrategy: SpotifySongReleaseDateStrategy {
 }
 
 class SpotifySongReleaseDateByDayStrategy: SpotifySongReleaseDateStrategy {
-    override fun printReleaseDate(releaseDate: String): String {
+    override fun getFormattedReleaseDate(releaseDate: String): String {
         val info = releaseDate.split("-")
         return "${info[2]}/${info[1]}/${info[0]}"
     }
 }
 
 class SpotifySongReleaseDateByDefaultStrategy: SpotifySongReleaseDateStrategy {
-    override fun printReleaseDate(releaseDate: String): String {
-        return "No se encontro fecha"
+    override fun getFormattedReleaseDate(releaseDate: String): String {
+        return "Date unknown"
     }
 }

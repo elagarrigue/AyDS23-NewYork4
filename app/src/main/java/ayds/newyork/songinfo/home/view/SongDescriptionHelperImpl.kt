@@ -23,5 +23,5 @@ internal class SongDescriptionHelperImpl : SongDescriptionHelper {
             else -> "Song not found"
         }
     }
-    override fun getSongReleaseDate(song: SpotifySong) : String = SpotifySongReleaseDateStrategyFactory.getStrategy(song.releaseDatePrecision).printReleaseDate(song.releaseDate)
+    override fun getSongReleaseDate(song: SpotifySong) : String = SpotifySongReleaseDateStrategyFactory.getStrategy(song.releaseDatePrecision).getFormattedReleaseDate(song.releaseDate)
 }
