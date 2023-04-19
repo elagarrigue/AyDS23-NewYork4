@@ -9,7 +9,7 @@ interface SongDescriptionHelper {
     fun getSongReleaseDate(song: SpotifySong): String
 }
 
-internal class SongDescriptionHelperImpl : SongDescriptionHelper {
+internal class SongDescriptionHelperImpl(private val songReleaseDateStrategyFactory : SpotifySongReleaseDateStrategyFactory) : SongDescriptionHelper {
     override fun getSongDescriptionText(song: Song): String {
         return when (song) {
             is SpotifySong ->
@@ -23,5 +23,5 @@ internal class SongDescriptionHelperImpl : SongDescriptionHelper {
             else -> "Song not found"
         }
     }
-    override fun getSongReleaseDate(song: SpotifySong) : String = SpotifySongReleaseDateStrategyFactory.getStrategy(song.releaseDatePrecision).getFormattedReleaseDate(song.releaseDate)
+    override fun getSongReleaseDate(song: SpotifySong) : String = songReleaseDateStrategyFactory.getStrategy(song.releaseDatePrecision).getFormattedReleaseDate(song.releaseDate)
 }

@@ -4,7 +4,7 @@ private const val SPOTIFY_DAY = "day"
 private const val SPOTIFY_MONTH = "month"
 private const val SPOTIFY_YEAR = "year"
 
-object SpotifySongReleaseDateStrategyFactory {
+class SpotifySongReleaseDateStrategyFactory {
     fun getStrategy(releaseDatePrecision : String) : SpotifySongReleaseDateStrategy {
         return when (releaseDatePrecision){
             SPOTIFY_YEAR -> SpotifySongReleaseDateByYearStrategy()
