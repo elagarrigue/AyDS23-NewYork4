@@ -76,5 +76,4 @@ internal class JsonToSongResolver() : SpotifyToSongResolver {
         val album = this[ALBUM].asJsonObject
         return album[RELEASE_DATE_PRECISION].asString
     }
-
 }
