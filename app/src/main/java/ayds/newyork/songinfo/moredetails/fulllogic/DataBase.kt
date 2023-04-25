@@ -49,7 +49,11 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
     private fun createCursor(artist: String): Cursor {
         val cursor = this.readableDatabase.query(
             ARTISTS_TABLE_NAME,
-            projection,
+            arrayOf(
+                  ID_COLUMN,
+                  ARTIST_NAME_COLUMN,
+                  INFO_COLUMN
+            ),
             WHERE_COLUMN,
             arrayOf(artist),
             null,
