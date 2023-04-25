@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 
 private const val LOG_TAG = "DB"
-private const val TABLE_NAME = "artists"
+private const val ARTISTS_TABLE_NAME = "artists"
 private const val COLUMN_ID = "id"
 private const val COLUMN_ARTIST = "artist"
 private const val COLUMN_SOURCE = "source"
@@ -16,6 +16,7 @@ private const val COLUMN_INFO = "info"
 private const val SELECTION_FILTER = "$COLUMN_ARTIST = ?"
 private const val SELECTION_ORDER_BY = "$COLUMN_ARTIST = DESC"
 private const val SQLITE_OPEN_HELPER_NAME = "dictionary.db"
+private const val SOURCE_VALUE = 1
 
 class DataBase(context: Context): SQLiteOpenHelper(context, SQLITE_OPEN_HELPER_NAME, null, 1) {
 
@@ -38,7 +39,7 @@ class DataBase(context: Context): SQLiteOpenHelper(context, SQLITE_OPEN_HELPER_N
         return ContentValues().apply {
             put(COLUMN_ARTIST, artist)
             put(COLUMN_INFO, info)
-            put(COLUMN_SOURCE, 1)
+            put(COLUMN_SOURCE, SOURCE_VALUE)
         }
     }
 
