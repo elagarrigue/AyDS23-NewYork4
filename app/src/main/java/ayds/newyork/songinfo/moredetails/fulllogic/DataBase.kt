@@ -21,15 +21,15 @@ private const val SOURCE_VALUE = 1
 class DataBase(context: Context): SQLiteOpenHelper(context, SQLITE_OPEN_HELPER_NAME, null, 1) {
 
     override fun onCreate(database: SQLiteDatabase) {
-        database.execSQL("create table $TABLE_NAME ($COLUMN_ID integer primary key autoincrement, $COLUMN_ARTIST string, $COLUMN_INFO string, $COLUMN_SOURCE integer)")
-        Log.i(LOG_TAG, "'$TABLE_NAME' database created")
+        database.execSQL("create table $ARTISTS_TABLE_NAME ($COLUMN_ID integer primary key autoincrement, $COLUMN_ARTIST string, $COLUMN_INFO string, $COLUMN_SOURCE integer)")
+        Log.i(LOG_TAG, "'$ARTISTS_TABLE_NAME' database created")
     }
 
     override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
     fun saveArtist(artist: String, info: String) {
         this.writableDatabase.insert(
-            TABLE_NAME,
+            ARTISTS_TABLE_NAME,
             null,
             this.createContentValues(artist, info)
         )
@@ -55,7 +55,7 @@ class DataBase(context: Context): SQLiteOpenHelper(context, SQLITE_OPEN_HELPER_N
 
     private fun createCursor(artist: String): Cursor {
         return this.readableDatabase.query(
-            TABLE_NAME,
+            ARTISTS_TABLE_NAME,
             arrayOf(
                 COLUMN_ID,
                 COLUMN_ARTIST,
