@@ -25,13 +25,15 @@ class DataBase(context: Context): SQLiteOpenHelper(context, SQLITE_OPEN_HELPER_N
         Log.i(LOG_TAG, "'$ARTISTS_TABLE_NAME' database created")
     }
 
-    override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
+    override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        // TODO: make sure we do not actually need to perform any actions.
+    }
 
     fun saveArtist(artist: String, info: String) {
-        this.writableDatabase.insert(
+        writableDatabase.insert(
             ARTISTS_TABLE_NAME,
             null,
-            this.createContentValues(artist, info)
+            createContentValues(artist, info)
         )
     }
 
@@ -45,7 +47,7 @@ class DataBase(context: Context): SQLiteOpenHelper(context, SQLITE_OPEN_HELPER_N
 
     fun getArtistInfo(artist: String): String? {
         var artistInfo: String? = null
-        val cursor = this.createCursor(artist)
+        val cursor = createCursor(artist)
         if (cursor.moveToNext()) {
             artistInfo = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_INFO))
         }
@@ -54,7 +56,7 @@ class DataBase(context: Context): SQLiteOpenHelper(context, SQLITE_OPEN_HELPER_N
     }
 
     private fun createCursor(artist: String): Cursor {
-        return this.readableDatabase.query(
+        return readableDatabase.query(
             ARTISTS_TABLE_NAME,
             arrayOf(
                 COLUMN_ID,
