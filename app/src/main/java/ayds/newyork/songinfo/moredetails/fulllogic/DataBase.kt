@@ -14,7 +14,7 @@ private const val COLUMN_ARTIST = "artist"
 private const val COLUMN_SOURCE = "source"
 private const val COLUMN_INFO = "info"
 private const val SELECTION_FILTER = "$COLUMN_ARTIST = ?"
-private const val SELECTION_ORDER_BY = "$COLUMN_ARTIST = DESC"
+private const val SELECTION_ORDER_BY = "$COLUMN_ARTIST DESC"
 private const val SQLITE_OPEN_HELPER_NAME = "dictionary.db"
 private const val SOURCE_VALUE = 1
 
