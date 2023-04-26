@@ -20,14 +20,34 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.IOException
 import java.util.*
 
-class OtherInfoWindow(private var database: DataBase? = null) : AppCompatActivity() {
+class OtherInfoWindow(private var database : DataBase? = null) : AppCompatActivity() {
     private var artistInfoView: TextView? = null
+
+    companion object {
+        const val ARTIST_NAME_EXTRA = "artistName"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
         artistInfoView = findViewById(R.id.textPane2)
-        open(intent.getStringExtra(ARTIST_NAME_EXTRA))
+        open(intent.getStringExtra(ARTIST_NAME_EXTRA)!!)
+    }
+
+    private fun open(artistName: String) {
+        database = DataBase(this)
+        getArtistInfo(artistName)
+    }
+
+    private fun getArtistInfo(artistName: String) {
+        val nyTimesApi = createNYTimesApi()
+        Log.e("TAG", "$ARTIST_NAME_EXTRA $artistName")
+        val thread = createThread(nyTimesApi, artistName)
+        thread.start()
+    }
+
+    private fun createNYTimesApi(): NYTimesAPI {
+        return retrofit().create(NYTimesAPI::class.java)
     }
 
     private fun retrofit() : Retrofit = Retrofit.Builder()
@@ -35,15 +55,41 @@ class OtherInfoWindow(private var database: DataBase? = null) : AppCompatActivit
         .addConverterFactory(ScalarsConverterFactory.create())
         .build()
 
-    private fun createNYTimesApi(): NYTimesAPI {
-        return retrofit().create(NYTimesAPI::class.java)
+    private fun createThread(
+        nyTimesApi: NYTimesAPI,
+        artistName: String
+    ): Thread {
+        return Thread {
+            var artistInfo = database!!.getArtistInfo(artistName)
+            artistInfo = if (artistInfoExists(artistInfo)) {
+                markArtistAsLocallyStored(artistInfo)
+            } else {
+                getArtistInfoFromService(nyTimesApi, artistName)
+            }
+            setArtistInfoIntoView(artistInfo)
+            setNYTimesImageIntoView()
+        }
     }
 
     private fun artistInfoExists(artistInfo: String?) = artistInfo != null
 
     private fun markArtistAsLocallyStored(artistInfo: String?) = "[*]$artistInfo"
 
-    private fun getApiResponse(nyTimesApi: NYTimesAPI, artistName: String?): Response<String>? {
+    private fun getArtistInfoFromService(nyTimesApi: NYTimesAPI, artistName: String): String? {
+        val nyTimesApiResponse = getApiResponse(nyTimesApi, artistName)
+        var formattedArtistInfo: String? = null
+        if (nyTimesApiResponse != null) {
+            Log.e("TAG", "JSON " + nyTimesApiResponse.body())
+            val responseInJson = apiResponseToJsonObject(nyTimesApiResponse)
+            val documentAbstractArtistInfo = getDocumentAbstract(responseInJson)
+            formattedArtistInfo = formatAbstractArtistInfo(documentAbstractArtistInfo, artistName)
+            val documentUrl = getDocumentUrl(responseInJson)
+            setOpenUrlButtonListener(documentUrl)
+        }
+        return formattedArtistInfo
+    }
+
+    private fun getApiResponse(nyTimesApi: NYTimesAPI, artistName: String): Response<String>? {
         var callResponse: Response<String>? = null
         try {
             callResponse = nyTimesApi.getArtistInfo(artistName).execute()
@@ -77,87 +123,42 @@ class OtherInfoWindow(private var database: DataBase? = null) : AppCompatActivit
     }
 
     private fun setArtistInfoIntoView(artistInfo: String?) {
-        runOnUiThread { artistInfoView!!.text = Html.fromHtml(artistInfo) }
+        runOnUiThread { artistInfoView?.text = Html.fromHtml(artistInfo) }
     }
 
     private fun getDocumentAbstract(apiCallResponseInJson: JsonObject): JsonElement {
         return apiCallResponseInJson["docs"].asJsonArray[0].asJsonObject["abstract"]
     }
 
-    private fun getDocumentUrl(apiCallResponseInJson: JsonObject): JsonElement {
-        return apiCallResponseInJson["docs"].asJsonArray[0].asJsonObject["web_url"]
-    }
-
     private fun formatAbstractArtistInfo(
         documentAbstractArtistInfo: JsonElement?,
-        artistName: String?
+        artistName: String
     ): String {
         var formattedArtistInfo = "No Results"
         if (documentAbstractArtistInfo != null) {
             formattedArtistInfo = documentAbstractArtistInfo.asString.replace("\\n", "\n")
             formattedArtistInfo = textToHtml(formattedArtistInfo, artistName)
-            DataBase.saveArtist(database, artistName, formattedArtistInfo)
+            database!!.saveArtist(artistName, formattedArtistInfo)
         }
         return formattedArtistInfo
     }
 
-    private fun getArtistInfoFromService(nyTimesApi: NYTimesAPI, artistName: String?): String? {
-        val nyTimesApiResponse = getApiResponse(nyTimesApi, artistName)
-        var formattedArtistInfo: String? = null
-        if (nyTimesApiResponse != null) {
-            Log.e("TAG", "JSON " + nyTimesApiResponse.body())
-            val responseInJson = apiResponseToJsonObject(nyTimesApiResponse)
-            val documentAbstractArtistInfo = getDocumentAbstract(responseInJson)
-            formattedArtistInfo = formatAbstractArtistInfo(documentAbstractArtistInfo, artistName)
-            val documentUrl = getDocumentUrl(responseInJson)
-            setOpenUrlButtonListener(documentUrl)
-        }
-        return formattedArtistInfo
+    private fun getDocumentUrl(apiCallResponseInJson: JsonObject): JsonElement {
+        return apiCallResponseInJson["docs"].asJsonArray[0].asJsonObject["web_url"]
     }
 
-    private fun createThread(
-        nyTimesApi: NYTimesAPI,
-        artistName: String?
-    ): Thread {
-        return Thread {
-            var artistInfo = DataBase.getInfo(database, artistName)
-            artistInfo = if (artistInfoExists(artistInfo)) {
-                markArtistAsLocallyStored(artistInfo)
-            } else {
-                getArtistInfoFromService(nyTimesApi, artistName)
-            }
-            setArtistInfoIntoView(artistInfo)
-            setNYTimesImageIntoView()
-        }
-    }
-
-    private fun getArtistInfo(artistName: String?) {
-        val nyTimesApi = createNYTimesApi()
-        Log.e("TAG", "artistName $artistName")
-        val thread = createThread(nyTimesApi, artistName)
-        thread.start()
-    }
-
-    private fun open(artist: String?) {
-        database = DataBase(this)
-        getArtistInfo(artist)
-    }
-
-    companion object {
-        const val ARTIST_NAME_EXTRA = "artistName"
-        fun textToHtml(text: String, term: String?): String {
-            val builder = StringBuilder()
-            builder.append("<html><div width=400> <font face=\"arial\">")
-            val textWithBoldInHtml = text
-                .replace("'", " ")
-                .replace("\n", "<br>")
-                .replace(
-                    "(?i)$term".toRegex(),
-                    "<b>" + term!!.uppercase(Locale.getDefault()) + "</b>"
-                )
-            builder.append(textWithBoldInHtml)
-            builder.append("</font></div></html>")
-            return builder.toString()
-        }
+    private fun textToHtml(text: String, term: String?): String {
+        val builder = StringBuilder()
+        builder.append("<html><div width=400> <font face=\"arial\">")
+        val textWithBoldInHtml = text
+            .replace("'", " ")
+            .replace("\n", "<br>")
+            .replace(
+                "(?i)$term".toRegex(),
+                "<b>" + term!!.uppercase(Locale.getDefault()) + "</b>"
+            )
+        builder.append(textWithBoldInHtml)
+        builder.append("</font></div></html>")
+        return builder.toString()
     }
 }
