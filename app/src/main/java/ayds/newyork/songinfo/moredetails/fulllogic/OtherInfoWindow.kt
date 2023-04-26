@@ -20,40 +20,28 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.IOException
 import java.util.*
 
-class OtherInfoWindow : AppCompatActivity() {
-    private var ArtistInfoView: TextView? = null
-    private var dataBase: DataBase? = null
+class OtherInfoWindow(private var database: DataBase? = null) : AppCompatActivity() {
+    private var artistInfoView: TextView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
-        ArtistInfoView = findViewById(R.id.textPane2)
-        open(intent.getStringExtra("artistName"))
+        artistInfoView = findViewById(R.id.textPane2)
+        open(intent.getStringExtra(ARTIST_NAME_EXTRA))
     }
 
-    private val retrofit: Retrofit
-        private get() = Retrofit.Builder()
-            .baseUrl("https://api.nytimes.com/svc/search/v2/")
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
+    private fun retrofit() : Retrofit = Retrofit.Builder()
+        .baseUrl("https://api.nytimes.com/svc/search/v2/")
+        .addConverterFactory(ScalarsConverterFactory.create())
+        .build()
 
     private fun createNYTimesApi(): NYTimesAPI {
-        val retrofit = retrofit
-        return retrofit.create(NYTimesAPI::class.java)
+        return retrofit().create(NYTimesAPI::class.java)
     }
 
-    private fun artistInfoExists(artistInfo: String?): Boolean {
-        var exists = false
-        if (artistInfo != null) {
-            exists = true
-        }
-        return exists
-    }
+    private fun artistInfoExists(artistInfo: String?) = artistInfo != null
 
-    private fun markArtistAsLocallyStored(artistInfo: String?): String {
-        var artistInfo = artistInfo
-        artistInfo = "[*]$artistInfo"
-        return artistInfo
-    }
+    private fun markArtistAsLocallyStored(artistInfo: String?) = "[*]$artistInfo"
 
     private fun getApiResponse(nyTimesApi: NYTimesAPI, artistName: String?): Response<String>? {
         var callResponse: Response<String>? = null
@@ -68,16 +56,14 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun apiResponseToJsonObject(apiCallResponse: Response<String>): JsonObject {
         val gson = Gson()
-        val jsonObject =
-            gson.fromJson(apiCallResponse.body(), JsonObject::class.java)
+        val jsonObject = gson.fromJson(apiCallResponse.body(), JsonObject::class.java)
         return jsonObject["response"].asJsonObject
     }
 
     private fun setOpenUrlButtonListener(jsonUrl: JsonElement) {
-        val urlInFinalString = jsonUrl.asString
         findViewById<View>(R.id.openUrlButton).setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(urlInFinalString)
+            intent.data = Uri.parse(jsonUrl.asString)
             startActivity(intent)
         }
     }
@@ -91,7 +77,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun setArtistInfoIntoView(artistInfo: String?) {
-        runOnUiThread { ArtistInfoView!!.text = Html.fromHtml(artistInfo) }
+        runOnUiThread { artistInfoView!!.text = Html.fromHtml(artistInfo) }
     }
 
     private fun getDocumentAbstract(apiCallResponseInJson: JsonObject): JsonElement {
@@ -106,13 +92,11 @@ class OtherInfoWindow : AppCompatActivity() {
         documentAbstractArtistInfo: JsonElement?,
         artistName: String?
     ): String {
-        var formattedArtistInfo: String
-        if (documentAbstractArtistInfo == null) {
-            formattedArtistInfo = "No Results"
-        } else {
+        var formattedArtistInfo = "No Results"
+        if (documentAbstractArtistInfo != null) {
             formattedArtistInfo = documentAbstractArtistInfo.asString.replace("\\n", "\n")
             formattedArtistInfo = textToHtml(formattedArtistInfo, artistName)
-            DataBase.saveArtist(dataBase, artistName, formattedArtistInfo)
+            DataBase.saveArtist(database, artistName, formattedArtistInfo)
         }
         return formattedArtistInfo
     }
@@ -120,7 +104,7 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun getArtistInfoFromService(nyTimesApi: NYTimesAPI, artistName: String?): String? {
         val nyTimesApiResponse = getApiResponse(nyTimesApi, artistName)
         var formattedArtistInfo: String? = null
-        if (nyTimesApiResponse != null) { // si se obtuvo respuesta
+        if (nyTimesApiResponse != null) {
             Log.e("TAG", "JSON " + nyTimesApiResponse.body())
             val responseInJson = apiResponseToJsonObject(nyTimesApiResponse)
             val documentAbstractArtistInfo = getDocumentAbstract(responseInJson)
@@ -136,7 +120,7 @@ class OtherInfoWindow : AppCompatActivity() {
         artistName: String?
     ): Thread {
         return Thread {
-            var artistInfo = DataBase.getInfo(dataBase, artistName)
+            var artistInfo = DataBase.getInfo(database, artistName)
             artistInfo = if (artistInfoExists(artistInfo)) {
                 markArtistAsLocallyStored(artistInfo)
             } else {
@@ -147,7 +131,7 @@ class OtherInfoWindow : AppCompatActivity() {
         }
     }
 
-    fun getArtistInfo(artistName: String?) {
+    private fun getArtistInfo(artistName: String?) {
         val nyTimesApi = createNYTimesApi()
         Log.e("TAG", "artistName $artistName")
         val thread = createThread(nyTimesApi, artistName)
@@ -155,7 +139,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun open(artist: String?) {
-        dataBase = DataBase(this)
+        database = DataBase(this)
         getArtistInfo(artist)
     }
 
