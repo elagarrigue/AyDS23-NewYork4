@@ -18,13 +18,14 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.IOException
-import java.util.*
+import java.util.Locale
 
 class OtherInfoWindow : AppCompatActivity() {
+    private lateinit var artist: ArtistInfo
+    private lateinit var artistName: String
     private lateinit var artistInfoView: TextView
     private lateinit var logoImageView: ImageView
     private lateinit var openUrlButtonView: View
-    private lateinit var artistName: String
     private lateinit var nyTimesApi: NYTimesAPI
     private lateinit var database : DataBase
 
@@ -54,8 +55,9 @@ class OtherInfoWindow : AppCompatActivity() {
         initProperties()
 
         createArtistName()
-        createDatabase()
         createNYTimesApi()
+        createDatabase()
+        createArtistInfo()
 
         setArtistInfoOnUi()
     }
@@ -70,10 +72,6 @@ class OtherInfoWindow : AppCompatActivity() {
         artistName = intent.getStringExtra(ARTIST_NAME_EXTRA)!!
     }
 
-    private fun createDatabase() {
-        database = DataBase(this)
-    }
-
     private fun createNYTimesApi() {
         nyTimesApi = retrofit().create(NYTimesAPI::class.java)
     }
@@ -83,6 +81,14 @@ class OtherInfoWindow : AppCompatActivity() {
         .addConverterFactory(ScalarsConverterFactory.create())
         .build()
 
+    private fun createDatabase() {
+        database = DataBase(this)
+    }
+
+    private fun createArtistInfo() {
+        artist = ArtistInfo()
+    }
+
     private fun setArtistInfoOnUi() {
         Thread {
             setArtistInfoLogic()
@@ -90,21 +96,29 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun setArtistInfoLogic() {
-        var artistInfo = database.getArtistInfo(artistName)
-        artistInfo = if (artistInfoExists(artistInfo)) {
-            markArtistAsLocallyStored(artistInfo)
-        } else {
-            getArtistInfoFromService(nyTimesApi, artistName)
-        }
-        setArtistInfoIntoView(artistInfo)
+        setArtistInfo()
+        setArtistInfoIntoView()
         setNYTimesImageIntoView()
+        setOpenUrlButtonListener()
+    }
+
+    private fun setArtistInfo() {
+        artist.info = database.getArtistInfo(artistName)
+        artist.info = if (artistInfoExists(artist.info)) {
+            markArtistAsLocallyStored(artist.info)
+        } else {
+            getArtistInfoFromService()
+        }
     }
 
     private fun artistInfoExists(artistInfo: String?) = artistInfo != null
 
-    private fun markArtistAsLocallyStored(artistInfo: String?) = "$LOCALLY_STORED_PREFIX$artistInfo"
+    private fun markArtistAsLocallyStored(artistInfo: String?):String {
+        artist.locallyStored = true
+        return "${LOCALLY_STORED_PREFIX}$artistInfo"
+    }
 
-    private fun getArtistInfoFromService(nyTimesApi: NYTimesAPI, artistName: String):String? {
+    private fun getArtistInfoFromService():String? {
         return getArtistInfo(getApiResponse(nyTimesApi, artistName))
     }
 
@@ -114,8 +128,7 @@ class OtherInfoWindow : AppCompatActivity() {
             val responseInJson = apiResponseToJsonObject(nyTimesApiResponse)
             val documentAbstractArtistInfo = getDocumentAbstract(responseInJson)
             formattedArtistInfo = formatAbstractArtistInfo(documentAbstractArtistInfo, artistName)
-            val documentUrl = getDocumentUrl(responseInJson)
-            setOpenUrlButtonListener(documentUrl)
+            artist.url = getDocumentUrl(responseInJson).asString
         }
         return formattedArtistInfo
     }
@@ -137,26 +150,6 @@ class OtherInfoWindow : AppCompatActivity() {
         return jsonObject[JSON_OBJECT_RESPONSE].asJsonObject
     }
 
-    private fun setOpenUrlButtonListener(jsonUrl: JsonElement) {
-        openUrlButtonView.setOnClickListener {
-            startActivity(getOpenUrlButtonIntent(jsonUrl))
-        }
-    }
-
-    private fun getOpenUrlButtonIntent(jsonUrl: JsonElement): Intent {
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse(jsonUrl.asString)
-        return intent
-    }
-
-    private fun setNYTimesImageIntoView() {
-        runOnUiThread { Picasso.get().load(NY_TIMES_LOGO_URL).into(logoImageView) }
-    }
-
-    private fun setArtistInfoIntoView(artistInfo: String?) {
-        runOnUiThread { artistInfoView.text = Html.fromHtml(artistInfo) }
-    }
-
     private fun getDocumentAbstract(apiCallResponseInJson: JsonObject): JsonElement {
         return getDocument(apiCallResponseInJson)[JSON_OBJECT_ABSTRACT]
     }
@@ -168,6 +161,32 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun getDocumentUrl(apiCallResponseInJson: JsonObject): JsonElement {
         return getDocument(apiCallResponseInJson)[JSON_OBJECT_WEB_URL]
+    }
+
+    private fun setArtistInfoIntoView() {
+        runOnUiThread {
+            artistInfoView.text = Html.fromHtml(artist.info)
+        }
+    }
+
+    private fun setNYTimesImageIntoView() {
+        runOnUiThread {
+            Picasso.get().load(NY_TIMES_LOGO_URL).into(logoImageView)
+        }
+    }
+
+    private fun setOpenUrlButtonListener() {
+        runOnUiThread {
+            openUrlButtonView.setOnClickListener {
+                startActivity(getOpenUrlButtonIntent())
+            }
+        }
+    }
+
+    private fun getOpenUrlButtonIntent(): Intent {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(artist.url)
+        return intent
     }
 
     private fun formatAbstractArtistInfo(
