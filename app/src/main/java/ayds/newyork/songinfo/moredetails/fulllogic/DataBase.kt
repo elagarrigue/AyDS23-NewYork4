@@ -7,27 +7,25 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 
-private const val LOG_TAG = "DB"
-private const val ARTISTS_TABLE_NAME = "artists"
-private const val COLUMN_ID = "id"
-private const val COLUMN_ARTIST = "artist"
-private const val COLUMN_SOURCE = "source"
-private const val COLUMN_INFO = "info"
-private const val SELECTION_FILTER = "$COLUMN_ARTIST = ?"
-private const val SELECTION_ORDER_BY = "$COLUMN_ARTIST DESC"
-private const val SQLITE_OPEN_HELPER_NAME = "dictionary.db"
-private const val SOURCE_VALUE = 1
-
 class DataBase(context: Context): SQLiteOpenHelper(context, SQLITE_OPEN_HELPER_NAME, null, 1) {
+    companion object {
+        const val ARTISTS_TABLE_NAME = "artists"
+        const val COLUMN_ID = "id"
+        const val COLUMN_ARTIST = "artist"
+        const val COLUMN_SOURCE = "source"
+        const val COLUMN_INFO = "info"
+        const val SELECTION_FILTER = "$COLUMN_ARTIST = ?"
+        const val SELECTION_ORDER_BY = "$COLUMN_ARTIST DESC"
+        const val SQLITE_OPEN_HELPER_NAME = "dictionary.db"
+        const val SOURCE_VALUE = 1
+        const val CREATE_ARTISTS_TABLE_SQL_QUERY = "create table $ARTISTS_TABLE_NAME ($COLUMN_ID integer primary key autoincrement, $COLUMN_ARTIST string, $COLUMN_INFO string, $COLUMN_SOURCE integer)"
+    }
 
     override fun onCreate(database: SQLiteDatabase) {
-        database.execSQL("create table $ARTISTS_TABLE_NAME ($COLUMN_ID integer primary key autoincrement, $COLUMN_ARTIST string, $COLUMN_INFO string, $COLUMN_SOURCE integer)")
-        Log.i(LOG_TAG, "'$ARTISTS_TABLE_NAME' database created")
+        database.execSQL(CREATE_ARTISTS_TABLE_SQL_QUERY)
     }
 
-    override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        // TODO: make sure we do not actually need to perform any actions.
-    }
+    override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
     fun saveArtist(artist: String, info: String) {
         writableDatabase.insert(
