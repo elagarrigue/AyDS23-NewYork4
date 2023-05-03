@@ -5,7 +5,6 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
 
 class DataBase(context: Context): SQLiteOpenHelper(context, SQLITE_OPEN_HELPER_NAME, null, 1) {
     companion object {
@@ -19,6 +18,7 @@ class DataBase(context: Context): SQLiteOpenHelper(context, SQLITE_OPEN_HELPER_N
         const val SQLITE_OPEN_HELPER_NAME = "dictionary.db"
         const val SOURCE_VALUE = 1
         const val CREATE_ARTISTS_TABLE_SQL_QUERY = "create table $ARTISTS_TABLE_NAME ($COLUMN_ID integer primary key autoincrement, $COLUMN_ARTIST string, $COLUMN_INFO string, $COLUMN_SOURCE integer)"
+        const val LOCALLY_STORED_PREFIX = "[*]"
     }
 
     override fun onCreate(database: SQLiteDatabase) {
@@ -43,17 +43,21 @@ class DataBase(context: Context): SQLiteOpenHelper(context, SQLITE_OPEN_HELPER_N
         }
     }
 
-    fun getArtistInfo(artist: String): String? {
-        var artistInfo: String? = null
-        val cursor = createCursor(artist)
-        if (cursor.moveToNext()) {
-            artistInfo = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_INFO))
+    fun getArtistInfo(artistName: String): ArtistInfo {
+        val info = getInfoColumn(getArtist(artistName))
+        val artistInfo = ArtistInfo()
+        if (info != null) {
+            artistInfo.locallyStored = true
+            artistInfo.info = markArtistAsLocallyStored(info)
         }
-        cursor.close()
         return artistInfo
     }
 
-    private fun createCursor(artist: String): Cursor {
+    private fun markArtistAsLocallyStored(artistInfo: String?):String {
+        return "${LOCALLY_STORED_PREFIX}$artistInfo"
+    }
+
+    private fun getArtist(artist: String): Cursor {
         return readableDatabase.query(
             ARTISTS_TABLE_NAME,
             arrayOf(
@@ -69,4 +73,12 @@ class DataBase(context: Context): SQLiteOpenHelper(context, SQLITE_OPEN_HELPER_N
         )
     }
 
+    private fun getInfoColumn(query: Cursor): String? {
+        var info: String? = null
+        if (query.moveToNext()) {
+            info = query.getString(query.getColumnIndexOrThrow(COLUMN_INFO))
+        }
+        query.close()
+        return info
+    }
 }

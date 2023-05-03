@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -21,13 +20,12 @@ import java.io.IOException
 import java.util.Locale
 
 class OtherInfoWindow : AppCompatActivity() {
-    private lateinit var artist: ArtistInfo
     private lateinit var artistName: String
     private lateinit var artistInfoView: TextView
     private lateinit var logoImageView: ImageView
     private lateinit var openUrlButtonView: View
     private lateinit var nyTimesApi: NYTimesAPI
-    private lateinit var database : DataBase
+    private var database = DataBase(this)
 
     companion object {
         const val ARTIST_NAME_EXTRA = "artistName"
@@ -45,7 +43,6 @@ class OtherInfoWindow : AppCompatActivity() {
         const val HTML_NEW_LINE = "<br>"
         const val HTML_OPEN_BOLD = "<b>"
         const val HTML_CLOSE_BOLD = "</b>"
-        const val LOCALLY_STORED_PREFIX = "[*]"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,8 +53,6 @@ class OtherInfoWindow : AppCompatActivity() {
 
         createArtistName()
         createNYTimesApi()
-        createDatabase()
-        createArtistInfo()
 
         setArtistInfoOnUi()
     }
@@ -81,14 +76,6 @@ class OtherInfoWindow : AppCompatActivity() {
         .addConverterFactory(ScalarsConverterFactory.create())
         .build()
 
-    private fun createDatabase() {
-        database = DataBase(this)
-    }
-
-    private fun createArtistInfo() {
-        artist = ArtistInfo()
-    }
-
     private fun setArtistInfoOnUi() {
         Thread {
             setArtistInfoLogic()
@@ -96,52 +83,86 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun setArtistInfoLogic() {
-        setArtistInfo()
-        setArtistInfoIntoView()
+        val artistInfo = getArtistInfo()
+        setArtistInfoIntoView(artistInfo.info)
         setNYTimesImageIntoView()
-        setOpenUrlButtonListener()
+        setOpenUrlButtonListener(artistInfo.url)
     }
 
-    private fun setArtistInfo() {
-        artist.info = database.getArtistInfo(artistName)
-        artist.info = if (artistInfoExists(artist.info)) {
-            markArtistAsLocallyStored(artist.info)
-        } else {
-            getArtistInfoFromService()
+    private fun getArtistInfo(): ArtistInfo {
+        return database.getArtistInfo(artistName)
+    }
+
+    private fun setArtistInfoIntoView(info: String?) {
+        runOnUiThread {
+            var artistInfo = info
+            if(info == null){
+                val nyTimesApiResponse = getApiResponse(nyTimesApi, artistName)
+                artistInfo = getArtistInfoFromService(nyTimesApiResponse, artistName)
+            }
+            artistInfoView.text = Html.fromHtml(artistInfo)
         }
     }
 
-    private fun artistInfoExists(artistInfo: String?) = artistInfo != null
-
-    private fun markArtistAsLocallyStored(artistInfo: String?):String {
-        artist.locallyStored = true
-        return "${LOCALLY_STORED_PREFIX}$artistInfo"
-    }
-
-    private fun getArtistInfoFromService():String? {
-        return getArtistInfo(getApiResponse(nyTimesApi, artistName))
-    }
-
-    private fun getArtistInfo(nyTimesApiResponse: Response<String>?):String? {
-        var formattedArtistInfo: String? = null
-        if (nyTimesApiResponse != null) {
-            val responseInJson = apiResponseToJsonObject(nyTimesApiResponse)
-            val documentAbstractArtistInfo = getDocumentAbstract(responseInJson)
-            formattedArtistInfo = formatAbstractArtistInfo(documentAbstractArtistInfo, artistName)
-            artist.url = getDocumentUrl(responseInJson).asString
+    private fun setNYTimesImageIntoView() {
+        runOnUiThread {
+            Picasso.get().load(NY_TIMES_LOGO_URL).into(logoImageView)
         }
-        return formattedArtistInfo
     }
 
-    private fun getApiResponse(nyTimesApi: NYTimesAPI, artistName: String): Response<String>? {
-        var callResponse: Response<String>? = null
+    private fun setOpenUrlButtonListener(url: String?) {
+        runOnUiThread {
+            var artistUrl = url
+            if(url == null){
+                val nyTimesApiResponse = getApiResponse(nyTimesApi, artistName)
+                artistUrl = getArtistUrlFromService(nyTimesApiResponse)
+            }
+            openUrlButtonView.setOnClickListener {
+                startActivity(getOpenUrlButtonIntent(artistUrl))
+            }
+        }
+    }
+
+    private fun getOpenUrlButtonIntent(url: String?): Intent {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(url)
+        return intent
+    }
+
+    private fun getApiResponse(nyTimesApi: NYTimesAPI, artistName: String): JsonObject? {
+        var responseInJson: JsonObject? = null
         try {
-            callResponse = nyTimesApi.getArtistInfo(artistName).execute()
+            val callResponse = nyTimesApi.getArtistInfo(artistName).execute()
+            responseInJson = apiResponseToJsonObject(callResponse)
         } catch (e1: IOException) {
-            Log.e("TAG", "Error $e1")
             e1.printStackTrace()
         }
-        return callResponse
+        return responseInJson
+    }
+
+    private fun getArtistInfoFromService(nyTimesApiResponse: JsonObject?, artistName: String):String? {
+        return getArtistInfo(nyTimesApiResponse, artistName)
+    }
+
+    private fun getArtistUrlFromService(nyTimesApiResponse: JsonObject?):String? {
+        return getArtistUrl(nyTimesApiResponse)
+    }
+
+    private fun getArtistInfo(nyTimesApiResponse: JsonObject?, artistName: String):String? {
+        return if (nyTimesApiResponse != null) {
+            val documentAbstractArtistInfo = getDocumentAbstract(nyTimesApiResponse)
+            formatAbstractArtistInfo(documentAbstractArtistInfo, artistName)
+        } else {
+            null
+        }
+    }
+
+    private fun getArtistUrl(nyTimesApiResponse: JsonObject?):String? {
+        return if (nyTimesApiResponse != null) {
+            getDocumentUrl(nyTimesApiResponse).asString
+        } else {
+            null
+        }
     }
 
     private fun apiResponseToJsonObject(apiCallResponse: Response<String>): JsonObject {
@@ -163,39 +184,16 @@ class OtherInfoWindow : AppCompatActivity() {
         return getDocument(apiCallResponseInJson)[JSON_OBJECT_WEB_URL]
     }
 
-    private fun setArtistInfoIntoView() {
-        runOnUiThread {
-            artistInfoView.text = Html.fromHtml(artist.info)
-        }
-    }
-
-    private fun setNYTimesImageIntoView() {
-        runOnUiThread {
-            Picasso.get().load(NY_TIMES_LOGO_URL).into(logoImageView)
-        }
-    }
-
-    private fun setOpenUrlButtonListener() {
-        runOnUiThread {
-            openUrlButtonView.setOnClickListener {
-                startActivity(getOpenUrlButtonIntent())
-            }
-        }
-    }
-
-    private fun getOpenUrlButtonIntent(): Intent {
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse(artist.url)
-        return intent
-    }
-
     private fun formatAbstractArtistInfo(
         documentAbstractArtistInfo: JsonElement?,
         artistName: String
     ): String {
         var formattedArtistInfo = DEFAULT_ARTIST_INFO_RESULT_TEXT
         if (documentAbstractArtistInfo != null) {
-            formattedArtistInfo = documentAbstractArtistInfo.asString.replace(ESCAPED_NEW_LINE_TEXT, ESCAPED_NEW_LINE)
+            formattedArtistInfo = documentAbstractArtistInfo.asString.replace(
+                ESCAPED_NEW_LINE_TEXT,
+                ESCAPED_NEW_LINE
+            )
             formattedArtistInfo = textToHtml(formattedArtistInfo, artistName)
             database.saveArtist(artistName, formattedArtistInfo)
         }
@@ -203,11 +201,11 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun textToHtml(text: String, term: String?): String {
-        val builder = StringBuilder()
-        builder.append(BEGIN_HTML)
-        builder.append(getBoldTextInHtml(text, term))
-        builder.append(END_HTML)
-        return builder.toString()
+        return StringBuilder().apply {
+            append(BEGIN_HTML)
+            append(getBoldTextInHtml(text, term))
+            append(END_HTML)
+        }.toString()
     }
 
     private fun getBoldTextInHtml(text: String, term: String?): String {
