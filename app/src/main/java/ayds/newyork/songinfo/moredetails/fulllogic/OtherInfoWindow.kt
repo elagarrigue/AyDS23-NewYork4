@@ -43,6 +43,7 @@ class OtherInfoWindow : AppCompatActivity() {
         const val HTML_NEW_LINE = "<br>"
         const val HTML_OPEN_BOLD = "<b>"
         const val HTML_CLOSE_BOLD = "</b>"
+        const val LOCALLY_STORED_PREFIX = "[*]"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,24 +84,37 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun setArtistInfoLogic() {
-        val artistInfo = getArtistInfo()
-        setArtistInfoIntoView(artistInfo.info)
+        val artistInfo = getArtistByTerm(artistName)
+        setArtistInfoIntoView(artistInfo)
         setNYTimesImageIntoView()
         setOpenUrlButtonListener(artistInfo.url)
     }
 
-    private fun getArtistInfo(): ArtistInfo {
-        return database.getArtistInfo(artistName)
+    private fun getArtistByTerm(term: String): ArtistInfo {
+        var artistInfo = database.getArtistInfo(term)
+        when {
+            artistInfo != null -> markArtistAsLocal(artistInfo)
+            else -> {
+                val apiResponse = getApiResponse(term)
+                artistInfo = ArtistInfo(
+                    getArtistUrlFromService(apiResponse),
+                    getArtistInfoFromService(apiResponse, term)
+                )
+            }
+        }
+        return artistInfo
     }
 
-    private fun setArtistInfoIntoView(info: String?) {
+    private fun markArtistAsLocal(artistInfo: ArtistInfo) {
+        artistInfo.isLocallyStored = true
+    }
+
+    private fun setArtistInfoIntoView(artistInfo: ArtistInfo) {
         runOnUiThread {
-            var artistInfo = info
-            if(info == null){
-                val nyTimesApiResponse = getApiResponse(nyTimesApi, artistName)
-                artistInfo = getArtistInfoFromService(nyTimesApiResponse, artistName)
+            if(artistInfo.isLocallyStored){
+                artistInfo.info = "${LOCALLY_STORED_PREFIX}${artistInfo.info}"
             }
-            artistInfoView.text = Html.fromHtml(artistInfo)
+            artistInfoView.text = Html.fromHtml(artistInfo.info)
         }
     }
 
@@ -112,13 +126,8 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun setOpenUrlButtonListener(url: String?) {
         runOnUiThread {
-            var artistUrl = url
-            if(url == null){
-                val nyTimesApiResponse = getApiResponse(nyTimesApi, artistName)
-                artistUrl = getArtistUrlFromService(nyTimesApiResponse)
-            }
             openUrlButtonView.setOnClickListener {
-                startActivity(getOpenUrlButtonIntent(artistUrl))
+                startActivity(getOpenUrlButtonIntent(url))
             }
         }
     }
@@ -129,7 +138,7 @@ class OtherInfoWindow : AppCompatActivity() {
         return intent
     }
 
-    private fun getApiResponse(nyTimesApi: NYTimesAPI, artistName: String): JsonObject? {
+    private fun getApiResponse(artistName: String): JsonObject? {
         var responseInJson: JsonObject? = null
         try {
             val callResponse = nyTimesApi.getArtistInfo(artistName).execute()

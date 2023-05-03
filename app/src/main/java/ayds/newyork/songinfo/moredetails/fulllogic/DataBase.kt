@@ -18,7 +18,6 @@ class DataBase(context: Context): SQLiteOpenHelper(context, SQLITE_OPEN_HELPER_N
         const val SQLITE_OPEN_HELPER_NAME = "dictionary.db"
         const val SOURCE_VALUE = 1
         const val CREATE_ARTISTS_TABLE_SQL_QUERY = "create table $ARTISTS_TABLE_NAME ($COLUMN_ID integer primary key autoincrement, $COLUMN_ARTIST string, $COLUMN_INFO string, $COLUMN_SOURCE integer)"
-        const val LOCALLY_STORED_PREFIX = "[*]"
     }
 
     override fun onCreate(database: SQLiteDatabase) {
@@ -43,18 +42,13 @@ class DataBase(context: Context): SQLiteOpenHelper(context, SQLITE_OPEN_HELPER_N
         }
     }
 
-    fun getArtistInfo(artistName: String): ArtistInfo {
+    fun getArtistInfo(artistName: String): ArtistInfo? {
         val info = getInfoColumn(getArtist(artistName))
-        val artistInfo = ArtistInfo()
-        if (info != null) {
-            artistInfo.locallyStored = true
-            artistInfo.info = markArtistAsLocallyStored(info)
+        return if(info != null){
+            return ArtistInfo(info)
+        } else {
+            null
         }
-        return artistInfo
-    }
-
-    private fun markArtistAsLocallyStored(artistInfo: String?):String {
-        return "${LOCALLY_STORED_PREFIX}$artistInfo"
     }
 
     private fun getArtist(artist: String): Cursor {
