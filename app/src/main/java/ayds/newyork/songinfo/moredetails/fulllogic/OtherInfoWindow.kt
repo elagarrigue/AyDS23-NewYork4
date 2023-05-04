@@ -90,15 +90,15 @@ class OtherInfoWindow : AppCompatActivity() {
         setOpenUrlButtonListener(artistInfo.url)
     }
 
-    private fun getArtistInfo(term: String): ArtistInfo {
-        var artistInfo = database.getArtistInfo(term)
+    private fun getArtistInfo(artistName: String): ArtistInfo {
+        var artistInfo = database.getArtistInfo(artistName)
         when {
             artistInfo != null -> markArtistAsLocal(artistInfo)
             else -> {
-                val apiResponse = getApiResponse(term)
+                val apiResponse = getApiResponse(artistName)
                 artistInfo = ArtistInfo(
                     getArtistUrlFromService(apiResponse),
-                    getArtistInfoFromService(apiResponse, term)
+                    getArtistInfoFromService(apiResponse, artistName)
                 )
             }
         }
