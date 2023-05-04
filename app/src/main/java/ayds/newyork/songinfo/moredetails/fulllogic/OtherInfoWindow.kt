@@ -84,13 +84,13 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun setArtistInfoLogic() {
-        val artistInfo = getArtistByTerm(artistName)
+        val artistInfo = getArtistInfo(artistName)
         setArtistInfoIntoView(artistInfo)
         setNYTimesImageIntoView()
         setOpenUrlButtonListener(artistInfo.url)
     }
 
-    private fun getArtistByTerm(term: String): ArtistInfo {
+    private fun getArtistInfo(term: String): ArtistInfo {
         var artistInfo = database.getArtistInfo(term)
         when {
             artistInfo != null -> markArtistAsLocal(artistInfo)
