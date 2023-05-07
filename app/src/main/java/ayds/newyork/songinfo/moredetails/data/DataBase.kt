@@ -1,10 +1,11 @@
-package ayds.newyork.songinfo.moredetails.fulllogic
+package ayds.newyork.songinfo.moredetails.data
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import ayds.newyork.songinfo.moredetails.domain.ArtistInfo
 
 class DataBase(context: Context): SQLiteOpenHelper(context, SQLITE_OPEN_HELPER_NAME, null, 1) {
     companion object {

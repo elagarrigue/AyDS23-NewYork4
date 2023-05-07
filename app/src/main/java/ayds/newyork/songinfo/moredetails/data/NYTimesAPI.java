@@ -1,4 +1,4 @@
-package ayds.newyork.songinfo.moredetails.fulllogic;
+package ayds.newyork.songinfo.moredetails.data;
 
 
 import retrofit2.Call;

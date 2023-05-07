@@ -1,4 +1,4 @@
-package ayds.newyork.songinfo.moredetails.fulllogic
+package ayds.newyork.songinfo.moredetails.domain
 
 data class ArtistInfo(
     var url: String? = null,

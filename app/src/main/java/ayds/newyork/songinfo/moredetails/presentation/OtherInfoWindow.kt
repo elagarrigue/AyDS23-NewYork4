@@ -1,4 +1,4 @@
-package ayds.newyork.songinfo.moredetails.fulllogic
+package ayds.newyork.songinfo.moredetails.presentation
 
 import android.content.Intent
 import android.net.Uri
@@ -9,6 +9,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.newyork.songinfo.R
+import ayds.newyork.songinfo.moredetails.data.DataBase
+import ayds.newyork.songinfo.moredetails.data.NYTimesAPI
+import ayds.newyork.songinfo.moredetails.domain.ArtistInfo
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
@@ -112,7 +115,7 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun setArtistInfoIntoView(artistInfo: ArtistInfo) {
         runOnUiThread {
             if(artistInfo.isLocallyStored){
-                artistInfo.info = "${LOCALLY_STORED_PREFIX}${artistInfo.info}"
+                artistInfo.info = "$LOCALLY_STORED_PREFIX${artistInfo.info}"
             }
             artistInfoView.text = Html.fromHtml(artistInfo.info)
         }
