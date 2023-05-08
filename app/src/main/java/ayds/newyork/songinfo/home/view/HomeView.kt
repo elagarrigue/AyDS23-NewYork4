@@ -16,7 +16,8 @@ import ayds.newyork.songinfo.home.model.entities.Song.EmptySong
 import ayds.newyork.songinfo.home.model.entities.Song
 import ayds.newyork.songinfo.home.model.entities.Song.SpotifySong
 import ayds.newyork.songinfo.home.view.HomeUiState.Companion.DEFAULT_IMAGE
-import ayds.newyork.songinfo.moredetails.presentation.OtherInfoWindow
+import ayds.newyork.songinfo.moredetails.presentation.MoreDetailsActivity
+import ayds.newyork.songinfo.moredetails.presentation.MoreDetailsView
 import ayds.newyork.songinfo.utils.UtilsInjector
 import ayds.newyork.songinfo.utils.navigation.NavigationUtils
 import ayds.newyork.songinfo.utils.view.ImageLoader
@@ -32,7 +33,6 @@ interface HomeView {
 }
 
 class HomeViewActivity : AppCompatActivity(), HomeView {
-
     private val onActionSubject = Subject<HomeUiEvent>()
     private lateinit var homeModel: HomeModel
     private val songDescriptionHelper: SongDescriptionHelper = HomeViewInjector.songDescriptionHelper
@@ -50,8 +50,8 @@ class HomeViewActivity : AppCompatActivity(), HomeView {
     override var uiState: HomeUiState = HomeUiState()
 
     override fun navigateToOtherDetails(artistName: String) {
-        val intent = Intent(this, OtherInfoWindow::class.java)
-        intent.putExtra(OtherInfoWindow.ARTIST_NAME_EXTRA, artistName)
+        val intent = Intent(this, MoreDetailsView::class.java)
+        intent.putExtra(MoreDetailsActivity.ARTIST_NAME_EXTRA, artistName)
         startActivity(intent)
     }
 
