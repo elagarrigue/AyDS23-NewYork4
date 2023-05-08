@@ -1,4 +1,4 @@
-package ayds.newyork.songinfo.moredetails.domain
+package ayds.newyork.songinfo.moredetails.domain.entities
 
 data class ArtistInfo(
     var url: String? = null,
