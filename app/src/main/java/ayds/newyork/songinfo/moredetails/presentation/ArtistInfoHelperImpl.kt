@@ -12,7 +12,7 @@ interface ArtistInfoHelper {
     ): String
 }
 
-class ArtistInfoHelperImpl() : ArtistInfoHelper {
+class ArtistInfoHelperImpl : ArtistInfoHelper {
     companion object {
         const val DEFAULT_ARTIST_INFO_RESULT_TEXT = "No Results"
         const val BEGIN_HTML = "<html><div width=400><font face=\"arial\">"

@@ -1,8 +1,8 @@
 package ayds.newyork.songinfo.moredetails.data.external.nytimes
 
 import ayds.newyork.songinfo.moredetails.data.external.nytimes.artists.*
-import ayds.newyork.songinfo.moredetails.domain.repository.NYTimesArtistInfoService
+import ayds.newyork.songinfo.moredetails.domain.repository.ArtistInfoRepository
 
 object NYTimesInjector {
-    val nyTimesArtistInfoService: NYTimesArtistInfoService = NYTimesArtistInfoInjector.nyTimesArtistInfoService
+    val nyTimesArtistInfoService: ArtistInfoRepository = NYTimesArtistInfoInjector.nyTimesArtistInfoService
 }

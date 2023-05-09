@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.newyork.songinfo.R
 import ayds.newyork.songinfo.moredetails.data.MoreDetailsModel
+import ayds.newyork.songinfo.moredetails.data.MoreDetailsModelInjector
 import ayds.newyork.songinfo.moredetails.domain.entities.ArtistInfo
 import ayds.newyork.songinfo.utils.UtilsInjector
 import ayds.newyork.songinfo.utils.navigation.NavigationUtils
@@ -28,7 +29,7 @@ class MoreDetailsActivity: AppCompatActivity(), MoreDetailsView {
     private lateinit var logoImageView: ImageView
     private lateinit var openUrlButtonView: View
     private lateinit var moreDetailsModel: MoreDetailsModel
-    private lateinit var artistInfoHelper: ArtistInfoHelper// = MoreDetailsViewInjector.artistInfoHelper
+
     private val onActionSubject = Subject<MoreDetailsUiEvent>()
     private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
     private val imageLoader: ImageLoader = UtilsInjector.imageLoader
@@ -48,11 +49,17 @@ class MoreDetailsActivity: AppCompatActivity(), MoreDetailsView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
 
+        initModule()
         initProperties()
         initObservers()
         initListeners()
 
         createArtistName()
+    }
+
+    private fun initModule() {
+        MoreDetailsViewInjector.init(this)
+        moreDetailsModel = MoreDetailsModelInjector.getMoreDetailsModel()
     }
 
     private fun initProperties() {
@@ -70,26 +77,31 @@ class MoreDetailsActivity: AppCompatActivity(), MoreDetailsView {
     private fun initListeners() {
         runOnUiThread {
             openUrlButtonView.setOnClickListener {
+                notifyArtistInfoAction()
                 openExternalLink(uiState.artistInfoUrl!!)
             }
         }
     }
 
+    private fun notifyArtistInfoAction(){
+        onActionSubject.notify(MoreDetailsUiEvent.ArtistInfo)
+    }
+
     private fun updateArtistInfo(artistInfo: ArtistInfo) {
         updateUiState(artistInfo)
-        updateArtistInfoText()
+        updateArtistInfoDescription()
         updateLogoImage()
     }
 
     private fun updateUiState(artistInfo: ArtistInfo) {
         uiState = uiState.copy(
-            artistInfoDescription = artistInfoHelper.getArtistInfoText(artistInfo),
+            artistInfoDescription = artistInfo.info,
             artistInfoUrl = artistInfo.url,
             actionsEnabled = true
         )
     }
 
-    private fun updateArtistInfoText() {
+    private fun updateArtistInfoDescription() {
         runOnUiThread {
             artistInfoView.text = Html.fromHtml(uiState.artistInfoDescription)
         }
