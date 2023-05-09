@@ -12,12 +12,12 @@ import ayds.newyork.songinfo.moredetails.domain.repository.ArtistInfoRepository
 
 object MoreDetailsViewInjector {
 
-    private var presenter: MoreDetailsPresenter = MoreDetailsPresenterImpl()
     private lateinit var moreDetailsView: MoreDetailsView
     private lateinit var nyTimesLocalStorage: NYTimesLocalStorage
     private lateinit var artistInfoRepository: ArtistInfoRepository
     private lateinit var cursorToArtistInfoMapper: CursorToArtistInfoMapper
 
+    val presenter: MoreDetailsPresenter = MoreDetailsPresenterImpl()
     val artistInfoHelper: ArtistInfoHelper = ArtistInfoHelperImpl()
 
     fun init(moreDetailsView: MoreDetailsView) {

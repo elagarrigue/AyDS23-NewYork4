@@ -2,7 +2,7 @@ package ayds.newyork.songinfo.moredetails.presentation
 
 data class MoreDetailsUiState(
     val artistInfoDescription: String? = "",
-    val artistInfoUrl: String? = "",
+    val artistInfoUrl: String? = null,
     val logoImageUrl: String = NY_TIMES_LOGO_URL,
     val actionsEnabled: Boolean = false,
 ) {
