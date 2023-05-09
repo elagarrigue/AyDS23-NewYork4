@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import ayds.newyork.songinfo.moredetails.domain.entities.ArtistInfo
 
-class DataBase(context: Context): SQLiteOpenHelper(context, SQLITE_OPEN_HELPER_NAME, null, 1) {
+class NYTimesLocalStorage(context: Context): SQLiteOpenHelper(context, SQLITE_OPEN_HELPER_NAME, null, 1) {
     companion object {
         const val ARTISTS_TABLE_NAME = "artists"
         const val COLUMN_ID = "id"
