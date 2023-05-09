@@ -84,7 +84,7 @@ class MoreDetailsActivity: AppCompatActivity(), MoreDetailsView {
     }
 
     private fun notifyArtistInfoAction(){
-        onActionSubject.notify(MoreDetailsUiEvent.ArtistInfo)
+        onActionSubject.notify(MoreDetailsUiEvent.ViewFullArticle)
     }
 
     private fun updateArtistInfo(artistInfo: ArtistInfo) {
