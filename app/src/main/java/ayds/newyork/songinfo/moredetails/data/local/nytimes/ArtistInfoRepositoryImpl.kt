@@ -1,5 +1,7 @@
-package ayds.newyork.songinfo.moredetails.data
+package ayds.newyork.songinfo.moredetails.data.local.nytimes
 
+import ayds.newyork.songinfo.moredetails.data.external.nytimes.NYTimesAPI
+import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.DataBase
 import ayds.newyork.songinfo.moredetails.domain.entities.ArtistInfo
 import ayds.newyork.songinfo.moredetails.domain.repository.ArtistInfoRepository
 import ayds.newyork.songinfo.moredetails.presentation.ArtistInfoHelper
@@ -15,7 +17,8 @@ internal class ArtistInfoRepositoryImpl(
     private val artistLocalStorage: DataBase,
 ): ArtistInfoRepository {
     private lateinit var artistInfoHelper: ArtistInfoHelper// = MoreDetailsViewInjector.artistInfoHelper
-    private var nyTimesService: NYTimesAPI = retrofit().create(NYTimesAPI::class.java)
+    private var nyTimesService: NYTimesAPI = retrofit().create(
+        NYTimesAPI::class.java)
 
     companion object {
         const val JSON_OBJECT_RESPONSE = "response"
