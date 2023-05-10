@@ -2,7 +2,7 @@ package ayds.newyork.songinfo.moredetails.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import ayds.newyork.songinfo.moredetails.data.external.nytimes.artists.NYTimesArtistInjector
-import ayds.newyork.songinfo.moredetails.data.local.nytimes.ArtistRepositoryImpl
+import ayds.newyork.songinfo.moredetails.data.ArtistRepositoryImpl
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.NYTimesLocalStorage
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.CursorToArtistMapper
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.CursorToArtistMapperImpl

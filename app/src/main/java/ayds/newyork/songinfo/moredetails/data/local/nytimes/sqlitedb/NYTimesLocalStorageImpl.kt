@@ -5,7 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.NYTimesLocalStorage
-import ayds.newyork.songinfo.moredetails.domain.entities.Artist
+import ayds.newyork.songinfo.moredetails.domain.entities.Artist.NYTimesArtist
 
 internal class NYTimesLocalStorageImpl(
     context: Context,
@@ -39,7 +39,7 @@ internal class NYTimesLocalStorageImpl(
         )
     }
 
-    override fun getArtistByName(artistName: String): Artist? {
+    override fun getArtistByName(artistName: String): NYTimesArtist? {
         val artistCursor = readableDatabase.query(
             ARTISTS_TABLE_NAME,
             projection,

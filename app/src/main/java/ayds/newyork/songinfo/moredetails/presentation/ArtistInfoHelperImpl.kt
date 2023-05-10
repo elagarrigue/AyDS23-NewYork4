@@ -1,11 +1,13 @@
 package ayds.newyork.songinfo.moredetails.presentation
 
 import ayds.newyork.songinfo.moredetails.domain.entities.Artist
+import ayds.newyork.songinfo.moredetails.domain.entities.Artist.EmptyArtist
+import ayds.newyork.songinfo.moredetails.domain.entities.Artist.NYTimesArtist
 import com.google.gson.JsonElement
 import java.util.Locale
 
 interface ArtistHelper {
-    fun getArtistText(artist: Artist): String?
+    fun getArtistText(artist: Artist = EmptyArtist): String?
     fun formatAbstractArtist(
         documentAbstractArtist: JsonElement?,
         artistName: String
@@ -25,10 +27,14 @@ class ArtistHelperImpl : ArtistHelper {
     }
 
     override fun getArtistText(artist: Artist): String? {
-        if(artist.isLocallyStored){
-            return "[*]${artist.info}"
+        return when (artist) {
+            is NYTimesArtist -> if(artist.isLocallyStored){
+                "[*]${artist.info}"
+            } else {
+                artist.info
+            }
+            else -> "Artist not found"
         }
-        return artist.info
     }
 
     override fun formatAbstractArtist(

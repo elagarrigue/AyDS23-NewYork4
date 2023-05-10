@@ -1,8 +1,6 @@
 package ayds.newyork.songinfo.moredetails.data.external.nytimes.artists
 
 import ayds.newyork.songinfo.moredetails.data.external.nytimes.NYTimesArtistService
-import ayds.newyork.songinfo.moredetails.data.local.nytimes.ArtistRepositoryImpl
-import ayds.newyork.songinfo.moredetails.domain.repository.ArtistRepository
 import ayds.newyork.songinfo.moredetails.presentation.ArtistHelperImpl
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory

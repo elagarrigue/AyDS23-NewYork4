@@ -1,7 +1,10 @@
-package ayds.newyork.songinfo.moredetails.data.local.nytimes
+package ayds.newyork.songinfo.moredetails.data
 
 import ayds.newyork.songinfo.moredetails.data.external.nytimes.NYTimesArtistService
+import ayds.newyork.songinfo.moredetails.data.local.nytimes.NYTimesLocalStorage
 import ayds.newyork.songinfo.moredetails.domain.entities.Artist
+import ayds.newyork.songinfo.moredetails.domain.entities.Artist.NYTimesArtist
+import ayds.newyork.songinfo.moredetails.domain.entities.Artist.EmptyArtist
 import ayds.newyork.songinfo.moredetails.domain.repository.ArtistRepository
 
 internal class ArtistRepositoryImpl(
@@ -15,13 +18,15 @@ internal class ArtistRepositoryImpl(
             artist != null -> markArtistAsLocal(artist)
             else -> {
                 artist = nyTimesArtistService.getArtist(artistName)
-                nyTimesLocalStorage.insertArtist(artistName, artist.info!!)
+                artist?.let {
+                    nyTimesLocalStorage.insertArtist(artistName, artist.info!!)
+                }
             }
         }
-        return artist
+        return artist ?: EmptyArtist
     }
 
-    private fun markArtistAsLocal(artist: Artist) {
+    private fun markArtistAsLocal(artist: NYTimesArtist) {
         artist.isLocallyStored = true
     }
 }

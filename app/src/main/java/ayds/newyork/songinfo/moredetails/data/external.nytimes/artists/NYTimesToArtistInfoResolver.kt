@@ -1,14 +1,13 @@
 package ayds.newyork.songinfo.moredetails.data.external.nytimes.artists
 
-import ayds.newyork.songinfo.moredetails.domain.entities.Artist
+import ayds.newyork.songinfo.moredetails.domain.entities.Artist.NYTimesArtist
 import ayds.newyork.songinfo.moredetails.presentation.ArtistHelper
-import ayds.newyork.songinfo.moredetails.presentation.MoreDetailsViewInjector
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 
 interface NYTimesToArtistResolver {
-    fun getArtistFromExternalData(serviceData: String?, artistName: String): Artist
+    fun getArtistFromExternalData(serviceData: String?, artistName: String): NYTimesArtist?
 }
 
 internal class JsonToArtistResolver(
@@ -21,14 +20,17 @@ internal class JsonToArtistResolver(
         const val JSON_OBJECT_ABSTRACT = "abstract"
     }
 
-    override fun getArtistFromExternalData(serviceData: String?, artistName: String): Artist {
-        val responseInJson = apiResponseToJsonObject(serviceData)
-        val documentAbstractArtist = getDocumentAbstract(responseInJson)
-        return Artist(
-            getArtistUrl(responseInJson),
-            artistHelper.formatAbstractArtist(documentAbstractArtist, artistName)
-        )
-    }
+    override fun getArtistFromExternalData(serviceData: String?, artistName: String): NYTimesArtist? =
+        try {
+            val responseInJson = apiResponseToJsonObject(serviceData)
+            val documentAbstractArtist = getDocumentAbstract(responseInJson)
+            NYTimesArtist(
+                getArtistUrl(responseInJson),
+                artistHelper.formatAbstractArtist(documentAbstractArtist, artistName)
+            )
+        } catch (e: Exception){
+            null
+        }
 
     private fun apiResponseToJsonObject(serviceData: String?): JsonObject {
         val jsonObject = Gson().fromJson(serviceData, JsonObject::class.java)

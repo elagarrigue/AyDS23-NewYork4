@@ -8,6 +8,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.newyork.songinfo.R
 import ayds.newyork.songinfo.moredetails.domain.entities.Artist
+import ayds.newyork.songinfo.moredetails.domain.entities.Artist.NYTimesArtist
+import ayds.newyork.songinfo.moredetails.domain.entities.Artist.EmptyArtist
 import ayds.newyork.songinfo.utils.UtilsInjector
 import ayds.newyork.songinfo.utils.view.ImageLoader
 
@@ -27,6 +29,7 @@ class MoreDetailsActivity: AppCompatActivity(), MoreDetailsView {
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
 
     private val imageLoader: ImageLoader = UtilsInjector.imageLoader
+    private val artistHelper: ArtistHelper = ArtistHelperImpl()
 
     override var uiState: MoreDetailsUiState = MoreDetailsUiState()
 
@@ -71,10 +74,25 @@ class MoreDetailsActivity: AppCompatActivity(), MoreDetailsView {
     }
 
     override fun updateUiState(artist: Artist) {
+        when (artist) {
+            is NYTimesArtist -> updateArtistUiState(artist)
+            EmptyArtist -> updateNoResultsUiState()
+        }
+    }
+
+    private fun updateArtistUiState(artist: NYTimesArtist) {
         uiState = uiState.copy(
             artistDescription = artist.info,
             artistUrl = artist.url,
             actionsEnabled = artist.url != null
+        )
+    }
+
+    private fun updateNoResultsUiState() {
+        uiState = uiState.copy(
+            artistDescription = artistHelper.getArtistText(),
+            artistUrl = null,
+            actionsEnabled = false
         )
     }
 
