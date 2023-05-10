@@ -1,18 +1,18 @@
 package ayds.newyork.songinfo.moredetails.presentation
 
-import ayds.newyork.songinfo.moredetails.domain.entities.ArtistInfo
+import ayds.newyork.songinfo.moredetails.domain.entities.Artist
 import com.google.gson.JsonElement
 import java.util.Locale
 
-interface ArtistInfoHelper {
-    fun getArtistInfoText(artistInfo: ArtistInfo): String?
-    fun formatAbstractArtistInfo(
-        documentAbstractArtistInfo: JsonElement?,
+interface ArtistHelper {
+    fun getArtistText(artist: Artist): String?
+    fun formatAbstractArtist(
+        documentAbstractArtist: JsonElement?,
         artistName: String
     ): String
 }
 
-class ArtistInfoHelperImpl : ArtistInfoHelper {
+class ArtistHelperImpl : ArtistHelper {
     companion object {
         const val DEFAULT_ARTIST_INFO_RESULT_TEXT = "No Results"
         const val BEGIN_HTML = "<html><div width=400><font face=\"arial\">"
@@ -24,26 +24,26 @@ class ArtistInfoHelperImpl : ArtistInfoHelper {
         const val HTML_CLOSE_BOLD = "</b>"
     }
 
-    override fun getArtistInfoText(artistInfo: ArtistInfo): String? {
-        if(artistInfo.isLocallyStored){
-            return "[*]${artistInfo.info}"
+    override fun getArtistText(artist: Artist): String? {
+        if(artist.isLocallyStored){
+            return "[*]${artist.info}"
         }
-        return artistInfo.info
+        return artist.info
     }
 
-    override fun formatAbstractArtistInfo(
-        documentAbstractArtistInfo: JsonElement?,
+    override fun formatAbstractArtist(
+        documentAbstractArtist: JsonElement?,
         artistName: String
     ): String {
-        var formattedArtistInfo = DEFAULT_ARTIST_INFO_RESULT_TEXT
-        if (documentAbstractArtistInfo != null) {
-            formattedArtistInfo = documentAbstractArtistInfo.asString.replace(
+        var formattedArtist = DEFAULT_ARTIST_INFO_RESULT_TEXT
+        if (documentAbstractArtist != null) {
+            formattedArtist = documentAbstractArtist.asString.replace(
                 ESCAPED_NEW_LINE_TEXT,
                 ESCAPED_NEW_LINE
             )
-            formattedArtistInfo = textToHtml(formattedArtistInfo, artistName)
+            formattedArtist = textToHtml(formattedArtist, artistName)
         }
-        return formattedArtistInfo
+        return formattedArtist
     }
 
     private fun textToHtml(text: String, term: String?): String {

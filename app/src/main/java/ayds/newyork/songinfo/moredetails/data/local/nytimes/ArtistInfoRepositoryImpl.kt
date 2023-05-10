@@ -1,27 +1,27 @@
 package ayds.newyork.songinfo.moredetails.data.local.nytimes
 
-import ayds.newyork.songinfo.moredetails.data.external.nytimes.NYTimesArtistInfoService
-import ayds.newyork.songinfo.moredetails.domain.entities.ArtistInfo
-import ayds.newyork.songinfo.moredetails.domain.repository.ArtistInfoRepository
+import ayds.newyork.songinfo.moredetails.data.external.nytimes.NYTimesArtistService
+import ayds.newyork.songinfo.moredetails.domain.entities.Artist
+import ayds.newyork.songinfo.moredetails.domain.repository.ArtistRepository
 
-internal class ArtistInfoRepositoryImpl(
+internal class ArtistRepositoryImpl(
     private val nyTimesLocalStorage: NYTimesLocalStorage,
-    private val nyTimesArtistInfoService: NYTimesArtistInfoService
-): ArtistInfoRepository {
+    private val nyTimesArtistService: NYTimesArtistService
+): ArtistRepository {
 
-    override fun getArtistInfo(artistName: String): ArtistInfo {
-        var artistInfo = nyTimesLocalStorage.getArtistInfoByName(artistName)
+    override fun getArtist(artistName: String): Artist {
+        var artist = nyTimesLocalStorage.getArtistByName(artistName)
         when {
-            artistInfo != null -> markArtistAsLocal(artistInfo)
+            artist != null -> markArtistAsLocal(artist)
             else -> {
-                artistInfo = nyTimesArtistInfoService.getArtistInfo(artistName)
-
+                artist = nyTimesArtistService.getArtist(artistName)
+                nyTimesLocalStorage.insertArtist(artistName, artist.info!!)
             }
         }
-        return artistInfo
+        return artist
     }
 
-    private fun markArtistAsLocal(artistInfo: ArtistInfo) {
-        artistInfo.isLocallyStored = true
+    private fun markArtistAsLocal(artist: Artist) {
+        artist.isLocallyStored = true
     }
 }

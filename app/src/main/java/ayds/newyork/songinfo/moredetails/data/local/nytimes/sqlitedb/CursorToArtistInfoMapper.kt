@@ -1,20 +1,20 @@
 package ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb
 
 import android.database.Cursor
-import ayds.newyork.songinfo.moredetails.domain.entities.ArtistInfo
+import ayds.newyork.songinfo.moredetails.domain.entities.Artist
 import java.sql.SQLException
 
-interface CursorToArtistInfoMapper {
-    fun map(cursor: Cursor): ArtistInfo?
+interface CursorToArtistMapper {
+    fun map(cursor: Cursor): Artist?
 }
 
-internal class CursorToArtistInfoMapperImpl : CursorToArtistInfoMapper {
+internal class CursorToArtistMapperImpl : CursorToArtistMapper {
 
-    override fun map(cursor: Cursor): ArtistInfo? =
+    override fun map(cursor: Cursor): Artist? =
         try {
             with(cursor) {
                 if (moveToNext()) {
-                    ArtistInfo(
+                    Artist(
                         info = getString(getColumnIndexOrThrow(COLUMN_INFO)),
                         isLocallyStored = true,
                     )

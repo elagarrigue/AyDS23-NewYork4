@@ -7,21 +7,21 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.newyork.songinfo.R
-import ayds.newyork.songinfo.moredetails.domain.entities.ArtistInfo
+import ayds.newyork.songinfo.moredetails.domain.entities.Artist
 import ayds.newyork.songinfo.utils.UtilsInjector
 import ayds.newyork.songinfo.utils.view.ImageLoader
 
 interface MoreDetailsView {
     val uiState: MoreDetailsUiState
 
-    fun updateUiState(artistInfo: ArtistInfo)
-    fun updateArtistInfoDescription()
+    fun updateUiState(artist: Artist)
+    fun updateArtistDescription()
     fun updateLogoImage()
     fun updateFullArticleState()
 }
 
 class MoreDetailsActivity: AppCompatActivity(), MoreDetailsView {
-    private lateinit var artistInfoView: TextView
+    private lateinit var artistView: TextView
     private lateinit var logoImageView: ImageView
     private lateinit var fullArticleButtonView: View
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
@@ -42,7 +42,7 @@ class MoreDetailsActivity: AppCompatActivity(), MoreDetailsView {
         initProperties()
         initListeners()
 
-        updateArtistInfo()
+        updateArtist()
     }
 
     private fun initModule() {
@@ -51,7 +51,7 @@ class MoreDetailsActivity: AppCompatActivity(), MoreDetailsView {
     }
 
     private fun initProperties() {
-        artistInfoView = findViewById(R.id.textPane2)
+        artistView = findViewById(R.id.textPane2)
         logoImageView = findViewById(R.id.imageView)
         fullArticleButtonView = findViewById(R.id.openUrlButton)
     }
@@ -59,26 +59,28 @@ class MoreDetailsActivity: AppCompatActivity(), MoreDetailsView {
     private fun initListeners() {
         runOnUiThread {
             fullArticleButtonView.setOnClickListener {
-                moreDetailsPresenter.onButtonClicked(uiState.artistInfoUrl!!)
+                moreDetailsPresenter.onButtonClicked(uiState.artistUrl!!)
             }
         }
     }
 
-    private fun updateArtistInfo() {
-        moreDetailsPresenter.updateArtistInfo(intent.getStringExtra(ARTIST_NAME_EXTRA)!!)
+    private fun updateArtist() {
+        Thread {
+            moreDetailsPresenter.updateArtist(intent.getStringExtra(ARTIST_NAME_EXTRA)!!)
+        }.start()
     }
 
-    override fun updateUiState(artistInfo: ArtistInfo) {
+    override fun updateUiState(artist: Artist) {
         uiState = uiState.copy(
-            artistInfoDescription = artistInfo.info,
-            artistInfoUrl = artistInfo.url,
-            actionsEnabled = artistInfo.url != null
+            artistDescription = artist.info,
+            artistUrl = artist.url,
+            actionsEnabled = artist.url != null
         )
     }
 
-    override fun updateArtistInfoDescription() {
+    override fun updateArtistDescription() {
         runOnUiThread {
-            artistInfoView.text = Html.fromHtml(uiState.artistInfoDescription)
+            artistView.text = Html.fromHtml(uiState.artistDescription)
         }
     }
 

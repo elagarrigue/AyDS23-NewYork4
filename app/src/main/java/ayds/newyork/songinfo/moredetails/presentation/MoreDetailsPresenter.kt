@@ -1,9 +1,7 @@
 package ayds.newyork.songinfo.moredetails.presentation
 
-import android.app.Activity
-import android.text.Html
-import ayds.newyork.songinfo.moredetails.domain.entities.ArtistInfo
-import ayds.newyork.songinfo.moredetails.domain.repository.ArtistInfoRepository
+import androidx.appcompat.app.AppCompatActivity
+import ayds.newyork.songinfo.moredetails.domain.repository.ArtistRepository
 import ayds.newyork.songinfo.utils.UtilsInjector
 import ayds.newyork.songinfo.utils.navigation.NavigationUtils
 
@@ -11,10 +9,10 @@ interface MoreDetailsPresenter {
     fun onViewAttached(view: MoreDetailsView)
     fun onViewDetached()
     fun onButtonClicked(url: String)
-    fun updateArtistInfo(artistName: String)
+    fun updateArtist(artistName: String)
 }
 
-class MoreDetailsPresenterImpl(private val repository: ArtistInfoRepository): MoreDetailsPresenter {
+class MoreDetailsPresenterImpl(private val repository: ArtistRepository): MoreDetailsPresenter {
     private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
     private var view: MoreDetailsView? = null
 
@@ -27,12 +25,12 @@ class MoreDetailsPresenterImpl(private val repository: ArtistInfoRepository): Mo
     }
 
     override fun onButtonClicked(url: String) {
-        navigationUtils.openExternalUrl(view as Activity, url)
+        navigationUtils.openExternalUrl(view as AppCompatActivity, url)
     }
 
-    override fun updateArtistInfo(artistName: String) {
-        view?.updateUiState(repository.getArtistInfo(artistName))
-        view?.updateArtistInfoDescription()
+    override fun updateArtist(artistName: String) {
+        view?.updateUiState(repository.getArtist(artistName))
+        view?.updateArtistDescription()
         view?.updateLogoImage()
         view?.updateFullArticleState()
     }

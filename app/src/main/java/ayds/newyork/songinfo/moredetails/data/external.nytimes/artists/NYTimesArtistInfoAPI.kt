@@ -4,8 +4,10 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-internal interface NYTimesArtistInfoAPI {
+internal interface NYTimesArtistAPI {
 
     @GET("articlesearch.json?api-key=fFnIAXXz8s8aJ4dB8CVOJl0Um2P96Zyx")
-    fun getArtistInfo(@Query("q") query: String): Call<String>
+    fun getArtist(
+        @Query("q") artist: String
+    ): Call<String>
 }

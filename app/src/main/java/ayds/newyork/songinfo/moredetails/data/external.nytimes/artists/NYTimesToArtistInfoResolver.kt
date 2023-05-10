@@ -1,19 +1,19 @@
 package ayds.newyork.songinfo.moredetails.data.external.nytimes.artists
 
-import ayds.newyork.songinfo.moredetails.domain.entities.ArtistInfo
-import ayds.newyork.songinfo.moredetails.presentation.ArtistInfoHelper
+import ayds.newyork.songinfo.moredetails.domain.entities.Artist
+import ayds.newyork.songinfo.moredetails.presentation.ArtistHelper
 import ayds.newyork.songinfo.moredetails.presentation.MoreDetailsViewInjector
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 
-interface NYTimesToArtistInfoResolver {
-    fun getArtistInfoFromExternalData(serviceData: String?, artistName: String): ArtistInfo
+interface NYTimesToArtistResolver {
+    fun getArtistFromExternalData(serviceData: String?, artistName: String): Artist
 }
 
-internal class JsonToArtistInfoResolver(
-    private val artistInfoHelper: ArtistInfoHelper
-) : NYTimesToArtistInfoResolver {
+internal class JsonToArtistResolver(
+    private val artistHelper: ArtistHelper
+) : NYTimesToArtistResolver {
     companion object {
         const val JSON_OBJECT_DOCS = "docs"
         const val JSON_OBJECT_WEB_URL = "web_url"
@@ -21,12 +21,12 @@ internal class JsonToArtistInfoResolver(
         const val JSON_OBJECT_ABSTRACT = "abstract"
     }
 
-    override fun getArtistInfoFromExternalData(serviceData: String?, artistName: String): ArtistInfo {
+    override fun getArtistFromExternalData(serviceData: String?, artistName: String): Artist {
         val responseInJson = apiResponseToJsonObject(serviceData)
-        val documentAbstractArtistInfo = getDocumentAbstract(responseInJson)
-        return ArtistInfo(
+        val documentAbstractArtist = getDocumentAbstract(responseInJson)
+        return Artist(
             getArtistUrl(responseInJson),
-            artistInfoHelper.formatAbstractArtistInfo(documentAbstractArtistInfo, artistName)
+            artistHelper.formatAbstractArtist(documentAbstractArtist, artistName)
         )
     }
 

@@ -5,11 +5,11 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.NYTimesLocalStorage
-import ayds.newyork.songinfo.moredetails.domain.entities.ArtistInfo
+import ayds.newyork.songinfo.moredetails.domain.entities.Artist
 
 internal class NYTimesLocalStorageImpl(
     context: Context,
-    private val cursorToArtistInfoMapper: CursorToArtistInfoMapper
+    private val cursorToArtistMapper: CursorToArtistMapper
 ): SQLiteOpenHelper(context, SQLITE_OPEN_HELPER_NAME, null, 1), NYTimesLocalStorage {
     private val projection = arrayOf(
         COLUMN_ID,
@@ -39,7 +39,7 @@ internal class NYTimesLocalStorageImpl(
         )
     }
 
-    override fun getArtistInfoByName(artistName: String): ArtistInfo? {
+    override fun getArtistByName(artistName: String): Artist? {
         val artistCursor = readableDatabase.query(
             ARTISTS_TABLE_NAME,
             projection,
@@ -50,6 +50,6 @@ internal class NYTimesLocalStorageImpl(
             SELECTION_ORDER_BY
         )
 
-        return cursorToArtistInfoMapper.map(artistCursor)
+        return cursorToArtistMapper.map(artistCursor)
     }
 }

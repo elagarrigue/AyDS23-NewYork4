@@ -1,21 +1,21 @@
 package ayds.newyork.songinfo.moredetails.presentation
 
 import androidx.appcompat.app.AppCompatActivity
-import ayds.newyork.songinfo.moredetails.data.external.nytimes.artists.NYTimesArtistInfoInjector
-import ayds.newyork.songinfo.moredetails.data.local.nytimes.ArtistInfoRepositoryImpl
+import ayds.newyork.songinfo.moredetails.data.external.nytimes.artists.NYTimesArtistInjector
+import ayds.newyork.songinfo.moredetails.data.local.nytimes.ArtistRepositoryImpl
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.NYTimesLocalStorage
-import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.CursorToArtistInfoMapper
-import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.CursorToArtistInfoMapperImpl
+import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.CursorToArtistMapper
+import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.CursorToArtistMapperImpl
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.NYTimesLocalStorageImpl
-import ayds.newyork.songinfo.moredetails.domain.repository.ArtistInfoRepository
+import ayds.newyork.songinfo.moredetails.domain.repository.ArtistRepository
 
 object MoreDetailsViewInjector {
-    private var cursorToArtistInfoMapper: CursorToArtistInfoMapper = CursorToArtistInfoMapperImpl()
+    private var cursorToArtistMapper: CursorToArtistMapper = CursorToArtistMapperImpl()
 
     private lateinit var moreDetailsView: MoreDetailsView
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
     private lateinit var nyTimesLocalStorage: NYTimesLocalStorage
-    private lateinit var artistInfoRepository: ArtistInfoRepository
+    private lateinit var artistRepository: ArtistRepository
 
     fun init(moreDetailsView: MoreDetailsView) {
         initMoreDetailsView(moreDetailsView)
@@ -29,15 +29,15 @@ object MoreDetailsViewInjector {
     }
 
     private fun initNYTimesLocalStorage(){
-        nyTimesLocalStorage = NYTimesLocalStorageImpl(moreDetailsView as AppCompatActivity, cursorToArtistInfoMapper)
+        nyTimesLocalStorage = NYTimesLocalStorageImpl(moreDetailsView as AppCompatActivity, cursorToArtistMapper)
     }
 
     private fun initInfoRepository(){
-        artistInfoRepository = ArtistInfoRepositoryImpl(nyTimesLocalStorage, NYTimesArtistInfoInjector.nyTimesArtistInfoService)
+        artistRepository = ArtistRepositoryImpl(nyTimesLocalStorage, NYTimesArtistInjector.nyTimesArtistService)
     }
 
     private fun initPresenter(){
-        moreDetailsPresenter = MoreDetailsPresenterImpl(artistInfoRepository)
+        moreDetailsPresenter = MoreDetailsPresenterImpl(artistRepository)
         moreDetailsPresenter.onViewAttached(moreDetailsView)
     }
 

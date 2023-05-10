@@ -1,7 +1,7 @@
 package ayds.newyork.songinfo.moredetails.domain.repository
 
-import ayds.newyork.songinfo.moredetails.domain.entities.ArtistInfo
+import ayds.newyork.songinfo.moredetails.domain.entities.Artist
 
-interface ArtistInfoRepository {
-    fun getArtistInfo(artistName: String) : ArtistInfo
+interface ArtistRepository {
+    fun getArtist(artistName: String) : Artist
 }
