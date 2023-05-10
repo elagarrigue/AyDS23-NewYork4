@@ -1,7 +1,7 @@
 package ayds.newyork.songinfo.moredetails.data.external.nytimes.artists
 
 import ayds.newyork.songinfo.moredetails.domain.entities.Artist.NYTimesArtist
-import ayds.newyork.songinfo.moredetails.presentation.ArtistHelper
+import ayds.newyork.songinfo.moredetails.presentation.ArtistInfoHelper
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
@@ -11,7 +11,7 @@ interface NYTimesToArtistResolver {
 }
 
 internal class JsonToArtistResolver(
-    private val artistHelper: ArtistHelper
+    private val artistHelper: ArtistInfoHelper
 ) : NYTimesToArtistResolver {
     companion object {
         const val JSON_OBJECT_DOCS = "docs"

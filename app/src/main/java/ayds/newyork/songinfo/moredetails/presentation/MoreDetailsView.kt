@@ -29,7 +29,7 @@ class MoreDetailsActivity: AppCompatActivity(), MoreDetailsView {
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
 
     private val imageLoader: ImageLoader = UtilsInjector.imageLoader
-    private val artistHelper: ArtistHelper = ArtistHelperImpl()
+    private val artistHelper: ArtistInfoHelper = ArtistInfoHelperImpl()
 
     override var uiState: MoreDetailsUiState = MoreDetailsUiState()
 

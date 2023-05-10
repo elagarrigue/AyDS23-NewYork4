@@ -6,7 +6,7 @@ import ayds.newyork.songinfo.moredetails.domain.entities.Artist.NYTimesArtist
 import com.google.gson.JsonElement
 import java.util.Locale
 
-interface ArtistHelper {
+interface ArtistInfoHelper {
     fun getArtistText(artist: Artist = EmptyArtist): String?
     fun formatAbstractArtist(
         documentAbstractArtist: JsonElement?,
@@ -14,7 +14,7 @@ interface ArtistHelper {
     ): String
 }
 
-class ArtistHelperImpl : ArtistHelper {
+class ArtistInfoHelperImpl : ArtistInfoHelper {
     companion object {
         const val DEFAULT_ARTIST_INFO_RESULT_TEXT = "No Results"
         const val BEGIN_HTML = "<html><div width=400><font face=\"arial\">"
