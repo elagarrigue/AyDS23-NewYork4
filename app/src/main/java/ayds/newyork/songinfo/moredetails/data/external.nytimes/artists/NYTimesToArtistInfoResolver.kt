@@ -1,6 +1,7 @@
 package ayds.newyork.songinfo.moredetails.data.external.nytimes.artists
 
 import ayds.newyork.songinfo.moredetails.domain.entities.ArtistInfo
+import ayds.newyork.songinfo.moredetails.presentation.ArtistInfoHelper
 import ayds.newyork.songinfo.moredetails.presentation.MoreDetailsViewInjector
 import com.google.gson.Gson
 import com.google.gson.JsonElement
@@ -10,7 +11,9 @@ interface NYTimesToArtistInfoResolver {
     fun getArtistInfoFromExternalData(serviceData: String?, artistName: String): ArtistInfo
 }
 
-internal class JsonToArtistInfoResolver : NYTimesToArtistInfoResolver {
+internal class JsonToArtistInfoResolver(
+    private val artistInfoHelper: ArtistInfoHelper
+) : NYTimesToArtistInfoResolver {
     companion object {
         const val JSON_OBJECT_DOCS = "docs"
         const val JSON_OBJECT_WEB_URL = "web_url"
@@ -23,7 +26,7 @@ internal class JsonToArtistInfoResolver : NYTimesToArtistInfoResolver {
         val documentAbstractArtistInfo = getDocumentAbstract(responseInJson)
         return ArtistInfo(
             getArtistUrl(responseInJson),
-            MoreDetailsViewInjector.artistInfoHelper.formatAbstractArtistInfo(documentAbstractArtistInfo, artistName)
+            artistInfoHelper.formatAbstractArtistInfo(documentAbstractArtistInfo, artistName)
         )
     }
 

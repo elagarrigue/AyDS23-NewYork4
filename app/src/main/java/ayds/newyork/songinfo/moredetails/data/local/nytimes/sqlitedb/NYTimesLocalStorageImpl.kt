@@ -7,10 +7,10 @@ import android.database.sqlite.SQLiteOpenHelper
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.NYTimesLocalStorage
 import ayds.newyork.songinfo.moredetails.domain.entities.ArtistInfo
 
-private const val DATABASE_VERSION = 1
-private const val DATABASE_NAME = "artists.db"
-
-internal class NYTimesLocalStorageImpl(context: Context, private val cursorToArtistInfoMapper: CursorToArtistInfoMapper): SQLiteOpenHelper(context, SQLITE_OPEN_HELPER_NAME, null, 1), NYTimesLocalStorage {
+internal class NYTimesLocalStorageImpl(
+    context: Context,
+    private val cursorToArtistInfoMapper: CursorToArtistInfoMapper
+): SQLiteOpenHelper(context, SQLITE_OPEN_HELPER_NAME, null, 1), NYTimesLocalStorage {
     private val projection = arrayOf(
         COLUMN_ID,
         COLUMN_ARTIST,
@@ -32,7 +32,11 @@ internal class NYTimesLocalStorageImpl(context: Context, private val cursorToArt
     }
 
     override fun insertArtist(artistName: String, artistDescription: String) {
-        writableDatabase.insert( ARTISTS_TABLE_NAME, null, createContentValues(artistName, artistDescription) )
+        writableDatabase.insert(
+            ARTISTS_TABLE_NAME,
+            null,
+            createContentValues(artistName, artistDescription)
+        )
     }
 
     override fun getArtistInfoByName(artistName: String): ArtistInfo? {

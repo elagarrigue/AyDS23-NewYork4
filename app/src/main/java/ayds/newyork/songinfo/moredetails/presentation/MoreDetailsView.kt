@@ -7,16 +7,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.newyork.songinfo.R
-import ayds.newyork.songinfo.moredetails.data.MoreDetailsModel
-import ayds.newyork.songinfo.moredetails.data.MoreDetailsModelInjector
 import ayds.newyork.songinfo.moredetails.domain.entities.ArtistInfo
 import ayds.newyork.songinfo.utils.UtilsInjector
 import ayds.newyork.songinfo.utils.view.ImageLoader
-import ayds.observer.Observable
-import ayds.observer.Subject
 
 interface MoreDetailsView {
-    val uiEventObservable: Observable<MoreDetailsUiEvent>
     val uiState: MoreDetailsUiState
 
     fun updateUiState(artistInfo: ArtistInfo)
@@ -29,12 +24,10 @@ class MoreDetailsActivity: AppCompatActivity(), MoreDetailsView {
     private lateinit var artistInfoView: TextView
     private lateinit var logoImageView: ImageView
     private lateinit var fullArticleButtonView: View
-    private lateinit var moreDetailsModel: MoreDetailsModel
+    private lateinit var moreDetailsPresenter: MoreDetailsPresenter
 
-    private val onActionSubject = Subject<MoreDetailsUiEvent>()
     private val imageLoader: ImageLoader = UtilsInjector.imageLoader
 
-    override val uiEventObservable: Observable<MoreDetailsUiEvent> = onActionSubject
     override var uiState: MoreDetailsUiState = MoreDetailsUiState()
 
     companion object {
@@ -47,15 +40,14 @@ class MoreDetailsActivity: AppCompatActivity(), MoreDetailsView {
 
         initModule()
         initProperties()
-        initObservers()
         initListeners()
 
-        loadArtistInfo()
+        updateArtistInfo()
     }
 
     private fun initModule() {
         MoreDetailsViewInjector.init(this)
-        moreDetailsModel = MoreDetailsModelInjector.getMoreDetailsModel()
+        moreDetailsPresenter = MoreDetailsViewInjector.getMoreDetailsPresenter()
     }
 
     private fun initProperties() {
@@ -64,22 +56,16 @@ class MoreDetailsActivity: AppCompatActivity(), MoreDetailsView {
         fullArticleButtonView = findViewById(R.id.openUrlButton)
     }
 
-    private fun initObservers() {
-        moreDetailsModel.artistInfoObservable.subscribe {
-            value -> MoreDetailsViewInjector.presenter.updateArtistInfo(value)
-        }
-    }
-
     private fun initListeners() {
         runOnUiThread {
             fullArticleButtonView.setOnClickListener {
-                MoreDetailsViewInjector.presenter.onButtonClicked(uiState.artistInfoUrl!!)
+                moreDetailsPresenter.onButtonClicked(uiState.artistInfoUrl!!)
             }
         }
     }
 
-    private fun loadArtistInfo() {
-        moreDetailsModel.searchArtistInfo(intent.getStringExtra(ARTIST_NAME_EXTRA)!!)
+    private fun updateArtistInfo() {
+        moreDetailsPresenter.updateArtistInfo(intent.getStringExtra(ARTIST_NAME_EXTRA)!!)
     }
 
     override fun updateUiState(artistInfo: ArtistInfo) {
