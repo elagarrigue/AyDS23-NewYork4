@@ -47,10 +47,8 @@ internal class JsonToArtistResolver(
     }
 
     private fun getArtistUrl(responseInJson: JsonObject?):String? {
-        return if (responseInJson != null) {
-            getDocumentUrl(responseInJson).asString
-        } else {
-            null
+        return responseInJson?.let {
+            return getDocumentUrl(it).asString
         }
     }
 

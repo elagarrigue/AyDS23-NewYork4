@@ -11,16 +11,10 @@ import ayds.newyork.songinfo.moredetails.domain.entities.Artist
 import ayds.newyork.songinfo.moredetails.domain.entities.Artist.NYTimesArtist
 import ayds.newyork.songinfo.moredetails.domain.entities.Artist.EmptyArtist
 import ayds.newyork.songinfo.utils.UtilsInjector
+import ayds.newyork.songinfo.utils.navigation.NavigationUtils
 import ayds.newyork.songinfo.utils.view.ImageLoader
 
-interface MoreDetailsView {
-    val uiState: MoreDetailsUiState
-
-    fun updateUiState(artist: Artist)
-    fun updateArtistDescription()
-    fun updateLogoImage()
-    fun updateFullArticleState()
-}
+interface MoreDetailsView
 
 class MoreDetailsActivity: AppCompatActivity(), MoreDetailsView {
     private lateinit var artistView: TextView
@@ -29,9 +23,6 @@ class MoreDetailsActivity: AppCompatActivity(), MoreDetailsView {
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
 
     private val imageLoader: ImageLoader = UtilsInjector.imageLoader
-    private val artistHelper: ArtistInfoHelper = ArtistInfoHelperImpl()
-
-    override var uiState: MoreDetailsUiState = MoreDetailsUiState()
 
     companion object {
         const val ARTIST_NAME_EXTRA = "artistName"
@@ -43,6 +34,7 @@ class MoreDetailsActivity: AppCompatActivity(), MoreDetailsView {
 
         initModule()
         initProperties()
+        initObservers()
         initListeners()
 
         updateArtist()
@@ -59,56 +51,47 @@ class MoreDetailsActivity: AppCompatActivity(), MoreDetailsView {
         fullArticleButtonView = findViewById(R.id.openUrlButton)
     }
 
+    private fun initObservers() {
+        moreDetailsPresenter.uiStateObservable.subscribe {
+            uiState -> updateUi(uiState)
+        }
+    }
+
     private fun initListeners() {
         runOnUiThread {
             fullArticleButtonView.setOnClickListener {
-                moreDetailsPresenter.onButtonClicked(uiState.artistUrl!!)
+                moreDetailsPresenter.onButtonClicked(this)
             }
         }
     }
 
     private fun updateArtist() {
         Thread {
-            moreDetailsPresenter.updateArtist(intent.getStringExtra(ARTIST_NAME_EXTRA)!!)
+            intent.getStringExtra(ARTIST_NAME_EXTRA)?.let {
+                moreDetailsPresenter.updateArtist(it)
+            }
         }.start()
     }
 
-    override fun updateUiState(artist: Artist) {
-        when (artist) {
-            is NYTimesArtist -> updateArtistUiState(artist)
-            EmptyArtist -> updateNoResultsUiState()
-        }
+    private fun updateUi(uiState: MoreDetailsUiState){
+        updateArtistDescription(uiState)
+        updateLogoImage(uiState)
+        updateFullArticleState(uiState)
     }
 
-    private fun updateArtistUiState(artist: NYTimesArtist) {
-        uiState = uiState.copy(
-            artistDescription = artist.info,
-            artistUrl = artist.url,
-            actionsEnabled = artist.url != null
-        )
-    }
-
-    private fun updateNoResultsUiState() {
-        uiState = uiState.copy(
-            artistDescription = artistHelper.getArtistText(),
-            artistUrl = null,
-            actionsEnabled = false
-        )
-    }
-
-    override fun updateArtistDescription() {
+    private fun updateArtistDescription(uiState: MoreDetailsUiState) {
         runOnUiThread {
             artistView.text = Html.fromHtml(uiState.artistDescription)
         }
     }
 
-    override fun updateLogoImage() {
+    private fun updateLogoImage(uiState: MoreDetailsUiState) {
         runOnUiThread {
             imageLoader.loadImageIntoView(uiState.logoImageUrl, logoImageView)
         }
     }
 
-    override fun updateFullArticleState() {
+    private fun updateFullArticleState(uiState: MoreDetailsUiState) {
         enableActions(uiState.actionsEnabled)
     }
 

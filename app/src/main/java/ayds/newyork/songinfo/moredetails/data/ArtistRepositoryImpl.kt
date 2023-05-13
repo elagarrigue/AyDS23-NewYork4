@@ -19,7 +19,7 @@ internal class ArtistRepositoryImpl(
             else -> {
                 artist = nyTimesArtistService.getArtist(artistName)
                 artist?.let {
-                    nyTimesLocalStorage.insertArtist(artistName, artist.info!!)
+                    nyTimesLocalStorage.insertArtist(artistName, artist.info ?: "")
                 }
             }
         }
