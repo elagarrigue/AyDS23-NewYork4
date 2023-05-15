@@ -16,12 +16,18 @@ object MoreDetailsViewInjector {
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
     private lateinit var nyTimesLocalStorage: NYTimesLocalStorage
     private lateinit var artistRepository: ArtistRepository
+    private lateinit var artistHelper : ArtistInfoHelper
 
     fun init(moreDetailsView: MoreDetailsView) {
+        initArtistHelper()
         initMoreDetailsView(moreDetailsView)
         initNYTimesLocalStorage()
         initInfoRepository()
         initPresenter()
+    }
+
+    private fun initArtistHelper(){
+        artistHelper = ArtistInfoHelperImpl()
     }
 
     private fun initMoreDetailsView(moreDetailsView : MoreDetailsView){
@@ -43,5 +49,9 @@ object MoreDetailsViewInjector {
 
     fun getMoreDetailsPresenter(): MoreDetailsPresenter {
         return moreDetailsPresenter
+    }
+
+    fun getArtistHelper(): ArtistInfoHelper {
+        return artistHelper
     }
 }

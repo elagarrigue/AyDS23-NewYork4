@@ -22,7 +22,7 @@ class MoreDetailsPresenterImpl(private val repository: ArtistRepository): MoreDe
     override var uiState: MoreDetailsUiState = MoreDetailsUiState()
     override val uiStateObservable = Subject<MoreDetailsUiState>()
 
-    private val artistHelper: ArtistInfoHelper = ArtistInfoHelperImpl()
+    private val artistHelper: ArtistInfoHelper = MoreDetailsViewInjector.getArtistHelper()
     private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
 
     override fun onButtonClicked(activity: AppCompatActivity){
@@ -46,7 +46,7 @@ class MoreDetailsPresenterImpl(private val repository: ArtistRepository): MoreDe
 
     private fun updateArtistUiState(artist: NYTimesArtist) {
         uiState = uiState.copy(
-            artistDescription = artist.info,
+            artistDescription = artistHelper.getArtistText(artist),
             artistUrl = artist.url,
             actionsEnabled = artist.url != null
         )
