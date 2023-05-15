@@ -11,7 +11,6 @@ import ayds.observer.Observable
 import ayds.observer.Subject
 
 interface MoreDetailsPresenter {
-    val uiState: MoreDetailsUiState
     val uiStateObservable: Observable<MoreDetailsUiState>
 
     fun onButtonClicked(activity: AppCompatActivity)
@@ -19,9 +18,8 @@ interface MoreDetailsPresenter {
 }
 
 class MoreDetailsPresenterImpl(private val repository: ArtistRepository): MoreDetailsPresenter {
-    override var uiState: MoreDetailsUiState = MoreDetailsUiState()
+    private var uiState: MoreDetailsUiState = MoreDetailsUiState()
     override val uiStateObservable = Subject<MoreDetailsUiState>()
-
     private val artistHelper: ArtistInfoHelper = MoreDetailsViewInjector.getArtistHelper()
     private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
 
