@@ -44,7 +44,7 @@ object MoreDetailsViewInjector {
 
     private fun initPresenter(){
         moreDetailsPresenter = MoreDetailsPresenterImpl(artistRepository)
-       // moreDetailsPresenter.onViewAttached(moreDetailsView)
+        moreDetailsPresenter.onViewAttached(moreDetailsView)
     }
 
     fun getMoreDetailsPresenter(): MoreDetailsPresenter {
