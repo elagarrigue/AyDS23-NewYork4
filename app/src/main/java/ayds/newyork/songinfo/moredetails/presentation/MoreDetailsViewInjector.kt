@@ -18,7 +18,7 @@ object MoreDetailsViewInjector {
     private lateinit var artistRepository: ArtistRepository
     private lateinit var artistHelper : ArtistInfoHelper
 
-    fun init(moreDetailsView: MoreDetailsView) {
+    fun init(moreDetailsView: AppCompatActivity) {
         initArtistHelper()
         initMoreDetailsView(moreDetailsView)
         initNYTimesLocalStorage()
@@ -30,7 +30,7 @@ object MoreDetailsViewInjector {
         artistHelper = ArtistInfoHelperImpl()
     }
 
-    private fun initMoreDetailsView(moreDetailsView : MoreDetailsView){
+    private fun initMoreDetailsView(moreDetailsView : AppCompatActivity){
         this.moreDetailsView = moreDetailsView
     }
 
