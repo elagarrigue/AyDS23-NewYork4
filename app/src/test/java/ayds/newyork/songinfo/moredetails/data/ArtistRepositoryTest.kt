@@ -32,7 +32,7 @@ class SongRepositoryTest {
     }
 
     @Test
-    fun `given existing song by name should return song`() {
+    fun `given existing artist by name should return artist`() {
         val artist: NYTimesArtist = mockk()
         every { nyTimesLocalStorage.getArtistByName("artistName") } returns artist
 
