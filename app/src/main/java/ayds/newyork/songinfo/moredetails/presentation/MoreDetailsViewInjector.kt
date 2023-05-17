@@ -12,13 +12,13 @@ import ayds.newyork.songinfo.moredetails.domain.repository.ArtistRepository
 object MoreDetailsViewInjector {
     private var cursorToArtistMapper: CursorToArtistMapper = CursorToArtistMapperImpl()
 
-    private lateinit var moreDetailsView: MoreDetailsView
+    private lateinit var moreDetailsView: AppCompatActivity
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
     private lateinit var nyTimesLocalStorage: NYTimesLocalStorage
     private lateinit var artistRepository: ArtistRepository
     private lateinit var artistHelper : ArtistInfoHelper
 
-    fun init(moreDetailsView: MoreDetailsView) {
+    fun init(moreDetailsView: AppCompatActivity) {
         initArtistHelper()
         initMoreDetailsView(moreDetailsView)
         initNYTimesLocalStorage()
@@ -30,12 +30,12 @@ object MoreDetailsViewInjector {
         artistHelper = ArtistInfoHelperImpl()
     }
 
-    private fun initMoreDetailsView(moreDetailsView : MoreDetailsView){
+    private fun initMoreDetailsView(moreDetailsView : AppCompatActivity){
         this.moreDetailsView = moreDetailsView
     }
 
     private fun initNYTimesLocalStorage(){
-        nyTimesLocalStorage = NYTimesLocalStorageImpl(moreDetailsView as AppCompatActivity, cursorToArtistMapper)
+        nyTimesLocalStorage = NYTimesLocalStorageImpl(moreDetailsView, cursorToArtistMapper)
     }
 
     private fun initInfoRepository(){
@@ -44,7 +44,6 @@ object MoreDetailsViewInjector {
 
     private fun initPresenter(){
         moreDetailsPresenter = MoreDetailsPresenterImpl(artistRepository)
-        moreDetailsPresenter.onViewAttached(moreDetailsView)
     }
 
     fun getMoreDetailsPresenter(): MoreDetailsPresenter {
