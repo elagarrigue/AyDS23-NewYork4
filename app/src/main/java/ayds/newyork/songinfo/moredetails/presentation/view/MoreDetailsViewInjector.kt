@@ -1,4 +1,4 @@
-package ayds.newyork.songinfo.moredetails.presentation
+package ayds.newyork.songinfo.moredetails.presentation.view
 
 import androidx.appcompat.app.AppCompatActivity
 import ayds.newyork.songinfo.moredetails.data.external.nytimes.artists.NYTimesArtistInjector
@@ -8,11 +8,15 @@ import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.CursorToArt
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.CursorToArtistMapperImpl
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.NYTimesLocalStorageImpl
 import ayds.newyork.songinfo.moredetails.domain.repository.ArtistRepository
+import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsPresenter
+import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsPresenterImpl
+import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsUiState
 
 object MoreDetailsViewInjector {
     private var cursorToArtistMapper: CursorToArtistMapper = CursorToArtistMapperImpl()
 
     private lateinit var moreDetailsView: AppCompatActivity
+    private lateinit var moreDetailsUiState: MoreDetailsUiState
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
     private lateinit var nyTimesLocalStorage: NYTimesLocalStorage
     private lateinit var artistRepository: ArtistRepository
@@ -20,6 +24,7 @@ object MoreDetailsViewInjector {
 
     fun init(moreDetailsView: AppCompatActivity) {
         initArtistHelper()
+        initMoreDetailsUiState()
         initMoreDetailsView(moreDetailsView)
         initNYTimesLocalStorage()
         initInfoRepository()
@@ -28,6 +33,10 @@ object MoreDetailsViewInjector {
 
     private fun initArtistHelper(){
         artistHelper = ArtistInfoHelperImpl()
+    }
+
+    private fun initMoreDetailsUiState(){
+        moreDetailsUiState = MoreDetailsUiState()
     }
 
     private fun initMoreDetailsView(moreDetailsView : AppCompatActivity){
@@ -43,14 +52,10 @@ object MoreDetailsViewInjector {
     }
 
     private fun initPresenter(){
-        moreDetailsPresenter = MoreDetailsPresenterImpl(artistRepository)
+        moreDetailsPresenter = MoreDetailsPresenterImpl(artistRepository, moreDetailsUiState, artistHelper)
     }
 
     fun getMoreDetailsPresenter(): MoreDetailsPresenter {
         return moreDetailsPresenter
-    }
-
-    fun getArtistHelper(): ArtistInfoHelper {
-        return artistHelper
     }
 }

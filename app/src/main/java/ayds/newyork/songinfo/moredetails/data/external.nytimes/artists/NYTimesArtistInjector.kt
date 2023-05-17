@@ -1,7 +1,7 @@
 package ayds.newyork.songinfo.moredetails.data.external.nytimes.artists
 
 import ayds.newyork.songinfo.moredetails.data.external.nytimes.NYTimesArtistService
-import ayds.newyork.songinfo.moredetails.presentation.ArtistInfoHelperImpl
+import ayds.newyork.songinfo.moredetails.presentation.view.ArtistInfoHelperImpl
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
@@ -13,7 +13,9 @@ object NYTimesArtistInjector {
         .addConverterFactory(ScalarsConverterFactory.create())
         .build()
     private val nyTimesApi: NYTimesArtistAPI = nyTimesApiRetrofit.create(NYTimesArtistAPI::class.java)
-    private val nyTimesToArtistResolver: NYTimesToArtistResolver = JsonToArtistResolver(ArtistInfoHelperImpl())
+    private val nyTimesToArtistResolver: NYTimesToArtistResolver = JsonToArtistResolver(
+        ArtistInfoHelperImpl()
+    )
 
     val nyTimesArtistService: NYTimesArtistService = NYTimesArtistServiceImpl(
         nyTimesApi,

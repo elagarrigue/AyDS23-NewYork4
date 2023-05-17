@@ -1,4 +1,4 @@
-package ayds.newyork.songinfo.moredetails.presentation
+package ayds.newyork.songinfo.moredetails.presentation.view
 
 import android.os.Bundle
 import android.text.Html
@@ -7,7 +7,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.newyork.songinfo.R
+import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsPresenter
+import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsUiState
 import ayds.newyork.songinfo.utils.UtilsInjector
+import ayds.newyork.songinfo.utils.navigation.NavigationUtils
 import ayds.newyork.songinfo.utils.view.ImageLoader
 
 class MoreDetailsView: AppCompatActivity() {
@@ -16,7 +19,9 @@ class MoreDetailsView: AppCompatActivity() {
     private lateinit var fullArticleButtonView: View
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
 
+    private var artistUrl: String? = null
     private val imageLoader: ImageLoader = UtilsInjector.imageLoader
+    private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
 
     companion object {
         const val ARTIST_NAME_EXTRA = "artistName"
@@ -54,7 +59,9 @@ class MoreDetailsView: AppCompatActivity() {
     private fun initListeners() {
         runOnUiThread {
             fullArticleButtonView.setOnClickListener {
-                moreDetailsPresenter.onButtonClicked(this)
+                artistUrl?.let {
+                    navigationUtils.openExternalUrl(this, it)
+                }
             }
         }
     }
@@ -69,6 +76,7 @@ class MoreDetailsView: AppCompatActivity() {
 
     private fun updateUi(uiState: MoreDetailsUiState){
         updateArtistDescription(uiState)
+        updateArtistUrl(uiState)
         updateLogoImage(uiState)
         updateFullArticleState(uiState)
     }
@@ -76,6 +84,12 @@ class MoreDetailsView: AppCompatActivity() {
     private fun updateArtistDescription(uiState: MoreDetailsUiState) {
         runOnUiThread {
             artistView.text = Html.fromHtml(uiState.artistDescription)
+        }
+    }
+
+    private fun updateArtistUrl(uiState: MoreDetailsUiState) {
+        runOnUiThread {
+            artistUrl = uiState.artistUrl
         }
     }
 
