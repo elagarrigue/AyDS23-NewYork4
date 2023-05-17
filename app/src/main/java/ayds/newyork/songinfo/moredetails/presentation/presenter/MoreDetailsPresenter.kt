@@ -1,38 +1,34 @@
-package ayds.newyork.songinfo.moredetails.presentation
+package ayds.newyork.songinfo.moredetails.presentation.presenter
 
-import androidx.appcompat.app.AppCompatActivity
 import ayds.newyork.songinfo.moredetails.domain.entities.Artist
 import ayds.newyork.songinfo.moredetails.domain.entities.Artist.NYTimesArtist
 import ayds.newyork.songinfo.moredetails.domain.entities.Artist.EmptyArtist
 import ayds.newyork.songinfo.moredetails.domain.repository.ArtistRepository
-import ayds.newyork.songinfo.utils.UtilsInjector
-import ayds.newyork.songinfo.utils.navigation.NavigationUtils
+import ayds.newyork.songinfo.moredetails.presentation.view.ArtistInfoHelper
 import ayds.observer.Observable
 import ayds.observer.Subject
 
 interface MoreDetailsPresenter {
+    var uiState: MoreDetailsUiState
     val uiStateObservable: Observable<MoreDetailsUiState>
 
-    fun onButtonClicked(activity: AppCompatActivity)
     fun updateArtist(artistName: String)
 }
 
-class MoreDetailsPresenterImpl(private val repository: ArtistRepository): MoreDetailsPresenter {
-    private var uiState: MoreDetailsUiState = MoreDetailsUiState()
+class MoreDetailsPresenterImpl(
+    private val repository: ArtistRepository,
+    override var uiState: MoreDetailsUiState,
+    private val artistHelper: ArtistInfoHelper
+): MoreDetailsPresenter {
     override val uiStateObservable = Subject<MoreDetailsUiState>()
-    private val artistHelper: ArtistInfoHelper = MoreDetailsViewInjector.getArtistHelper()
-    private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
-
-    override fun onButtonClicked(activity: AppCompatActivity){
-        uiState.artistUrl?.let {
-            navigationUtils.openExternalUrl(activity, it)
-        }
-    }
 
     override fun updateArtist(artistName: String) {
-        val artist = repository.getArtist(artistName)
-        updateUiState(artist)
+        updateUiState(getArtist(artistName))
         uiStateObservable.notify(uiState)
+    }
+
+    private fun getArtist(artistName: String):Artist {
+        return repository.getArtist(artistName)
     }
 
     private fun updateUiState(artist: Artist) {

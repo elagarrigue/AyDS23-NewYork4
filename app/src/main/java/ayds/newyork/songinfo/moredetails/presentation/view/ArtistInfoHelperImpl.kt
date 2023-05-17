@@ -1,4 +1,4 @@
-package ayds.newyork.songinfo.moredetails.presentation
+package ayds.newyork.songinfo.moredetails.presentation.view
 
 import ayds.newyork.songinfo.moredetails.domain.entities.Artist
 import ayds.newyork.songinfo.moredetails.domain.entities.Artist.EmptyArtist

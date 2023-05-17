@@ -1,7 +1,7 @@
 package ayds.newyork.songinfo.moredetails.data.external.nytimes.artists
 
 import ayds.newyork.songinfo.moredetails.domain.entities.Artist.NYTimesArtist
-import ayds.newyork.songinfo.moredetails.presentation.ArtistInfoHelper
+import ayds.newyork.songinfo.moredetails.presentation.view.ArtistInfoHelper
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
