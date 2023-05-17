@@ -16,7 +16,6 @@ object MoreDetailsViewInjector {
     private var cursorToArtistMapper: CursorToArtistMapper = CursorToArtistMapperImpl()
 
     private lateinit var moreDetailsView: AppCompatActivity
-    private lateinit var moreDetailsUiState: MoreDetailsUiState
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
     private lateinit var nyTimesLocalStorage: NYTimesLocalStorage
     private lateinit var artistRepository: ArtistRepository
@@ -24,7 +23,6 @@ object MoreDetailsViewInjector {
 
     fun init(moreDetailsView: AppCompatActivity) {
         initArtistHelper()
-        initMoreDetailsUiState()
         initMoreDetailsView(moreDetailsView)
         initNYTimesLocalStorage()
         initInfoRepository()
@@ -33,10 +31,6 @@ object MoreDetailsViewInjector {
 
     private fun initArtistHelper(){
         artistHelper = ArtistInfoHelperImpl()
-    }
-
-    private fun initMoreDetailsUiState(){
-        moreDetailsUiState = MoreDetailsUiState()
     }
 
     private fun initMoreDetailsView(moreDetailsView : AppCompatActivity){
@@ -52,7 +46,7 @@ object MoreDetailsViewInjector {
     }
 
     private fun initPresenter(){
-        moreDetailsPresenter = MoreDetailsPresenterImpl(artistRepository, moreDetailsUiState, artistHelper)
+        moreDetailsPresenter = MoreDetailsPresenterImpl(artistRepository, artistHelper)
     }
 
     fun getMoreDetailsPresenter(): MoreDetailsPresenter {
