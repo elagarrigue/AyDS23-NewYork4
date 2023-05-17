@@ -2,6 +2,7 @@ package ayds.newyork.songinfo.moredetails.presentation
 
 import ayds.newyork.songinfo.moredetails.domain.entities.Artist.NYTimesArtist
 import ayds.newyork.songinfo.moredetails.domain.entities.Artist
+import ayds.newyork.songinfo.moredetails.presentation.view.ArtistInfoHelperImpl
 import io.mockk.mockk
 import org.junit.Assert
 import org.junit.Test
