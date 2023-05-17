@@ -1,69 +1,55 @@
 package ayds.newyork.songinfo.moredetails.presentation
 
-import androidx.appcompat.app.AppCompatActivity
-import ayds.newyork.songinfo.utils.UtilsInjector.navigationUtils
-import com.squareup.picasso.Picasso
+import ayds.newyork.songinfo.moredetails.data.ArtistRepositoryImpl
+import ayds.newyork.songinfo.moredetails.data.external.nytimes.NYTimesArtistService
+import ayds.newyork.songinfo.moredetails.data.local.nytimes.NYTimesLocalStorage
+import ayds.newyork.songinfo.moredetails.domain.entities.Artist
+import ayds.newyork.songinfo.moredetails.domain.entities.Artist.NYTimesArtist
+import ayds.newyork.songinfo.moredetails.domain.repository.ArtistRepository
+import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsPresenter
+import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsPresenterImpl
+import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsUiState
+import ayds.newyork.songinfo.moredetails.presentation.view.ArtistInfoHelper
+import ayds.newyork.songinfo.moredetails.presentation.view.ArtistInfoHelperImpl
 import io.mockk.*
-import junit.framework.TestCase.*
 import org.junit.Assert
-import org.junit.Before
 import org.junit.Test
 
 class MoreDetailsPresenterTest {
-    private val activity: AppCompatActivity = mockk()
-    private lateinit var presenter: MoreDetailsPresenter
-
-    @Before
-    fun setUp(){
-        every { Picasso.get() } returns mockk()
-        MoreDetailsViewInjector.init(activity)
-        presenter = MoreDetailsViewInjector.getMoreDetailsPresenter()
+    private val nyTimesLocalStorage: NYTimesLocalStorage = mockk(relaxUnitFun = true)
+    private val nyTimesArtistService: NYTimesArtistService = mockk(relaxUnitFun = true)
+    private val repository: ArtistRepository by lazy {
+        ArtistRepositoryImpl(nyTimesLocalStorage, nyTimesArtistService)
     }
-
-    @Test
-    fun `onButtonClicked should open external URL if available`() {
-        val activity: AppCompatActivity = mockk()
-
-        val captor = slot<String>()
-        every { navigationUtils.openExternalUrl(activity, capture(captor)) } just Runs
-
-        presenter.onButtonClicked(activity)
-
-        val capturedUrl = captor.captured
-        assertNotNull(capturedUrl)
-    }
-
-    @Test
-    fun `onButtonClicked should not open external URL if not available`() {
-        val activity: AppCompatActivity = mockk()
-
-        val captor = slot<String>()
-        every { navigationUtils.openExternalUrl(activity, capture(captor)) } just Runs
-
-        presenter.onButtonClicked(activity)
-
-        val capturedUrl = captor.captured
-        assertNull(capturedUrl)
-    }
+    private val uiState: MoreDetailsUiState = MoreDetailsUiState()
+    private val artistInfoHelper: ArtistInfoHelper = ArtistInfoHelperImpl()
+    private val presenter: MoreDetailsPresenter = MoreDetailsPresenterImpl(repository, uiState, artistInfoHelper)
 
     @Test
     fun `updateArtist should notify observers with NYTimesArtist`() {
-        val artistName = "John Doe"
+        val artist = NYTimesArtist(null, "info", false)
+        every {
+            nyTimesLocalStorage.getArtistByName("artistName")
+        } returns artist
 
-        presenter.uiStateObservable.subscribe{
-            uiState->Assert.assertNotNull(uiState)
-        }
-        presenter.updateArtist(artistName)
+        presenter.updateArtist("artistName")
 
+        Assert.assertNull(presenter.uiState.artistUrl)
+        Assert.assertEquals("[*]info", presenter.uiState.artistDescription)
+        Assert.assertFalse(presenter.uiState.actionsEnabled)
     }
 
     @Test
     fun `updateArtist should notify observers with EmptyArtist`() {
-        val artistName = "No results found"
+        every { nyTimesLocalStorage.getArtistByName("artistName") } returns null
+        every { nyTimesArtistService.getArtist("artistName") } returns null
 
-        presenter.uiStateObservable.subscribe { uiState ->
-            Assert.assertNotNull(uiState)
-        }
-        presenter.updateArtist(artistName)
+        presenter.updateArtist("artistName")
+        val result = repository.getArtist("artistName")
+
+        Assert.assertEquals(Artist.EmptyArtist, result)
+        Assert.assertNull(presenter.uiState.artistUrl)
+        Assert.assertEquals("Artist not found", presenter.uiState.artistDescription)
+        Assert.assertFalse(presenter.uiState.actionsEnabled)
     }
 }
