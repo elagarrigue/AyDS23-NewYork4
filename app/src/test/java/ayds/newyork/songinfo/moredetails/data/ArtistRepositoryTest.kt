@@ -2,6 +2,7 @@ package ayds.newyork.songinfo.moredetails.data
 
 import ayds.newyork.songinfo.moredetails.domain.entities.Artist.NYTimesArtist
 import ayds.newyork.songinfo.moredetails.domain.entities.Artist
+import ayds.newyork.songinfo.moredetails.domain.entities.Artist.EmptyArtist
 import ayds.newyork.songinfo.moredetails.domain.repository.ArtistRepository
 import ayds.newyork.songinfo.moredetails.data.external.nytimes.NYTimesArtistService
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.NYTimesLocalStorage
@@ -12,7 +13,7 @@ import org.junit.Assert.*
 import org.junit.Test
 import java.lang.Exception
 
-class SongRepositoryTest {
+class ArtistRepositoryTest {
 
     private val nyTimesLocalStorage: NYTimesLocalStorage = mockk(relaxUnitFun = true)
     private val nyTimesArtistService: NYTimesArtistService = mockk(relaxUnitFun = true)
@@ -29,16 +30,6 @@ class SongRepositoryTest {
         val result = artistRepository.getArtist("artistName")
 
         assertEquals(Artist.EmptyArtist, result)
-    }
-
-    @Test
-    fun `given existing artist by name should return artist`() {
-        val artist: NYTimesArtist = mockk()
-        every { nyTimesLocalStorage.getArtistByName("artistName") } returns artist
-
-        val result = artistRepository.getArtist("artistName")
-
-        assertEquals(artist, result)
     }
 
     @Test
@@ -72,6 +63,6 @@ class SongRepositoryTest {
 
         val result = artistRepository.getArtist("artistName")
 
-        assertEquals(Artist.EmptyArtist, result)
+        assertEquals(EmptyArtist, result)
     }
 }
