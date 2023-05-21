@@ -14,9 +14,8 @@ import org.junit.Test
 class MoreDetailsPresenterTest {
     private val repository: ArtistRepository = mockk()
     private val artistHelper: ArtistInfoHelper= mockk()
-    private val uiState: MoreDetailsUiState = mockk()
     private val presenter: MoreDetailsPresenter by lazy {
-        MoreDetailsPresenterImpl(repository,uiState,artistHelper)
+        MoreDetailsPresenterImpl(repository,artistHelper)
     }
 
     @Test
@@ -24,18 +23,17 @@ class MoreDetailsPresenterTest {
 
         val artistName = "ArtistName"
         val artist = NYTimesArtist("url", "info",true)
-        val expectedInfo = "[*]info"
         val expectedUiState = MoreDetailsUiState(
-            expectedInfo,
+            "ArtistName",
             artist.url,
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVioI832nuYIXqzySD8cOXRZEcdlAj3KfxA62UEC4FhrHVe0f7oZXp3_mSFG7nIcUKhg&usqp=CAU",
-        true)
+            true
+        )
         val uiStateTester: (MoreDetailsUiState) -> Unit = mockk(relaxed =true)
         presenter.uiStateObservable.subscribe { uiStateTester(it) }
 
         every { repository.getArtist(artistName) } returns artist
         every { artistHelper.getArtistText(artist) } returns "ArtistName"
-        every {uiState.logoImageUrl} returns expectedUiState.logoImageUrl
 
         presenter.updateArtist(artistName)
 

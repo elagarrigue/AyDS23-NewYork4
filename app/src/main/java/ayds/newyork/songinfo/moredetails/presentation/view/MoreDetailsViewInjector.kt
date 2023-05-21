@@ -52,7 +52,7 @@ object MoreDetailsViewInjector {
     }
 
     private fun initPresenter(){
-        moreDetailsPresenter = MoreDetailsPresenterImpl(artistRepository, moreDetailsUiState, artistHelper)
+        moreDetailsPresenter = MoreDetailsPresenterImpl(artistRepository, artistHelper)
     }
 
     fun getMoreDetailsPresenter(): MoreDetailsPresenter {

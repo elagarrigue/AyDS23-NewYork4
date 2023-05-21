@@ -17,11 +17,10 @@ interface MoreDetailsPresenter {
 
 class MoreDetailsPresenterImpl(
     private val repository: ArtistRepository,
-    override var uiState: MoreDetailsUiState,
     private val artistHelper: ArtistInfoHelper
 ): MoreDetailsPresenter {
     override val uiStateObservable = Subject<MoreDetailsUiState>()
-
+    override var uiState= MoreDetailsUiState()
     override fun updateArtist(artistName: String) {
         updateUiState(getArtist(artistName))
         uiStateObservable.notify(uiState)
