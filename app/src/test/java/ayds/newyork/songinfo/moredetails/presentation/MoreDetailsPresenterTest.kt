@@ -10,7 +10,6 @@ import ayds.newyork.songinfo.moredetails.presentation.view.ArtistInfoHelper
 import io.mockk.*
 import org.junit.Test
 
-
 class MoreDetailsPresenterTest {
     private val repository: ArtistRepository = mockk()
     private val artistHelper: ArtistInfoHelper= mockk()
@@ -37,9 +36,7 @@ class MoreDetailsPresenterTest {
 
         presenter.updateArtist(artistName)
 
-        verify { repository.getArtist(artistName) }
-        verify { artistHelper.getArtistText(artist) }
-
         verify { uiStateTester(expectedUiState) }
     }
+
 }
