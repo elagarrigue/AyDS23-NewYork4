@@ -1,3 +1,5 @@
 include ':app'
 include 'observer'
 rootProject.name = "AK New York"
+include ':nytimesdata'
+project(':nytimesdata').projectDir = new File('libs/NYTimesData')

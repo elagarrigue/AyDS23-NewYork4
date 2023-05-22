@@ -1,0 +1,3 @@
+[submodule "libs/NYTimesData"]
+	path = libs/NYTimesData
+	url = git@github.com:albanomazzino/AyDS23-NewYork4-Service.git
