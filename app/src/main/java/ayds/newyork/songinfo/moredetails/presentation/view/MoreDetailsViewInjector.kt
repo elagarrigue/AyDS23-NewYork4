@@ -1,7 +1,6 @@
 package ayds.newyork.songinfo.moredetails.presentation.view
 
 import androidx.appcompat.app.AppCompatActivity
-import ayds.newyork.songinfo.moredetails.data.external.nytimes.artists.NYTimesArtistInjector
 import ayds.newyork.songinfo.moredetails.data.ArtistRepositoryImpl
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.NYTimesLocalStorage
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.CursorToArtistMapper
@@ -10,7 +9,7 @@ import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.NYTimesLoca
 import ayds.newyork.songinfo.moredetails.domain.repository.ArtistRepository
 import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsPresenter
 import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsPresenterImpl
-import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsUiState
+import com.test.artist.external.artists.NYTimesArtistInjector
 
 object MoreDetailsViewInjector {
     private var cursorToArtistMapper: CursorToArtistMapper = CursorToArtistMapperImpl()
