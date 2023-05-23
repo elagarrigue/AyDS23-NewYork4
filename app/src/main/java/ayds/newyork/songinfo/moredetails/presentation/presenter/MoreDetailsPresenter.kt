@@ -22,7 +22,7 @@ class MoreDetailsPresenterImpl(
 ): MoreDetailsPresenter {
     override var uiState: MoreDetailsUiState = MoreDetailsUiState()
     override val uiStateObservable = Subject<MoreDetailsUiState>()
-
+    override var uiState= MoreDetailsUiState()
     override fun updateArtist(artistName: String) {
         updateUiState(getArtist(artistName))
         uiStateObservable.notify(uiState)

@@ -34,7 +34,7 @@ object MoreDetailsViewInjector {
     }
 
     private fun initMoreDetailsView(moreDetailsView : AppCompatActivity){
-        MoreDetailsViewInjector.moreDetailsView = moreDetailsView
+        this.moreDetailsView = moreDetailsView
     }
 
     private fun initNYTimesLocalStorage(){
