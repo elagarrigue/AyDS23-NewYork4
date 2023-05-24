@@ -1,11 +1,12 @@
 package ayds.newyork.songinfo.moredetails.presentation
 
-import ayds.newyork.songinfo.moredetails.domain.entities.Artist.NYTimesArtist
+
 import ayds.newyork.songinfo.moredetails.domain.repository.ArtistRepository
 import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsPresenter
 import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsPresenterImpl
 import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsUiState
-import ayds.newyork.songinfo.moredetails.presentation.view.ArtistInfoHelper
+import com.test.artist.external.entities.Artist
+import com.test.artist.external.entities.ArtistInfoHelper
 
 import io.mockk.*
 import org.junit.Test
@@ -21,7 +22,7 @@ class MoreDetailsPresenterTest {
     fun `updateArtist should notify observers with NYTimesArtist`() {
 
         val artistName = "ArtistName"
-        val artist = NYTimesArtist("url", "info",true)
+        val artist = Artist.NYTimesArtist("url", "info", true)
         val expectedUiState = MoreDetailsUiState(
             "ArtistName",
             artist.url,

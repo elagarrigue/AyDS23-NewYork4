@@ -1,11 +1,9 @@
 package ayds.newyork.songinfo.moredetails.data
 
-import ayds.newyork.songinfo.moredetails.domain.entities.Artist.NYTimesArtist
-import ayds.newyork.songinfo.moredetails.domain.entities.Artist
-import ayds.newyork.songinfo.moredetails.domain.entities.Artist.EmptyArtist
 import ayds.newyork.songinfo.moredetails.domain.repository.ArtistRepository
-import ayds.newyork.songinfo.moredetails.data.external.nytimes.NYTimesArtistService
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.NYTimesLocalStorage
+import com.test.artist.external.NYTimesArtistService
+import com.test.artist.external.entities.Artist
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -34,7 +32,7 @@ class ArtistRepositoryTest {
 
     @Test
     fun `given existing artist by name should return artist and mark it as local`() {
-        val artist = NYTimesArtist("url", "info", false)
+        val artist = Artist.NYTimesArtist("url", "info", false)
         every { nyTimesLocalStorage.getArtistByName("artistName") } returns artist
 
         val result = artistRepository.getArtist("artistName")
@@ -45,7 +43,7 @@ class ArtistRepositoryTest {
 
     @Test
     fun `given non existing artist by name should get the artist and store it`() {
-        val artist = NYTimesArtist("url", "info", false)
+        val artist = Artist.NYTimesArtist("url", "info", false)
         every { nyTimesLocalStorage.getArtistByName("artistName") } returns null
         every { nyTimesArtistService.getArtist("artistName") } returns artist
 
@@ -63,6 +61,6 @@ class ArtistRepositoryTest {
 
         val result = artistRepository.getArtist("artistName")
 
-        assertEquals(EmptyArtist, result)
+        assertEquals(Artist.EmptyArtist, result)
     }
 }

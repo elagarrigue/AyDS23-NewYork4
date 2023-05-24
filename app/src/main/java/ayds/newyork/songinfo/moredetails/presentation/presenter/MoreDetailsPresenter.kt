@@ -19,9 +19,8 @@ class MoreDetailsPresenterImpl(
     private val repository: ArtistRepository,
     private val artistHelper: ArtistInfoHelper
 ): MoreDetailsPresenter {
-    override var uiState: MoreDetailsUiState = MoreDetailsUiState()
     override val uiStateObservable = Subject<MoreDetailsUiState>()
-    override var uiState= MoreDetailsUiState()
+    override var uiState = MoreDetailsUiState()
     override fun updateArtist(artistName: String) {
         updateUiState(getArtist(artistName))
         uiStateObservable.notify(uiState)
