@@ -1,7 +1,7 @@
 package ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb
 
 import android.database.Cursor
-import ayds.newyork.songinfo.moredetails.domain.entities.Artist.NYTimesArtist
+import com.test.artist.external.entities.Artist.NYTimesArtist
 import java.sql.SQLException
 
 interface CursorToArtistMapper {

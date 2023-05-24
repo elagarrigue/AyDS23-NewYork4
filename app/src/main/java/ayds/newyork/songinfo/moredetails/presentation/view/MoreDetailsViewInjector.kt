@@ -10,6 +10,8 @@ import ayds.newyork.songinfo.moredetails.domain.repository.ArtistRepository
 import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsPresenter
 import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsPresenterImpl
 import com.test.artist.external.artists.NYTimesArtistInjector
+import com.test.artist.external.entities.ArtistInfoHelper
+import com.test.artist.external.entities.ArtistInfoHelperImpl
 
 object MoreDetailsViewInjector {
     private var cursorToArtistMapper: CursorToArtistMapper = CursorToArtistMapperImpl()

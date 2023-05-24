@@ -5,7 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.NYTimesLocalStorage
-import ayds.newyork.songinfo.moredetails.domain.entities.Artist.NYTimesArtist
+import com.test.artist.external.entities.Artist.NYTimesArtist
 
 internal class NYTimesLocalStorageImpl(
     context: Context,

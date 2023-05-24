@@ -2,9 +2,9 @@ package ayds.newyork.songinfo.moredetails.data
 
 
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.NYTimesLocalStorage
-import ayds.newyork.songinfo.moredetails.domain.entities.Artist
-import ayds.newyork.songinfo.moredetails.domain.entities.Artist.NYTimesArtist
-import ayds.newyork.songinfo.moredetails.domain.entities.Artist.EmptyArtist
+import com.test.artist.external.entities.Artist
+import com.test.artist.external.entities.Artist.NYTimesArtist
+import com.test.artist.external.entities.Artist.EmptyArtist
 import ayds.newyork.songinfo.moredetails.domain.repository.ArtistRepository
 import com.test.artist.external.NYTimesArtistService
 

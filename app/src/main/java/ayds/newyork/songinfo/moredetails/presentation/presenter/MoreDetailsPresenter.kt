@@ -1,11 +1,10 @@
 package ayds.newyork.songinfo.moredetails.presentation.presenter
 
-import ayds.newyork.songinfo.moredetails.domain.entities.Artist
-import ayds.newyork.songinfo.moredetails.domain.entities.Artist.NYTimesArtist
-import ayds.newyork.songinfo.moredetails.domain.entities.Artist.EmptyArtist
+import com.test.artist.external.entities.Artist
+import com.test.artist.external.entities.Artist.NYTimesArtist
+import com.test.artist.external.entities.Artist.EmptyArtist
+import com.test.artist.external.entities.ArtistInfoHelper
 import ayds.newyork.songinfo.moredetails.domain.repository.ArtistRepository
-import ayds.newyork.songinfo.moredetails.presentation.view.ArtistInfoHelper
-import ayds.newyork.songinfo.moredetails.presentation.view.MoreDetailsViewInjector
 import ayds.observer.Observable
 import ayds.observer.Subject
 
@@ -28,7 +27,7 @@ class MoreDetailsPresenterImpl(
         uiStateObservable.notify(uiState)
     }
 
-    private fun getArtist(artistName: String):Artist {
+    private fun getArtist(artistName: String): Artist {
         return repository.getArtist(artistName)
     }
 
