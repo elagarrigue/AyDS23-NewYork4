@@ -18,9 +18,13 @@ internal class ArtistRepositoryImpl(
         when {
             artist != null -> markArtistAsLocal(artist)
             else -> {
-                artist = nyTimesArtistService.getArtist(artistName)
-                artist?.let {
-                    nyTimesLocalStorage.insertArtist(artistName, artist.info ?: "")
+                try {
+                    artist = nyTimesArtistService.getArtist(artistName)
+                    artist?.let {
+                        nyTimesLocalStorage.insertArtist(artistName, it.info ?: "")
+                    }
+                } catch(ioException : Exception) {
+                    artist = null
                 }
             }
         }
