@@ -1,10 +1,8 @@
 package ayds.newyork.songinfo.moredetails.presentation.presenter
 
-import com.test.artist.external.entities.Artist
-import com.test.artist.external.entities.Artist.NYTimesArtist
-import com.test.artist.external.entities.Artist.EmptyArtist
-import com.test.artist.external.entities.ArtistInfoHelper
-import ayds.newyork.songinfo.moredetails.domain.repository.ArtistRepository
+import ayds.newyork.songinfo.moredetails.domain.entities.Card
+import ayds.newyork.songinfo.moredetails.presentation.view.CardDescriptionHelper
+import ayds.newyork.songinfo.moredetails.domain.repository.CardRepository
 import ayds.observer.Observable
 import ayds.observer.Subject
 
@@ -16,8 +14,8 @@ interface MoreDetailsPresenter {
 }
 
 class MoreDetailsPresenterImpl(
-    private val repository: ArtistRepository,
-    private val artistHelper: ArtistInfoHelper
+        private val repository: CardRepository,
+        private val cardDescriptionHelper: CardDescriptionHelper
 ): MoreDetailsPresenter {
     override val uiStateObservable = Subject<MoreDetailsUiState>()
     override var uiState = MoreDetailsUiState()
@@ -26,12 +24,12 @@ class MoreDetailsPresenterImpl(
         uiStateObservable.notify(uiState)
     }
 
-    private fun getArtist(artistName: String): Artist {
-        return repository.getArtist(artistName)
+    private fun getArtist(artistName: String): List<Card> {
+        return repository.getCardByArtist(artistName)
     }
 
-    private fun updateUiState(artist: Artist) {
-        when (artist) {
+    private fun updateUiState(Card: card) {
+        when (card) {
             is NYTimesArtist -> updateArtistUiState(artist)
             EmptyArtist -> updateNoResultsUiState()
         }

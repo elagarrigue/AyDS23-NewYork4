@@ -4,17 +4,20 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import ayds.newyork.songinfo.moredetails.data.local.nytimes.NYTimesLocalStorage
-import com.test.artist.external.entities.Artist.NYTimesArtist
+import ayds.newyork.songinfo.moredetails.data.local.nytimes.CardLocalStorage
+import ayds.newyork.songinfo.moredetails.domain.entities.Source
+import ayds.newyork.songinfo.moredetails.domain.entities.Card
 
-internal class NYTimesLocalStorageImpl(
+internal class CardLocalStorageImpl(
     context: Context,
-    private val cursorToArtistMapper: CursorToArtistMapper
-): SQLiteOpenHelper(context, SQLITE_OPEN_HELPER_NAME, null, 1), NYTimesLocalStorage {
+    private val cursorToCardMapper: CursorToCardMapper
+): SQLiteOpenHelper(context, SQLITE_OPEN_HELPER_NAME, null, 1), CardLocalStorage {
     private val projection = arrayOf(
         COLUMN_ID,
         COLUMN_ARTIST,
-        COLUMN_INFO
+        COLUMN_INFO,
+        COLUMN_SOURCE,
+        COLUMN_SOURCE_LOGO
     )
 
     override fun onCreate(database: SQLiteDatabase) {
@@ -23,23 +26,24 @@ internal class NYTimesLocalStorageImpl(
 
     override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
-    private fun createContentValues(artistName: String, artistDescription: String): ContentValues {
+    private fun createContentValues(artistName: String, cardInfo: String, source: Source, sourceLogoUrl: String): ContentValues {
         return ContentValues().apply {
             put(COLUMN_ARTIST, artistName)
-            put(COLUMN_INFO, artistDescription)
-            put(COLUMN_SOURCE, SOURCE_VALUE)
+            put(COLUMN_INFO, cardInfo)
+            put(COLUMN_SOURCE, source.name)
+            put(COLUMN_SOURCE_LOGO, sourceLogoUrl)
         }
     }
 
-    override fun insertArtist(artistName: String, artistDescription: String) {
+    override fun saveCard(artistName: String, card: Card) {
         writableDatabase.insert(
             ARTISTS_TABLE_NAME,
             null,
-            createContentValues(artistName, artistDescription)
+            createContentValues(artistName, card.infoUrl!!, card.source, card.sourceLogoUrl)
         )
     }
 
-    override fun getArtistByName(artistName: String): NYTimesArtist? {
+    override fun getCards(artistName: String): List<Card> {
         val artistCursor = readableDatabase.query(
             ARTISTS_TABLE_NAME,
             projection,
@@ -50,6 +54,6 @@ internal class NYTimesLocalStorageImpl(
             SELECTION_ORDER_BY
         )
 
-        return cursorToArtistMapper.map(artistCursor)
+        return cursorToCardMapper.map(artistCursor)
     }
 }

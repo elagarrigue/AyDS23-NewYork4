@@ -1,7 +1,7 @@
 package ayds.newyork.songinfo.moredetails.presentation
 
 
-import ayds.newyork.songinfo.moredetails.domain.repository.ArtistRepository
+import ayds.newyork.songinfo.moredetails.domain.repository.CardRepository
 import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsPresenter
 import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsPresenterImpl
 import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsUiState
@@ -12,7 +12,7 @@ import io.mockk.*
 import org.junit.Test
 
 class MoreDetailsPresenterTest {
-    private val repository: ArtistRepository = mockk()
+    private val repository: CardRepository = mockk()
     private val artistHelper: ArtistInfoHelper= mockk()
     private val presenter: MoreDetailsPresenter by lazy {
         MoreDetailsPresenterImpl(repository,artistHelper)
@@ -32,7 +32,7 @@ class MoreDetailsPresenterTest {
         val uiStateTester: (MoreDetailsUiState) -> Unit = mockk(relaxed =true)
         presenter.uiStateObservable.subscribe { uiStateTester(it) }
 
-        every { repository.getArtist(artistName) } returns artist
+        every { repository.getCardByArtist(artistName) } returns artist
         every { artistHelper.getArtistText(artist) } returns "ArtistName"
 
         presenter.updateArtist(artistName)
