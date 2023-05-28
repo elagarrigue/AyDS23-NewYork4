@@ -83,19 +83,19 @@ class MoreDetailsView: AppCompatActivity() {
 
     private fun updateArtistDescription(uiState: MoreDetailsUiState) {
         runOnUiThread {
-            artistView.text = Html.fromHtml(uiState.artistDescription)
+            artistView.text = Html.fromHtml(uiState.cardDescription)
         }
     }
 
     private fun updateArtistUrl(uiState: MoreDetailsUiState) {
         runOnUiThread {
-            artistUrl = uiState.artistUrl
+            artistUrl = uiState.cardUrl
         }
     }
 
     private fun updateLogoImage(uiState: MoreDetailsUiState) {
         runOnUiThread {
-            imageLoader.loadImageIntoView(uiState.logoImageUrl, logoImageView)
+            imageLoader.loadImageIntoView(uiState.logoImageUrl!!, logoImageView)
         }
     }
 

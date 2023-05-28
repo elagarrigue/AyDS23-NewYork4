@@ -40,7 +40,7 @@ object MoreDetailsViewInjector {
     }
 
     private fun initInfoRepository(){
-        cardRepository = CardRepositoryImpl(cardLocalStorage, NYTimesArtistInjector.nyTimesArtistService)
+        cardRepository = CardRepositoryImpl(cardLocalStorage, NYTimesArtistInjector.nyTimesArtistService) //Broker en lugar de service
     }
 
     private fun initPresenter(){

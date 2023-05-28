@@ -22,7 +22,7 @@ class CardRepositoryTest {
 
     @Test
     fun `given non existing artist by name should return empty artist`() {
-        every { cardLocalStorage.getArtistByName("artistName") } returns null
+        every { cardLocalStorage.getCards("artistName") } returns null
         every { nyTimesArtistService.getArtist("artistName") } returns null
 
         val result = cardRepository.getCardByArtist("artistName")

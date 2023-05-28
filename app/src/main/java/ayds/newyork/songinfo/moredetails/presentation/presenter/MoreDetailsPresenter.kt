@@ -15,12 +15,16 @@ interface MoreDetailsPresenter {
 
 class MoreDetailsPresenterImpl(
         private val repository: CardRepository,
-        private val cardDescriptionHelper: CardDescriptionHelper
+        private val cardDescriptionHelper: CardDescriptionHelper,
+        private var cards: List<Card>
 ): MoreDetailsPresenter {
     override val uiStateObservable = Subject<MoreDetailsUiState>()
     override var uiState = MoreDetailsUiState()
     override fun updateArtist(artistName: String) {
-        updateUiState(getArtist(artistName))
+        cards = getArtist(artistName)
+        for (card in cards){
+            updateUiState(card)
+        }
         uiStateObservable.notify(uiState)
     }
 
@@ -28,26 +32,30 @@ class MoreDetailsPresenterImpl(
         return repository.getCardByArtist(artistName)
     }
 
-    private fun updateUiState(Card: card) {
+    private fun updateUiState(card: Card) {
         when (card) {
-            is NYTimesArtist -> updateArtistUiState(artist)
-            EmptyArtist -> updateNoResultsUiState()
+            null -> updateNoResultsUiState(card)
+            else -> updateCardUiState(card)
         }
     }
 
-    private fun updateArtistUiState(artist: NYTimesArtist) {
+    private fun updateCardUiState(card: Card) {
         uiState = uiState.copy(
-            artistDescription = artistHelper.getArtistText(artist),
-            artistUrl = artist.url,
-            actionsEnabled = artist.url != null
+            cardDescription = cardDescriptionHelper.getCardDescriptionText(card),
+            cardUrl = card.infoUrl,
+            source = card.source,
+            logoImageUrl = card.sourceLogoUrl,
+            actionsEnabled = true,
         )
     }
 
-    private fun updateNoResultsUiState() {
+    private fun updateNoResultsUiState(card: Card) {
         uiState = uiState.copy(
-            artistDescription = artistHelper.getArtistText(),
-            artistUrl = null,
-            actionsEnabled = false
+            cardDescription = cardDescriptionHelper.getCardDescriptionText(card),
+            cardUrl = "",
+            source = null,
+            logoImageUrl = "",
+            actionsEnabled = false,
         )
     }
 }

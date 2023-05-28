@@ -1,6 +1,7 @@
 package ayds.newyork.songinfo.moredetails.presentation
 import ayds.newyork.songinfo.moredetails.presentation.view.CardDescriptionHelperImpl
 import ayds.newyork.songinfo.moredetails.domain.entities.Card
+import ayds.newyork.songinfo.moredetails.domain.entities.Source
 import io.mockk.mockk
 import org.junit.Assert
 import org.junit.Test
@@ -13,7 +14,10 @@ class CardDescriptionHelperTest {
     fun `given a local artist it should return the description`() {
         val card: Card = Card(
                 "Great artist info",
-                "https://thepepe.com/"
+                "https://thepepe.com/",
+                 Source.NYTimes,
+                "",
+                 false
         )
 
         val result = cardDescriptionHelper.getCardDescriptionText(card)
@@ -28,7 +32,10 @@ class CardDescriptionHelperTest {
     fun `given a non local song it should return the description`() {
         val card: Card = Card(
                 "Great artist info",
-                "https://thepepe.com/"
+                "https://thepepe.com/",
+                 Source.NYTimes,
+                "",
+                false
         )
 
         val result = cardDescriptionHelper.getCardDescriptionText(card)
