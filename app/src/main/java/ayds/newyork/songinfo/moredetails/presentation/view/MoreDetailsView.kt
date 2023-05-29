@@ -18,6 +18,7 @@ class MoreDetailsView: AppCompatActivity() {
     private lateinit var logoImageView: ImageView
     private lateinit var fullArticleButtonView: View
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
+    private lateinit var sourceLabel: TextView
 
     private var artistUrl: String? = null
     private val imageLoader: ImageLoader = UtilsInjector.imageLoader
@@ -48,6 +49,7 @@ class MoreDetailsView: AppCompatActivity() {
         artistView = findViewById(R.id.textPane2)
         logoImageView = findViewById(R.id.imageView)
         fullArticleButtonView = findViewById(R.id.openUrlButton)
+        sourceLabel = findViewById(R.id.sourceTextView)
     }
 
     private fun initObservers() {
