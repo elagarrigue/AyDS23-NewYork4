@@ -32,10 +32,10 @@ class MoreDetailsPresenterTest {
         val uiStateTester: (MoreDetailsUiState) -> Unit = mockk(relaxed =true)
         presenter.uiStateObservable.subscribe { uiStateTester(it) }
 
-        every { repository.getCardByArtist(artistName) } returns artist
+        every { repository.getCardsByArtist(artistName) } returns artist
         every { artistHelper.getArtistText(artist) } returns "ArtistName"
 
-        presenter.updateArtist(artistName)
+        presenter.updateArtistCards(artistName)
 
         verify { uiStateTester(expectedUiState) }
     }

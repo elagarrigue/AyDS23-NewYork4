@@ -26,9 +26,9 @@ class CardDescriptionHelperImpl : CardDescriptionHelper {
         const val NOT_LOCALLY_STORED = ""
     }
 
-    override fun getCardDescriptionText(card: Card): String = when(card.isLocallyStored) {
-        true -> LOCALLY_STORED
-        false -> NOT_LOCALLY_STORED
+    override fun getCardDescriptionText(card: Card): String = when {
+        card.isLocallyStored -> LOCALLY_STORED
+        else -> NOT_LOCALLY_STORED
     } + card.description.ifEmpty {
         DEFAULT_CARD_DESCRIPTION_RESULT_TEXT
     }

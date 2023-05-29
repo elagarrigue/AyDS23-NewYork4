@@ -26,7 +26,7 @@ class CardRepositoryTest {
         every { cardLocalStorage.getCards("artistName") } returns null
         every { nyTimesArtistService.getArtist("artistName") } returns null
 
-        val result = cardRepository.getCardByArtist("artistName")
+        val result = cardRepository.getCardsByArtist("artistName")
 
         assertEquals(Artist.EmptyArtist, result)
     }
@@ -36,7 +36,7 @@ class CardRepositoryTest {
         val artist = Artist.NYTimesArtist("url", "info", false)
         every { cardLocalStorage.getArtistByName("artistName") } returns artist
 
-        val result = cardRepository.getCardByArtist("artistName")
+        val result = cardRepository.getCardsByArtist("artistName")
 
         assertEquals(artist, result)
         assertTrue(artist.isLocallyStored)
@@ -48,7 +48,7 @@ class CardRepositoryTest {
         every { cardLocalStorage.getArtistByName("artistName") } returns null
         every { nyTimesArtistService.getArtist("artistName") } returns artist
 
-        val result = cardRepository.getCardByArtist("artistName")
+        val result = cardRepository.getCardsByArtist("artistName")
 
         assertEquals(artist, result)
         assertFalse(artist.isLocallyStored)
@@ -60,7 +60,7 @@ class CardRepositoryTest {
         every { cardLocalStorage.getArtistByName("artistName") } returns null
         every { nyTimesArtistService.getArtist("artistName") } throws mockk<Exception>()
 
-        val result = cardRepository.getCardByArtist("artistName")
+        val result = cardRepository.getCardsByArtist("artistName")
 
         assertEquals(Artist.EmptyArtist, result)
     }

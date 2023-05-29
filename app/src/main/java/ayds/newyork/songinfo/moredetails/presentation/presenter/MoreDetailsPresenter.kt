@@ -10,33 +10,30 @@ interface MoreDetailsPresenter {
     var uiState: MoreDetailsUiState
     val uiStateObservable: Observable<MoreDetailsUiState>
 
-    fun updateArtist(artistName: String)
+    fun updateArtistCards(artistName: String)
 }
 
 class MoreDetailsPresenterImpl(
-        private val repository: CardRepository,
-        private val cardDescriptionHelper: CardDescriptionHelper,
-        private var cards: List<Card>
+    private val repository: CardRepository,
+    private val cardDescriptionHelper: CardDescriptionHelper
 ): MoreDetailsPresenter {
     override val uiStateObservable = Subject<MoreDetailsUiState>()
     override var uiState = MoreDetailsUiState()
-    override fun updateArtist(artistName: String) {
-        cards = getArtist(artistName)
-        for (card in cards){
-            updateUiState(card)
+
+    override fun updateArtistCards(artistName: String) {
+        val cards = getCards(artistName)
+        if(cards.isEmpty()){
+            updateNoResultsUiState()
+        } else {
+            for (card in cards){
+                updateCardUiState(card)
+            }
         }
         uiStateObservable.notify(uiState)
     }
 
-    private fun getArtist(artistName: String): List<Card> {
-        return repository.getCardByArtist(artistName)
-    }
-
-    private fun updateUiState(card: Card) {
-        when (card) {
-            null -> updateNoResultsUiState(card)
-            else -> updateCardUiState(card)
-        }
+    private fun getCards(artistName: String): List<Card> {
+        return repository.getCardsByArtist(artistName)
     }
 
     private fun updateCardUiState(card: Card) {
@@ -45,13 +42,13 @@ class MoreDetailsPresenterImpl(
             cardUrl = card.infoUrl,
             source = card.source,
             logoImageUrl = card.sourceLogoUrl,
-            actionsEnabled = true,
+            actionsEnabled = card.infoUrl != null,
         )
     }
 
-    private fun updateNoResultsUiState(card: Card) {
+    private fun updateNoResultsUiState() {
         uiState = uiState.copy(
-            cardDescription = cardDescriptionHelper.getCardDescriptionText(card),
+            cardDescription = "",
             cardUrl = "",
             source = null,
             logoImageUrl = "",

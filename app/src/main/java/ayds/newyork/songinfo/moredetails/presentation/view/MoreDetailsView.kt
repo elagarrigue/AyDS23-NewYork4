@@ -71,7 +71,7 @@ class MoreDetailsView: AppCompatActivity() {
     private fun updateArtist() {
         Thread {
             intent.getStringExtra(ARTIST_NAME_EXTRA)?.let {
-                moreDetailsPresenter.updateArtist(it)
+                moreDetailsPresenter.updateArtistCards(it)
             }
         }.start()
     }
