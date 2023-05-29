@@ -1,4 +1,4 @@
-package ayds.newyork.songinfo.moredetails.data
+package ayds.newyork.songinfo.moredetails.data.repository
 
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.CardLocalStorage
 import ayds.newyork.songinfo.moredetails.domain.repository.CardRepository
@@ -6,7 +6,7 @@ import ayds.newyork.songinfo.moredetails.domain.entities.Card
 
 internal class CardRepositoryImpl(
         private val cardLocalStorage: CardLocalStorage,
-        private val nyTimesArtistService: NYTimesArtistService //Aca iria broker, por eso no lo refactorizo a card
+        private val cardBroker: CardBroker
 ): CardRepository {
 
     override fun getCardByArtist(artistName: String): List<Card> {
@@ -15,10 +15,11 @@ internal class CardRepositoryImpl(
             !cards.isEmpty() -> markCardAsLocal(cards)
             else -> {
                 try {
-                    // cards = consigo cards de broker
+                    cards = cardBroker.getCards(artistName)
                     saveCards(artistName, cards)
                 } catch (ioException: Exception) {
-                    cards = null
+                    // TODO: handle emptyList() case scenario? o el broker deberia manejarlo?
+                    cards = emptyList()
                 }
             }
         }

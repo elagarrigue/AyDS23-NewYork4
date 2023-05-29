@@ -1,11 +1,12 @@
 package ayds.newyork.songinfo.moredetails.presentation.view
 
 import androidx.appcompat.app.AppCompatActivity
-import ayds.newyork.songinfo.moredetails.data.CardRepositoryImpl
+import ayds.newyork.songinfo.moredetails.data.repository.CardRepositoryImpl
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.CardLocalStorage
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.CursorToCardMapper
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.CursorToCardMapperImpl
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.CardLocalStorageImpl
+import ayds.newyork.songinfo.moredetails.data.repository.CardBrokerInjector
 import ayds.newyork.songinfo.moredetails.domain.repository.CardRepository
 import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsPresenter
 import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsPresenterImpl
@@ -40,7 +41,8 @@ object MoreDetailsViewInjector {
     }
 
     private fun initInfoRepository(){
-        cardRepository = CardRepositoryImpl(cardLocalStorage, NYTimesArtistInjector.nyTimesArtistService) //Broker en lugar de service
+        CardBrokerInjector.init()
+        cardRepository = CardRepositoryImpl(cardLocalStorage, CardBrokerInjector.getCardBroker())
     }
 
     private fun initPresenter(){

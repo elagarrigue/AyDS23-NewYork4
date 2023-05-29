@@ -2,6 +2,7 @@ package ayds.newyork.songinfo.moredetails.data
 
 import ayds.newyork.songinfo.moredetails.domain.repository.CardRepository
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.CardLocalStorage
+import ayds.newyork.songinfo.moredetails.data.repository.CardRepositoryImpl
 import com.test.artist.external.NYTimesArtistService
 import com.test.artist.external.entities.Artist
 import io.mockk.every
