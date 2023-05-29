@@ -31,10 +31,10 @@ class NYTimesArtistToCardResolver : ArtistToCardResolverStrategy {
 
     private fun createNYTimesArtistCard(nyTimesArtist: Artist.NYTimesArtist): Card {
         return Card(
-            nyTimesArtist.info ?: "",
+            nyTimesArtist.info,
             nyTimesArtist.url,
             Source.NYTimes,
-            nyTimesArtist.NYTIMESLOGO_URL,
+            nyTimesArtist.logoImageUrl,
             nyTimesArtist.isLocallyStored
         )
     }
