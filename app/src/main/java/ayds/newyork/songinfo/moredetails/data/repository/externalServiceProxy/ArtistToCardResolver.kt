@@ -1,35 +1,14 @@
-package ayds.newyork.songinfo.moredetails.data.repository
+package ayds.newyork.songinfo.moredetails.data.repository.externalServiceProxy
 
-import ayds.lisboa1.lastfm.LastFMArtistData
 import ayds.newyork.songinfo.moredetails.domain.entities.Card
 import ayds.newyork.songinfo.moredetails.domain.entities.Source
 import ayds.newYork4.artist.external.entities.Artist
+import ayds.lisboa1.lastfm.LastFMArtistData
 import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaArtist
 
-
-class ArtistToCardResolver {
-    private val resolvers = mapOf(
-        Artist.NYTimesArtist::class to NYTimesArtistToCardResolver(),
-        WikipediaArtist::class to WikipediaArtistToCardResolver(),
-        LastFMArtistData::class to LastFMArtistToCardResolver()
-    )
-
-    fun resolve(artist: Artist?): Card? {
-        return artist?.let { getResolver(it)?.resolve(it) }
-    }
-
-    private fun getResolver(artist: Artist): ArtistToCardResolverStrategy? {
-        return resolvers[artist::class]
-    }
-}
-
-interface ArtistToCardResolverStrategy {
-    fun resolve(artist: Artist?): Card?
-}
-
-class NYTimesArtistToCardResolver : ArtistToCardResolverStrategy {
-    override fun resolve(artist: Artist?): Card? {
-        return artist?.let { createNYTimesArtistCard(it as Artist.NYTimesArtist) } // TODO corroborar casteo
+class NYTimesArtistToCardResolver {
+    fun resolve(artist: Artist.NYTimesArtist?): Card? {
+        return artist?.let { createNYTimesArtistCard(it) }
     }
 
     private fun createNYTimesArtistCard(nyTimesArtist: Artist.NYTimesArtist): Card {
@@ -43,9 +22,9 @@ class NYTimesArtistToCardResolver : ArtistToCardResolverStrategy {
     }
 }
 
-class WikipediaArtistToCardResolver : ArtistToCardResolverStrategy {
-    override fun resolve(artist: Artist?): Card? {
-        return artist?.let { createWikipediaArtistCard(it as WikipediaArtist) } // TODO corroborar casteo
+class WikipediaArtistToCardResolver {
+    fun resolve(artist: WikipediaArtist?): Card? {
+        return artist?.let { createWikipediaArtistCard(it) }
     }
 
     private fun createWikipediaArtistCard(wikipediaArtist: WikipediaArtist): Card {
@@ -60,9 +39,9 @@ class WikipediaArtistToCardResolver : ArtistToCardResolverStrategy {
 }
 
 
-class LastFMArtistToCardResolver : ArtistToCardResolverStrategy {
-    override fun resolve(artist: Artist?): Card? {
-        return artist?.let { createLastFMArtistCard(it as LastFMArtistData) } // TODO corroborar casteo
+class LastFMArtistToCardResolver {
+    fun resolve(artist: LastFMArtistData?): Card? {
+        return artist?.let { createLastFMArtistCard(it) }
     }
 
     private fun createLastFMArtistCard(lastFMArtist: LastFMArtistData): Card {
@@ -75,4 +54,3 @@ class LastFMArtistToCardResolver : ArtistToCardResolverStrategy {
         )
     }
 }
-
