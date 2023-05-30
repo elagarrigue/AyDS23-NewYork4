@@ -1,3 +1,9 @@
 [submodule "libs/NYTimesData"]
 	path = libs/NYTimesData
 	url = https://github.com/albanomazzino/AyDS23-NewYork4-Service.git
+[submodule "libs/AyDS-Wikipedia"]
+	path = libs/AyDS-Wikipedia
+	url = https://github.com/JanoALockhart/AyDS-Wikipedia.git
+[submodule "libs/Lisbo1-LastFMData"]
+	path = libs/Lisbo1-LastFMData
+	url = https://github.com/Federico-manolo/Lisbo1-LastFMData.git

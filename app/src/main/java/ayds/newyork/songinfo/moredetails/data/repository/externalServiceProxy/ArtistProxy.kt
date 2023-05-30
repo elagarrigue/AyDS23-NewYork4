@@ -1,8 +1,10 @@
 package ayds.newyork.songinfo.moredetails.data.repository.externalServiceProxy
 
+import ayds.lisboa1.lastfm.LastFMService
 import ayds.newyork.songinfo.moredetails.data.repository.ArtistToCardResolver
 import ayds.newyork.songinfo.moredetails.domain.entities.Card
 import ayds.newYork4.artist.external.NYTimesArtistService
+import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaService
 
 interface ArtistProxy {
     fun getCard(artistName: String): Card?
@@ -19,9 +21,9 @@ class NYTimesArtistProxy(
     }
 }
 
-/*
+
 class WikipediaArtistProxy(
-    private val wikipediaArtistService: WikipediaArtistService,
+    private val wikipediaArtistService: WikipediaService,
     private val artistToCardResolver: ArtistToCardResolver
 ) : ArtistProxy {
     override fun getCard(artistName: String): Card? {
@@ -30,16 +32,15 @@ class WikipediaArtistProxy(
         return artistCard
     }
 }
-*/
-/*
+
+
 class LastFMArtistProxy(
-    private val lastFMArtistService: LastFMArtistService,
+    private val lastFMArtistService: LastFMService,
     private val artistToCardResolver: ArtistToCardResolver
 ) : ArtistProxy {
     override fun getCard(artistName: String): Card? {
-        val lastFMArtist = lastFMArtistService.getArtist(artistName)
+        val lastFMArtist = lastFMArtistService.getArtistData(artistName)
         val artistCard = artistToCardResolver.resolve(lastFMArtist)
         return artistCard
     }
 }
-*/

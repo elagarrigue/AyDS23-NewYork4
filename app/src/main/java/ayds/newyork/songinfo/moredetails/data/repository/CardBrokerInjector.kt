@@ -1,10 +1,12 @@
 package ayds.newyork.songinfo.moredetails.data.repository
 
+import ayds.lisboa1.lastfm.LastFMInjector
 import ayds.newyork.songinfo.moredetails.data.repository.externalServiceProxy.ArtistProxy
 import ayds.newyork.songinfo.moredetails.data.repository.externalServiceProxy.NYTimesArtistProxy
 import ayds.newYork4.artist.external.artists.NYTimesArtistInjector
-//import com.test.artist.external.artists.WikipediaArtistInjector
-//import com.test.artist.external.artists.LastFMArtistInjector
+import ayds.newyork.songinfo.moredetails.data.repository.externalServiceProxy.LastFMArtistProxy
+import ayds.newyork.songinfo.moredetails.data.repository.externalServiceProxy.WikipediaArtistProxy
+import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaInjector
 
 object CardBrokerInjector {
     private lateinit var nyTimesArtistProxy: ArtistProxy
@@ -24,14 +26,15 @@ object CardBrokerInjector {
             NYTimesArtistInjector.nyTimesArtistService,
             artistToCardResolver
         )
-        /*wikipediaArtistProxy = WikipediaArtistProxy(
-            WikipediaArtistInjector.wikipediaArtistService,
+
+        wikipediaArtistProxy = WikipediaArtistProxy(
+            WikipediaInjector.wikipediaService,
             artistToCardResolver
-        )*/
-        /*lastFMArtistProxy = LastFMArtistProxy(
-            LastFMArtistInjector.lastFMArtistService,
+        )
+        lastFMArtistProxy = LastFMArtistProxy(
+            LastFMInjector.getLastFMService(),
             artistToCardResolver
-        )*/
+        )
     }
 
     private fun initArtistToCardResolver() {

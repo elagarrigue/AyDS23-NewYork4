@@ -1,14 +1,17 @@
 package ayds.newyork.songinfo.moredetails.data.repository
 
+import ayds.lisboa1.lastfm.LastFMArtistData
 import ayds.newyork.songinfo.moredetails.domain.entities.Card
 import ayds.newyork.songinfo.moredetails.domain.entities.Source
 import ayds.newYork4.artist.external.entities.Artist
+import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaArtist
+
 
 class ArtistToCardResolver {
     private val resolvers = mapOf(
         Artist.NYTimesArtist::class to NYTimesArtistToCardResolver(),
-        //Artist.WikipediaArtist::class to WikipediaArtistToCardResolver(),
-        //Artist.LastFMArtist::class to LastFMArtistToCardResolver()
+        WikipediaArtist::class to WikipediaArtistToCardResolver(),
+        LastFMArtistData::class to LastFMArtistToCardResolver()
     )
 
     fun resolve(artist: Artist?): Card? {
@@ -39,37 +42,37 @@ class NYTimesArtistToCardResolver : ArtistToCardResolverStrategy {
         )
     }
 }
-/*
+
 class WikipediaArtistToCardResolver : ArtistToCardResolverStrategy {
     override fun resolve(artist: Artist?): Card? {
-        return artist?.let { createWikipediaArtistCard(it as Artist.WikipediaArtist) } // TODO corroborar casteo
+        return artist?.let { createWikipediaArtistCard(it as WikipediaArtist) } // TODO corroborar casteo
     }
 
-    private fun createWikipediaArtistCard(wikipediaArtist: Artist.WikipediaArtist): Card {
+    private fun createWikipediaArtistCard(wikipediaArtist: WikipediaArtist): Card {
         return Card(
-            wikipediaArtist.info ?: "",
-            wikipediaArtist.url,
+            wikipediaArtist.description,
+            wikipediaArtist.wikipediaURL,
             Source.Wikipedia,
-            "", // wikipedia.logoUrl instead
-            wikipediaArtist.isLocallyStored
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVioI832nuYIXqzySD8cOXRZEcdlAj3KfxA62UEC4FhrHVe0f7oZXp3_mSFG7nIcUKhg&usqp=CAU", // wikipediaArtist.logoUrl instead
+            false // should be added to the model
         )
     }
 }
-*/
-/*
+
+
 class LastFMArtistToCardResolver : ArtistToCardResolverStrategy {
     override fun resolve(artist: Artist?): Card? {
-        return artist?.let { createLastFMArtistCard(it as Artist.LastFMArtist) } // TODO corroborar casteo
+        return artist?.let { createLastFMArtistCard(it as LastFMArtistData) } // TODO corroborar casteo
     }
 
-    private fun createLastFMArtistCard(lastFMArtist: Artist.LastFMArtist): Card {
+    private fun createLastFMArtistCard(lastFMArtist: LastFMArtistData): Card {
         return Card(
-            lastFMArtist.info ?: "",
-            lastFMArtist.url,
+            lastFMArtist.artisInfo,
+            lastFMArtist.artistUrl,
             Source.LastFM,
-            "", // lastFM.logoUrl instead
-            lastFMArtist.isLocallyStored
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVioI832nuYIXqzySD8cOXRZEcdlAj3KfxA62UEC4FhrHVe0f7oZXp3_mSFG7nIcUKhg&usqp=CAU", // lastFM.logoUrl instead
+            false // should be added to the model
         )
     }
 }
-*/
+

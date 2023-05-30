@@ -56,4 +56,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     implementation project(':nytimesdata')
+    implementation project(':wikipediadata')
+    implementation project(':lastfmdata')
 }
