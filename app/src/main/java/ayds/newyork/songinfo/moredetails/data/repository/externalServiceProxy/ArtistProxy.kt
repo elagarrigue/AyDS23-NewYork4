@@ -15,8 +15,7 @@ class NYTimesArtistProxy(
 ) : ArtistProxy {
     override fun getCard(artistName: String): Card? {
         val nyTimesArtist = nyTimesArtistService.getArtist(artistName)
-        val artistCard = nyTimesArtistToCardResolver.resolve(nyTimesArtist)
-        return artistCard
+        return nyTimesArtistToCardResolver.resolve(nyTimesArtist)
     }
 }
 
@@ -27,8 +26,7 @@ class WikipediaArtistProxy(
 ) : ArtistProxy {
     override fun getCard(artistName: String): Card? {
         val wikipediaArtist = wikipediaArtistService.getArtist(artistName)
-        val artistCard = wikipediaArtistToCardResolver.resolve(wikipediaArtist)
-        return artistCard
+        return wikipediaArtistToCardResolver.resolve(wikipediaArtist)
     }
 }
 
@@ -39,7 +37,6 @@ class LastFMArtistProxy(
 ) : ArtistProxy {
     override fun getCard(artistName: String): Card? {
         val lastFMArtist = lastFMArtistService.getArtistData(artistName)
-        val artistCard = lastFMArtistToCardResolver.resolve(lastFMArtist)
-        return artistCard
+        return lastFMArtistToCardResolver.resolve(lastFMArtist)
     }
 }

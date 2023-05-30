@@ -15,8 +15,7 @@ internal class CursorToCardMapperImpl : CursorToCardMapper {
         while (cursor.moveToNext()) {
             val card = Card(
                 description = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_INFO)),
-                source = Source.valueOf(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SOURCE))),
-                sourceLogoUrl = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SOURCE_LOGO)),
+                source = Source.valueOf(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SOURCE)))
             )
             cards.add(card)
         }

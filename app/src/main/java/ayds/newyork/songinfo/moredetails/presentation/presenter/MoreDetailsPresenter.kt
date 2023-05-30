@@ -1,5 +1,6 @@
 package ayds.newyork.songinfo.moredetails.presentation.presenter
 
+import ayds.newYork4.artist.external.entities.NY_TIMES_LOGO_URL
 import ayds.newyork.songinfo.moredetails.domain.entities.Card
 import ayds.newyork.songinfo.moredetails.presentation.view.CardDescriptionHelper
 import ayds.newyork.songinfo.moredetails.domain.repository.CardRepository
@@ -48,8 +49,8 @@ class MoreDetailsPresenterImpl(
 
     private fun updateNoResultsUiState() {
         uiState = uiState.copy(
-            cardDescription = "",
-            cardUrl = "",
+            cardDescription = "No results.",
+            cardUrl = null,
             source = null,
             logoImageUrl = "",
             actionsEnabled = false,

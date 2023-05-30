@@ -16,8 +16,7 @@ internal class CardLocalStorageImpl(
         COLUMN_ID,
         COLUMN_ARTIST,
         COLUMN_INFO,
-        COLUMN_SOURCE,
-        COLUMN_SOURCE_LOGO
+        COLUMN_SOURCE
     )
 
     override fun onCreate(database: SQLiteDatabase) {
@@ -26,12 +25,11 @@ internal class CardLocalStorageImpl(
 
     override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
-    private fun createContentValues(artistName: String, cardInfo: String, source: Source, sourceLogoUrl: String): ContentValues {
+    private fun createContentValues(artistName: String, cardInfo: String?, source: Source): ContentValues {
         return ContentValues().apply {
             put(COLUMN_ARTIST, artistName)
             put(COLUMN_INFO, cardInfo)
             put(COLUMN_SOURCE, source.name)
-            put(COLUMN_SOURCE_LOGO, sourceLogoUrl)
         }
     }
 
@@ -39,7 +37,7 @@ internal class CardLocalStorageImpl(
         writableDatabase.insert(
             ARTISTS_TABLE_NAME,
             null,
-            createContentValues(artistName, card.infoUrl!!, card.source, card.sourceLogoUrl)
+            createContentValues(artistName, card.infoUrl, card.source)
         )
     }
 
