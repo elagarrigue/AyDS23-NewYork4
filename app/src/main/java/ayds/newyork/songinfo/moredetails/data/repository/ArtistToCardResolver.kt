@@ -2,7 +2,7 @@ package ayds.newyork.songinfo.moredetails.data.repository
 
 import ayds.newyork.songinfo.moredetails.domain.entities.Card
 import ayds.newyork.songinfo.moredetails.domain.entities.Source
-import com.test.artist.external.entities.Artist
+import ayds.newYork4.artist.external.entities.Artist
 
 class ArtistToCardResolver {
     private val resolvers = mapOf(

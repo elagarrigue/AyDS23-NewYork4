@@ -14,9 +14,9 @@ internal class CursorToCardMapperImpl : CursorToCardMapper {
         val cards: MutableList<Card> = mutableListOf()
         while (cursor.moveToNext()) {
             val card = Card(
-                    description = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_INFO)),
-                    source = Source.valueOf(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SOURCE))),
-                    sourceLogoUrl = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SOURCE_LOGO)),
+                description = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_INFO)),
+                source = Source.valueOf(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SOURCE))),
+                sourceLogoUrl = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SOURCE_LOGO)),
             )
             cards.add(card)
         }

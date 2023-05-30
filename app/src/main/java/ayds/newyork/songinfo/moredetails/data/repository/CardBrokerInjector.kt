@@ -2,7 +2,7 @@ package ayds.newyork.songinfo.moredetails.data.repository
 
 import ayds.newyork.songinfo.moredetails.data.repository.externalServiceProxy.ArtistProxy
 import ayds.newyork.songinfo.moredetails.data.repository.externalServiceProxy.NYTimesArtistProxy
-import com.test.artist.external.artists.NYTimesArtistInjector
+import ayds.newYork4.artist.external.artists.NYTimesArtistInjector
 //import com.test.artist.external.artists.WikipediaArtistInjector
 //import com.test.artist.external.artists.LastFMArtistInjector
 

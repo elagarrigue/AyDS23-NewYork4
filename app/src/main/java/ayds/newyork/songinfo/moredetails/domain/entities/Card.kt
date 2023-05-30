@@ -1,9 +1,7 @@
 package ayds.newyork.songinfo.moredetails.domain.entities
 
-import com.google.gson.JsonElement
-
 data class Card(
-    var description: JsonElement,
+    var description: String,
     var infoUrl: String? = null,
     var source: Source,
     var sourceLogoUrl: String = "",

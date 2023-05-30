@@ -5,7 +5,7 @@ import ayds.newyork.songinfo.moredetails.domain.repository.CardRepository
 import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsPresenter
 import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsPresenterImpl
 import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsUiState
-import com.test.artist.external.entities.Artist
+import ayds.newYork4.artist.external.entities.Artist
 import com.test.artist.external.entities.ArtistInfoHelper
 
 import io.mockk.*

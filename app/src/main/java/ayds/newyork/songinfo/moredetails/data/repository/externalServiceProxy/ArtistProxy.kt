@@ -2,7 +2,7 @@ package ayds.newyork.songinfo.moredetails.data.repository.externalServiceProxy
 
 import ayds.newyork.songinfo.moredetails.data.repository.ArtistToCardResolver
 import ayds.newyork.songinfo.moredetails.domain.entities.Card
-import com.test.artist.external.NYTimesArtistService
+import ayds.newYork4.artist.external.NYTimesArtistService
 
 interface ArtistProxy {
     fun getCard(artistName: String): Card?

@@ -1,15 +1,10 @@
 package ayds.newyork.songinfo.moredetails.presentation.view
 
 import ayds.newyork.songinfo.moredetails.domain.entities.Card
-import com.google.gson.JsonElement
 import java.util.Locale
 
 interface CardDescriptionHelper {
-    fun getCardDescriptionText(card: Card): String
-    fun formatAbstractArtist(
-        documentAbstractArtist: JsonElement?,
-        artistName: String
-    ): String
+    fun getCardDescriptionText(card: Card, artistName: String): String
 }
 
 class CardDescriptionHelperImpl : CardDescriptionHelper {
@@ -26,26 +21,23 @@ class CardDescriptionHelperImpl : CardDescriptionHelper {
         const val NOT_LOCALLY_STORED = ""
     }
 
-    override fun getCardDescriptionText(card: Card): String = when {
+    override fun getCardDescriptionText(card: Card, artistName: String): String = when {
         card.isLocallyStored -> LOCALLY_STORED
         else -> NOT_LOCALLY_STORED
-    } + card.description.ifEmpty {
-        DEFAULT_CARD_DESCRIPTION_RESULT_TEXT
+    } + when {
+        card.description.isNotEmpty() -> formatAbstractArtist(card.description, artistName)
+        else -> DEFAULT_CARD_DESCRIPTION_RESULT_TEXT
     }
 
-    override fun formatAbstractArtist(
-        documentAbstractArtist: JsonElement?,
+    private fun formatAbstractArtist(
+        documentAbstractArtist: String,
         artistName: String
     ): String {
-        var formattedArtist = DEFAULT_CARD_DESCRIPTION_RESULT_TEXT
-        if (documentAbstractArtist != null) {
-            formattedArtist = documentAbstractArtist.asString.replace(
-                ESCAPED_NEW_LINE_TEXT,
-                ESCAPED_NEW_LINE
-            )
-            formattedArtist = textToHtml(formattedArtist, artistName)
-        }
-        return formattedArtist
+        val formattedArtist = documentAbstractArtist.replace(
+            ESCAPED_NEW_LINE_TEXT,
+            ESCAPED_NEW_LINE
+        )
+        return textToHtml(formattedArtist, artistName)
     }
 
     private fun textToHtml(text: String, term: String?): String = StringBuilder().apply {

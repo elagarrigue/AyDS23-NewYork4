@@ -26,7 +26,7 @@ class MoreDetailsPresenterImpl(
             updateNoResultsUiState()
         } else {
             for (card in cards){
-                updateCardUiState(card)
+                updateCardUiState(card, artistName)
             }
         }
         uiStateObservable.notify(uiState)
@@ -36,9 +36,9 @@ class MoreDetailsPresenterImpl(
         return repository.getCardsByArtist(artistName)
     }
 
-    private fun updateCardUiState(card: Card) {
+    private fun updateCardUiState(card: Card, artistName: String) {
         uiState = uiState.copy(
-            cardDescription = cardDescriptionHelper.getCardDescriptionText(card),
+            cardDescription = cardDescriptionHelper.getCardDescriptionText(card, artistName),
             cardUrl = card.infoUrl,
             source = card.source,
             logoImageUrl = card.sourceLogoUrl,
