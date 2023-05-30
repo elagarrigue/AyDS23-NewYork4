@@ -17,8 +17,19 @@ class MoreDetailsView: AppCompatActivity() {
     private lateinit var artistView: TextView
     private lateinit var logoImageView: ImageView
     private lateinit var fullArticleButtonView: View
-    private lateinit var moreDetailsPresenter: MoreDetailsPresenter
     private lateinit var sourceLabel: TextView
+
+    private lateinit var artistViewWinchester: TextView
+    private lateinit var logoImageViewWinchester: ImageView
+    private lateinit var fullArticleButtonViewWinchester: View
+    private lateinit var sourceLabelWinchester: TextView
+
+    private lateinit var artistViewLast: TextView
+    private lateinit var logoImageViewLast: ImageView
+    private lateinit var fullArticleButtonViewLast: View
+    private lateinit var sourceLabelLast: TextView
+
+    private lateinit var moreDetailsPresenter: MoreDetailsPresenter
 
     private var artistUrl: String? = null
     private val imageLoader: ImageLoader = UtilsInjector.imageLoader
@@ -50,6 +61,16 @@ class MoreDetailsView: AppCompatActivity() {
         logoImageView = findViewById(R.id.imageView)
         fullArticleButtonView = findViewById(R.id.openUrlButton)
         sourceLabel = findViewById(R.id.sourceTextView)
+
+        artistViewWinchester = findViewById(R.id.textPanelWiki)
+        logoImageViewWinchester = findViewById(R.id.imageViewWiki)
+        fullArticleButtonViewWinchester = findViewById(R.id.openUrlButtonWiki)
+        sourceLabelWinchester = findViewById(R.id.sourceTextViewWiki)
+
+        artistViewLast = findViewById(R.id.textPanelLF)
+        logoImageViewLast = findViewById(R.id.imageViewLF)
+        fullArticleButtonViewLast = findViewById(R.id.openUrlButtonLF)
+        sourceLabelLast = findViewById(R.id.sourceTextViewLF)
     }
 
     private fun initObservers() {
