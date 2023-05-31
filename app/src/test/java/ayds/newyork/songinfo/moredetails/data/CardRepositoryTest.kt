@@ -3,10 +3,10 @@ package ayds.newyork.songinfo.moredetails.data
 import ayds.newyork.songinfo.moredetails.domain.repository.CardRepository
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.CardLocalStorage
 import ayds.newyork.songinfo.moredetails.data.repository.CardRepositoryImpl
-import ayds.newYork4.artist.external.entities.Artist
 import ayds.newyork.songinfo.moredetails.data.repository.CardBroker
 import ayds.newyork.songinfo.moredetails.domain.entities.Card
 import ayds.newyork.songinfo.moredetails.domain.entities.Source
+import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsUiState
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -25,12 +25,14 @@ class CardRepositoryTest {
 
     @Test
     fun `given non existing artist by name should return empty artist`() {
+
         every { cardLocalStorage.getCards("artistName") } returns emptyList()
         every { nyTimesArtistService.getCards("artistName") } returns emptyList()
 
         val result = cardRepository.getCardsByArtist("artistName")
-        val card = Card("",null,Source.NYTimes,"",false)
-        assertEquals(card, result)
+        val cardsMoreDetailsUiState = MoreDetailsUiState(emptyList())
+        val cardsEmpty=cardsMoreDetailsUiState.cards
+        assertEquals(cardsEmpty, result)
     }
 
     @Test
@@ -63,7 +65,8 @@ class CardRepositoryTest {
         every { nyTimesArtistService.getCards("artistName") } throws Exception()
 
         val result = cardRepository.getCardsByArtist("artistName")
-        val card = Card("",null,Source.NYTimes,"",false)
-        assertEquals(card, result.first())
+        val cardsMoreDetailsUiState = MoreDetailsUiState(emptyList())
+        val cardsEmpty=cardsMoreDetailsUiState.cards
+        assertEquals(cardsEmpty, result)
     }
 }
