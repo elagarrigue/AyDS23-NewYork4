@@ -1,52 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:nestedScrollingEnabled="true"
+    android:overScrollMode="always">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_margin="16dp"
-        app:layout_constraintBottom_toTopOf="@id/scrollView"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="spread_inside"/>
 
     <ScrollView
-        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/openUrlButton"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageView"
-        >
+        android:layout_height="match_parent"
+        android:nestedScrollingEnabled="true">
 
-        <TextView
-            android:id="@+id/textPane2"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:autoLink="web"
-            android:linksClickable="true"
-            />
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/newYorkTimesCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/imageViewNYT"
+                        android:layout_width="wrap_content"
+                        android:layout_height="58dp"
+                        android:layout_margin="16dp"
+                        android:contentDescription="The New York Times logo" />
+
+                    <ScrollView
+                        android:id="@+id/scrollViewNYT"
+                        android:layout_width="match_parent"
+                        android:layout_height="128dp"
+                        android:layout_marginTop="16dp"
+                        android:nestedScrollingEnabled="true">
+
+                        <TextView
+                            android:id="@+id/textPanelNYT"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autoLink="web"
+                            android:linksClickable="true"
+                            android:padding="16dp" />
+                    </ScrollView>
+
+                    <Button
+                        android:id="@+id/openUrlButtonNYT"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:text="Visit Full Article" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/wikipediaCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/imageViewWiki"
+                        android:layout_width="wrap_content"
+                        android:layout_height="58dp"
+                        android:layout_margin="16dp"
+                        android:contentDescription="Wikipedia logo" />
+
+                    <ScrollView
+                        android:id="@+id/scrollViewWiki"
+                        android:layout_width="match_parent"
+                        android:layout_height="128dp"
+                        android:layout_marginTop="16dp"
+                        android:nestedScrollingEnabled="true">
+
+                        <TextView
+                            android:id="@+id/textPanelWiki"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autoLink="web"
+                            android:linksClickable="true"
+                            android:padding="16dp" />
+                    </ScrollView>
+
+                    <Button
+                        android:id="@+id/openUrlButtonWiki"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Visit Full Article" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/lastFmCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/imageViewLF"
+                        android:layout_width="wrap_content"
+                        android:layout_height="58dp"
+                        android:layout_margin="16dp"
+                        android:contentDescription="LastFM logo" />
+
+                    <ScrollView
+                        android:id="@+id/scrollViewLF"
+                        android:layout_width="match_parent"
+                        android:layout_height="128dp"
+                        android:layout_marginTop="16dp"
+                        android:nestedScrollingEnabled="true">
+
+                        <TextView
+                            android:id="@+id/textPanelLF"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autoLink="web"
+                            android:linksClickable="true"
+                            android:padding="16dp" />
+                    </ScrollView>
+
+                    <Button
+                        android:id="@+id/openUrlButtonLF"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Visit Full Article" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
     </ScrollView>
-
-
-
-    <Button
-        android:id="@+id/openUrlButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="View Full Article"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/scrollView" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

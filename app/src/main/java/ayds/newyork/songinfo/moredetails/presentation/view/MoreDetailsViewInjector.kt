@@ -1,37 +1,35 @@
 package ayds.newyork.songinfo.moredetails.presentation.view
 
 import androidx.appcompat.app.AppCompatActivity
-import ayds.newyork.songinfo.moredetails.data.ArtistRepositoryImpl
-import ayds.newyork.songinfo.moredetails.data.local.nytimes.NYTimesLocalStorage
-import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.CursorToArtistMapper
-import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.CursorToArtistMapperImpl
-import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.NYTimesLocalStorageImpl
-import ayds.newyork.songinfo.moredetails.domain.repository.ArtistRepository
+import ayds.newyork.songinfo.moredetails.data.repository.CardRepositoryImpl
+import ayds.newyork.songinfo.moredetails.data.local.nytimes.CardLocalStorage
+import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.CursorToCardMapper
+import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.CursorToCardMapperImpl
+import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.CardLocalStorageImpl
+import ayds.newyork.songinfo.moredetails.data.repository.CardBrokerInjector
+import ayds.newyork.songinfo.moredetails.domain.repository.CardRepository
 import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsPresenter
 import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsPresenterImpl
-import com.test.artist.external.artists.NYTimesArtistInjector
-import com.test.artist.external.entities.ArtistInfoHelper
-import com.test.artist.external.entities.ArtistInfoHelperImpl
 
 object MoreDetailsViewInjector {
-    private var cursorToArtistMapper: CursorToArtistMapper = CursorToArtistMapperImpl()
+    private var cursorToArtistMapper: CursorToCardMapper = CursorToCardMapperImpl()
 
     private lateinit var moreDetailsView: AppCompatActivity
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
-    private lateinit var nyTimesLocalStorage: NYTimesLocalStorage
-    private lateinit var artistRepository: ArtistRepository
-    private lateinit var artistHelper : ArtistInfoHelper
+    private lateinit var cardLocalStorage: CardLocalStorage
+    private lateinit var cardRepository: CardRepository
+    private lateinit var cardDescriptionHelper : CardDescriptionHelper
 
     fun init(moreDetailsView: AppCompatActivity) {
-        initArtistHelper()
+        initCardDescriptionHelper()
         initMoreDetailsView(moreDetailsView)
         initNYTimesLocalStorage()
         initInfoRepository()
         initPresenter()
     }
 
-    private fun initArtistHelper(){
-        artistHelper = ArtistInfoHelperImpl()
+    private fun initCardDescriptionHelper(){
+        cardDescriptionHelper = CardDescriptionHelperImpl()
     }
 
     private fun initMoreDetailsView(moreDetailsView : AppCompatActivity){
@@ -39,15 +37,16 @@ object MoreDetailsViewInjector {
     }
 
     private fun initNYTimesLocalStorage(){
-        nyTimesLocalStorage = NYTimesLocalStorageImpl(moreDetailsView, cursorToArtistMapper)
+        cardLocalStorage = CardLocalStorageImpl(moreDetailsView, cursorToArtistMapper)
     }
 
     private fun initInfoRepository(){
-        artistRepository = ArtistRepositoryImpl(nyTimesLocalStorage, NYTimesArtistInjector.nyTimesArtistService)
+        CardBrokerInjector.init()
+        cardRepository = CardRepositoryImpl(cardLocalStorage, CardBrokerInjector.getCardBroker())
     }
 
     private fun initPresenter(){
-        moreDetailsPresenter = MoreDetailsPresenterImpl(artistRepository, artistHelper)
+        moreDetailsPresenter = MoreDetailsPresenterImpl(cardRepository, cardDescriptionHelper)
     }
 
     fun getMoreDetailsPresenter(): MoreDetailsPresenter {

@@ -1,9 +1,10 @@
 package ayds.newyork.songinfo.moredetails.data
 
-import ayds.newyork.songinfo.moredetails.domain.repository.ArtistRepository
-import ayds.newyork.songinfo.moredetails.data.local.nytimes.NYTimesLocalStorage
+import ayds.newyork.songinfo.moredetails.domain.repository.CardRepository
+import ayds.newyork.songinfo.moredetails.data.local.nytimes.CardLocalStorage
+import ayds.newyork.songinfo.moredetails.data.repository.CardRepositoryImpl
 import com.test.artist.external.NYTimesArtistService
-import com.test.artist.external.entities.Artist
+import ayds.newYork4.artist.external.entities.Artist
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -11,21 +12,21 @@ import org.junit.Assert.*
 import org.junit.Test
 import java.lang.Exception
 
-class ArtistRepositoryTest {
+class CardRepositoryTest {
 
-    private val nyTimesLocalStorage: NYTimesLocalStorage = mockk(relaxUnitFun = true)
+    private val cardLocalStorage: CardLocalStorage = mockk(relaxUnitFun = true)
     private val nyTimesArtistService: NYTimesArtistService = mockk(relaxUnitFun = true)
 
-    private val artistRepository: ArtistRepository by lazy {
-        ArtistRepositoryImpl(nyTimesLocalStorage, nyTimesArtistService)
+    private val cardRepository: CardRepository by lazy {
+        CardRepositoryImpl(cardLocalStorage, nyTimesArtistService)
     }
 
     @Test
     fun `given non existing artist by name should return empty artist`() {
-        every { nyTimesLocalStorage.getArtistByName("artistName") } returns null
+        every { cardLocalStorage.getCards("artistName") } returns null
         every { nyTimesArtistService.getArtist("artistName") } returns null
 
-        val result = artistRepository.getArtist("artistName")
+        val result = cardRepository.getCardsByArtist("artistName")
 
         assertEquals(Artist.EmptyArtist, result)
     }
@@ -33,9 +34,9 @@ class ArtistRepositoryTest {
     @Test
     fun `given existing artist by name should return artist and mark it as local`() {
         val artist = Artist.NYTimesArtist("url", "info", false)
-        every { nyTimesLocalStorage.getArtistByName("artistName") } returns artist
+        every { cardLocalStorage.getArtistByName("artistName") } returns artist
 
-        val result = artistRepository.getArtist("artistName")
+        val result = cardRepository.getCardsByArtist("artistName")
 
         assertEquals(artist, result)
         assertTrue(artist.isLocallyStored)
@@ -44,22 +45,22 @@ class ArtistRepositoryTest {
     @Test
     fun `given non existing artist by name should get the artist and store it`() {
         val artist = Artist.NYTimesArtist("url", "info", false)
-        every { nyTimesLocalStorage.getArtistByName("artistName") } returns null
+        every { cardLocalStorage.getArtistByName("artistName") } returns null
         every { nyTimesArtistService.getArtist("artistName") } returns artist
 
-        val result = artistRepository.getArtist("artistName")
+        val result = cardRepository.getCardsByArtist("artistName")
 
         assertEquals(artist, result)
         assertFalse(artist.isLocallyStored)
-        verify { nyTimesLocalStorage.insertArtist("artistName", artist.info!!) }
+        verify { cardLocalStorage.insertArtist("artistName", artist.info!!) }
     }
 
     @Test
     fun `given service exception should return empty artist`() {
-        every { nyTimesLocalStorage.getArtistByName("artistName") } returns null
+        every { cardLocalStorage.getArtistByName("artistName") } returns null
         every { nyTimesArtistService.getArtist("artistName") } throws mockk<Exception>()
 
-        val result = artistRepository.getArtist("artistName")
+        val result = cardRepository.getCardsByArtist("artistName")
 
         assertEquals(Artist.EmptyArtist, result)
     }
