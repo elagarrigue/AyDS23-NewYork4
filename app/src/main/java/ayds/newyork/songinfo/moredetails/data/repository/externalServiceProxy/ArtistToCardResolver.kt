@@ -1,5 +1,6 @@
 package ayds.newyork.songinfo.moredetails.data.repository.externalServiceProxy
 
+import ayds.lisboa1.lastfm.LASTFM_IMAGE
 import ayds.newyork.songinfo.moredetails.domain.entities.Card
 import ayds.newyork.songinfo.moredetails.domain.entities.Source
 import ayds.newYork4.artist.external.entities.Artist
@@ -49,7 +50,7 @@ class LastFMArtistToCardResolver {
             lastFMArtist.artisInfo,
             lastFMArtist.artistUrl,
             Source.LastFM,
-            NY_TIMES_LOGO_URL // TODO: Replace with actual LastFM logo
+            LASTFM_IMAGE
         )
     }
 }
