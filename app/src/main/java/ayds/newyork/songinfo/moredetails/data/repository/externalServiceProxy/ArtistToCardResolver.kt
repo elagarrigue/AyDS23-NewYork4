@@ -5,6 +5,7 @@ import ayds.newyork.songinfo.moredetails.domain.entities.Source
 import ayds.newYork4.artist.external.entities.Artist
 import ayds.lisboa1.lastfm.LastFMArtistData
 import ayds.newYork4.artist.external.entities.NY_TIMES_LOGO_URL
+import ayds.winchester3.wikiartist.artist.externalWikipedia.WIKIPEDIA_LOGO_URL
 import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaArtist
 
 class NYTimesArtistToCardResolver {
@@ -32,7 +33,7 @@ class WikipediaArtistToCardResolver {
             wikipediaArtist.description,
             wikipediaArtist.wikipediaURL,
             Source.Wikipedia,
-            NY_TIMES_LOGO_URL // TODO: Replace with actual Wikipedia logo
+            WIKIPEDIA_LOGO_URL
         )
     }
 }

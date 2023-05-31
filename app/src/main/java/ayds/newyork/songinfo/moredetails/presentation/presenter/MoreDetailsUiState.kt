@@ -6,6 +6,6 @@ data class MoreDetailsUiState(
     val cardDescription: String = "",
     val cardUrl: String? = null,
     val source: Source? = null,
-    val logoImageUrl: String? = "",
+    val logoImageUrl: String = "",
     val actionsEnabled: Boolean = false,
 )

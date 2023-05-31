@@ -14,24 +14,23 @@ import ayds.newyork.songinfo.utils.navigation.NavigationUtils
 import ayds.newyork.songinfo.utils.view.ImageLoader
 
 class MoreDetailsView: AppCompatActivity() {
-    private lateinit var artistView: TextView
-    private lateinit var logoImageView: ImageView
-    private lateinit var fullArticleButtonView: View
-    private lateinit var sourceLabel: TextView
+    private lateinit var newYorkTimesDescriptionView: TextView
+    private lateinit var newYorkTimesLogoView: ImageView
+    private lateinit var newYorkTimesUrlView: View
 
-    private lateinit var artistViewWinchester: TextView
-    private lateinit var logoImageViewWinchester: ImageView
-    private lateinit var fullArticleButtonViewWinchester: View
-    private lateinit var sourceLabelWinchester: TextView
+    private lateinit var wikipediaDescriptionView: TextView
+    private lateinit var wikipediaLogoView: ImageView
+    private lateinit var wikipediaUrlView: View
 
-    private lateinit var artistViewLast: TextView
-    private lateinit var logoImageViewLast: ImageView
-    private lateinit var fullArticleButtonViewLast: View
-    private lateinit var sourceLabelLast: TextView
+    private lateinit var lastFmDescriptionView: TextView
+    private lateinit var lastFmLogoView: ImageView
+    private lateinit var lastFmUrlView: View
 
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
 
-    private var artistUrl: String? = null
+    private var newYorkTimesUrl: String? = null
+    private var wikipediaUrl: String? = null
+    private var lastFmUrl: String? = null
     private val imageLoader: ImageLoader = UtilsInjector.imageLoader
     private val navigationUtils: NavigationUtils = UtilsInjector.navigationUtils
 
@@ -57,32 +56,45 @@ class MoreDetailsView: AppCompatActivity() {
     }
 
     private fun initProperties() {
-        artistView = findViewById(R.id.textPane2)
-        logoImageView = findViewById(R.id.imageView)
-        fullArticleButtonView = findViewById(R.id.openUrlButton)
-        sourceLabel = findViewById(R.id.sourceTextView)
+        newYorkTimesLogoView = findViewById(R.id.imageViewNYT)
+        newYorkTimesDescriptionView = findViewById(R.id.textPanelNYT)
+        newYorkTimesUrlView = findViewById(R.id.openUrlButtonNYT)
 
-        artistViewWinchester = findViewById(R.id.textPanelWiki)
-        logoImageViewWinchester = findViewById(R.id.imageViewWiki)
-        fullArticleButtonViewWinchester = findViewById(R.id.openUrlButtonWiki)
-        sourceLabelWinchester = findViewById(R.id.sourceTextViewWiki)
+        wikipediaLogoView = findViewById(R.id.imageViewWiki)
+        wikipediaDescriptionView = findViewById(R.id.textPanelWiki)
+        wikipediaUrlView = findViewById(R.id.openUrlButtonWiki)
 
-        artistViewLast = findViewById(R.id.textPanelLF)
-        logoImageViewLast = findViewById(R.id.imageViewLF)
-        fullArticleButtonViewLast = findViewById(R.id.openUrlButtonLF)
-        sourceLabelLast = findViewById(R.id.sourceTextViewLF)
+        lastFmLogoView = findViewById(R.id.imageViewLF)
+        lastFmDescriptionView = findViewById(R.id.textPanelLF)
+        lastFmUrlView = findViewById(R.id.openUrlButtonLF)
     }
 
     private fun initObservers() {
-        moreDetailsPresenter.uiStateObservable.subscribe {
-            uiState -> updateUi(uiState)
+        moreDetailsPresenter.newYorkTimesUiStateObservable.subscribe {
+            uiState -> updateNewYorkTimesUi(uiState)
+        }
+        moreDetailsPresenter.wikipediaUiStateObservable.subscribe {
+            uiState -> updateWikipediaUi(uiState)
+        }
+        moreDetailsPresenter.lastFmUiStateObservable.subscribe {
+            uiState -> updateLastFmUi(uiState)
         }
     }
 
     private fun initListeners() {
         runOnUiThread {
-            fullArticleButtonView.setOnClickListener {
-                artistUrl?.let {
+            newYorkTimesUrlView.setOnClickListener {
+                newYorkTimesUrl?.let {
+                    navigationUtils.openExternalUrl(this, it)
+                }
+            }
+            wikipediaUrlView.setOnClickListener {
+                wikipediaUrl?.let {
+                    navigationUtils.openExternalUrl(this, it)
+                }
+            }
+            lastFmUrlView.setOnClickListener {
+                lastFmUrl?.let {
                     navigationUtils.openExternalUrl(this, it)
                 }
             }
@@ -97,38 +109,108 @@ class MoreDetailsView: AppCompatActivity() {
         }.start()
     }
 
-    private fun updateUi(uiState: MoreDetailsUiState){
-        updateArtistDescription(uiState)
-        updateArtistUrl(uiState)
-        updateLogoImage(uiState)
-        updateFullArticleState(uiState)
+    private fun updateNewYorkTimesUi(uiState: MoreDetailsUiState){
+        updateNewYorkTimesDescription(uiState)
+        updateNewYorkTimesUrl(uiState)
+        updateNewYorkTimesLogo(uiState)
+        updateNewYorkTimesFullArticleState(uiState)
     }
 
-    private fun updateArtistDescription(uiState: MoreDetailsUiState) {
+    private fun updateNewYorkTimesDescription(uiState: MoreDetailsUiState) {
         runOnUiThread {
-            artistView.text = Html.fromHtml(uiState.cardDescription)
+            newYorkTimesDescriptionView.text = Html.fromHtml(uiState.cardDescription)
         }
     }
 
-    private fun updateArtistUrl(uiState: MoreDetailsUiState) {
+    private fun updateNewYorkTimesUrl(uiState: MoreDetailsUiState) {
         runOnUiThread {
-            artistUrl = uiState.cardUrl
+            newYorkTimesUrl = uiState.cardUrl
         }
     }
 
-    private fun updateLogoImage(uiState: MoreDetailsUiState) {
+    private fun updateNewYorkTimesLogo(uiState: MoreDetailsUiState) {
         runOnUiThread {
-            imageLoader.loadImageIntoView(uiState.logoImageUrl!!, logoImageView)
+            imageLoader.loadImageIntoView(uiState.logoImageUrl, newYorkTimesLogoView)
         }
     }
 
-    private fun updateFullArticleState(uiState: MoreDetailsUiState) {
-        enableActions(uiState.actionsEnabled)
+    private fun updateNewYorkTimesFullArticleState(uiState: MoreDetailsUiState) {
+        enableNewYorkTimesActions(uiState.actionsEnabled)
     }
 
-    private fun enableActions(enable: Boolean) {
+    private fun enableNewYorkTimesActions(enable: Boolean) {
         runOnUiThread {
-            fullArticleButtonView.isEnabled = enable
+            newYorkTimesUrlView.isEnabled = enable
+        }
+    }
+
+    private fun updateWikipediaUi(uiState: MoreDetailsUiState){
+        updateWikipediaDescription(uiState)
+        updateWikipediaUrl(uiState)
+        updateWikipediaLogo(uiState)
+        updateWikipediaFullArticleState(uiState)
+    }
+
+    private fun updateWikipediaDescription(uiState: MoreDetailsUiState) {
+        runOnUiThread {
+            wikipediaDescriptionView.text = Html.fromHtml(uiState.cardDescription)
+        }
+    }
+
+    private fun updateWikipediaUrl(uiState: MoreDetailsUiState) {
+        runOnUiThread {
+            wikipediaUrl = uiState.cardUrl
+        }
+    }
+
+    private fun updateWikipediaLogo(uiState: MoreDetailsUiState) {
+        runOnUiThread {
+            imageLoader.loadImageIntoView(uiState.logoImageUrl, wikipediaLogoView)
+        }
+    }
+
+    private fun updateWikipediaFullArticleState(uiState: MoreDetailsUiState) {
+        enableWikipediaActions(uiState.actionsEnabled)
+    }
+
+    private fun enableWikipediaActions(enable: Boolean) {
+        runOnUiThread {
+            wikipediaUrlView.isEnabled = enable
+        }
+    }
+
+    private fun updateLastFmUi(uiState: MoreDetailsUiState){
+        updateLastFmDescription(uiState)
+        updateLastFmUrl(uiState)
+        updateLastFmLogo(uiState)
+        updateLastFmFullArticleState(uiState)
+    }
+
+    private fun updateLastFmDescription(uiState: MoreDetailsUiState) {
+        runOnUiThread {
+            lastFmDescriptionView.text = Html.fromHtml(uiState.cardDescription)
+        }
+    }
+
+    private fun updateLastFmUrl(uiState: MoreDetailsUiState) {
+        runOnUiThread {
+            lastFmUrl = uiState.cardUrl
+        }
+    }
+
+    private fun updateLastFmLogo(uiState: MoreDetailsUiState) {
+        runOnUiThread {
+            imageLoader.loadImageIntoView(uiState.logoImageUrl, lastFmLogoView)
+        }
+    }
+
+    private fun updateLastFmFullArticleState(uiState: MoreDetailsUiState) {
+        enableLastFmActions(uiState.actionsEnabled)
+    }
+
+    private fun enableLastFmActions(enable: Boolean) {
+        runOnUiThread {
+            lastFmUrlView.isEnabled = enable
         }
     }
 }

@@ -11,7 +11,6 @@ class CardBroker(
     fun getCards(artistName: String): List<Card> {
         val cards: MutableList<Card> = ArrayList()
 
-        // TODO (1) Lógica para seleccionar el servicio externo, supongamos por ahora que se desean todas por default
         val nyTimesCard = nyTimesArtistProxy.getCard(artistName)
         if (nyTimesCard != null) {
             cards.add(nyTimesCard)
