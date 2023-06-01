@@ -7,6 +7,7 @@ import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsUiSta
 import ayds.newyork.songinfo.moredetails.presentation.view.CardDescriptionHelper
 
 import io.mockk.*
+import org.junit.Assert
 import org.junit.Test
 
 class MoreDetailsPresenterTest {
@@ -15,21 +16,15 @@ class MoreDetailsPresenterTest {
     private val presenter = MoreDetailsPresenterImpl(artistInfoRepository,artistCardHelper)
 
     @Test
-    fun `on fetch should notify subscribers with otherInfoUiState`() {
-        val cards: List<Card> = mockk()
+    fun `on fetch should notify subscribers with MoreDetailsUiState`() {
+        val cards: List<Card> = mockk(relaxed = true)
 
-        val otherInfoUiStateTester: (MoreDetailsUiState) -> Unit = mockk(relaxed = true)
         presenter.uiStateObservable.subscribe {
-            otherInfoUiStateTester(it)
+            uiState -> Assert.assertEquals(uiState.cards, cards)
         }
 
         every { artistInfoRepository.getCardsByArtist("artistName") } returns cards
 
-        val otherInfoUiState = MoreDetailsUiState(
-           cards
-        )
         presenter.updateArtistCards("artistName")
-
-        verify { otherInfoUiStateTester(otherInfoUiState) }
     }
 }

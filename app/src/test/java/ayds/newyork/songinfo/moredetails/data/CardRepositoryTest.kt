@@ -1,5 +1,6 @@
 package ayds.newyork.songinfo.moredetails.data
 
+import ayds.newYork4.artist.external.entities.NY_TIMES_LOGO_URL
 import ayds.newyork.songinfo.moredetails.domain.repository.CardRepository
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.CardLocalStorage
 import ayds.newyork.songinfo.moredetails.data.repository.CardRepositoryImpl
@@ -25,38 +26,52 @@ class CardRepositoryTest {
 
     @Test
     fun `given non existing artist by name should return empty artist`() {
-
         every { cardLocalStorage.getCards("artistName") } returns emptyList()
         every { nyTimesArtistService.getCards("artistName") } returns emptyList()
 
         val result = cardRepository.getCardsByArtist("artistName")
         val cardsMoreDetailsUiState = MoreDetailsUiState(emptyList())
-        val cardsEmpty=cardsMoreDetailsUiState.cards
+        val cardsEmpty = cardsMoreDetailsUiState.cards
         assertEquals(cardsEmpty, result)
     }
 
     @Test
     fun `given existing artist by name should return artist and mark it as local`() {
-        val artistInfo = Card("descripcion", "url", Source.NYTimes,"new York")
-        every { cardLocalStorage.getCards("artistName").first() } returns artistInfo
+        val card = Card(
+            "description",
+            "url",
+            Source.NYTimes,
+            NY_TIMES_LOGO_URL,
+            true
+        )
+        val cards: MutableList<Card> = ArrayList()
+        cards.add(card)
+        every { cardLocalStorage.getCards("artistName") } returns cards
 
         val result = cardRepository.getCardsByArtist("artistName")
 
-        assertEquals(artistInfo, result.first())
-        assertTrue(artistInfo.isLocallyStored)
+        assertEquals(cards, result)
+        assertTrue(result.first().isLocallyStored)
     }
 
     @Test
     fun `given non existing artist by name should get the artist and store it`() {
-        val artist = Card("descripcion", "url", Source.NYTimes,"new York")
+        val card = Card(
+            "description",
+            "url",
+            Source.NYTimes,
+            NY_TIMES_LOGO_URL
+        )
+        val cards: MutableList<Card> = ArrayList()
+        cards.add(card)
         every { cardLocalStorage.getCards("artistName") } returns emptyList()
-        every { nyTimesArtistService.getCards("artistName").first() } returns artist
+        every { nyTimesArtistService.getCards("artistName") } returns cards
 
         val result = cardRepository.getCardsByArtist("artistName")
 
-        assertEquals(artist, result.first())
-        assertFalse(artist.isLocallyStored)
-        verify { cardLocalStorage.saveCard("artistName", artist) }
+        assertEquals(cards, result)
+        assertFalse(result.first().isLocallyStored)
+        verify { cardLocalStorage.saveCard("artistName", card) }
     }
 
     @Test
@@ -66,7 +81,7 @@ class CardRepositoryTest {
 
         val result = cardRepository.getCardsByArtist("artistName")
         val cardsMoreDetailsUiState = MoreDetailsUiState(emptyList())
-        val cardsEmpty=cardsMoreDetailsUiState.cards
+        val cardsEmpty = cardsMoreDetailsUiState.cards
         assertEquals(cardsEmpty, result)
     }
 }

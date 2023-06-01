@@ -4,4 +4,6 @@
     <string name="search">Search</string>
     <string name="more_details">More Details</string>
     <string name="open_song">Open Song</string>
+    <string name="itemCardLogoDescription">The item\'s source logo.</string>
+    <string name="itemCardFullArticleButtonText">Read Full Article</string>
 </resources>

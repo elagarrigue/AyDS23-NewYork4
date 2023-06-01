@@ -21,12 +21,15 @@ class CardDescriptionHelperImpl : CardDescriptionHelper {
         const val NOT_LOCALLY_STORED = ""
     }
 
-    override fun getCardDescriptionText(card: Card, artistName: String): String = when {
-        card.isLocallyStored -> LOCALLY_STORED
-        else -> NOT_LOCALLY_STORED
-    } + when {
-        card.description.isNotEmpty() -> formatAbstractArtist(card.description, artistName)
-        else -> DEFAULT_CARD_DESCRIPTION_RESULT_TEXT
+    override fun getCardDescriptionText(card: Card, artistName: String): String {
+        card.description = when {
+            card.isLocallyStored -> LOCALLY_STORED
+            else -> NOT_LOCALLY_STORED
+        } + card.description
+        return when {
+            card.description.isNotEmpty() -> formatAbstractArtist(card.description, artistName)
+            else -> DEFAULT_CARD_DESCRIPTION_RESULT_TEXT
+        }
     }
 
     private fun formatAbstractArtist(
