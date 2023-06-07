@@ -6,4 +6,5 @@
     <string name="open_song">Open Song</string>
     <string name="itemCardLogoDescription">The item\'s source logo.</string>
     <string name="itemCardFullArticleButtonText">Read Full Article</string>
+    <string name="noResultsText">No results</string>
 </resources>

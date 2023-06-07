@@ -1,6 +1,7 @@
 package ayds.newyork.songinfo.moredetails.presentation.view
 
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -10,17 +11,19 @@ import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsUiSta
 
 class MoreDetailsView: AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: RecyclerViewAdapter
+    private lateinit var noResultsTextView: TextView
+    private lateinit var adapter: RecyclerViewCardAdapter
 
     private lateinit var moreDetailsPresenter: MoreDetailsPresenter
 
     companion object {
+        const val NO_RESULTS_TEXT = "No Results"
         const val ARTIST_NAME_EXTRA = "artistName"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_other_info)
+        setContentView(R.layout.activity_more_details)
 
         initModule()
         initProperties()
@@ -35,10 +38,11 @@ class MoreDetailsView: AppCompatActivity() {
     }
 
     private fun initProperties() {
+        noResultsTextView = findViewById(R.id.noResultsTextView)
         recyclerView = findViewById(R.id.moreDetailsRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        adapter = RecyclerViewAdapter(emptyList(), this)
+        adapter = RecyclerViewCardAdapter(emptyList())
         recyclerView.adapter = adapter
     }
 
@@ -58,7 +62,10 @@ class MoreDetailsView: AppCompatActivity() {
 
     private fun updateUi(uiState: MoreDetailsUiState){
         runOnUiThread {
-            adapter = RecyclerViewAdapter(uiState.cards, this)
+            if(uiState.cards.isEmpty()){
+                noResultsTextView.text = NO_RESULTS_TEXT
+            }
+            adapter = RecyclerViewCardAdapter(uiState.cards)
             recyclerView.adapter = adapter
         }
     }

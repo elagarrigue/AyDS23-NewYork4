@@ -9,12 +9,10 @@ import ayds.lisboa1.lastfm.LastFMService
 class LastFMServiceProxy(
     private val lastFMArtistService: LastFMService,
 ) : ServiceProxy {
-    override fun getCard(artistName: String): Card {
+    override fun getCard(artistName: String): Card? {
         val lastFMArtist = lastFMArtistService.getArtistData(artistName)
-        return if(lastFMArtist == null){
-            createEmptyCard()
-        } else {
-            createLastFMArtistCard(lastFMArtist)
+        return lastFMArtist?.let {
+            createLastFMArtistCard(it)
         }
     }
 
@@ -24,15 +22,6 @@ class LastFMServiceProxy(
             lastFMArtist.artistUrl,
             Source.LastFM,
             LASTFM_IMAGE
-        )
-    }
-
-    private fun createEmptyCard(): Card {
-        return Card(
-            description = "",
-            infoUrl = "",
-            source = Source.LastFM,
-            sourceLogoUrl = LASTFM_IMAGE
         )
     }
 }

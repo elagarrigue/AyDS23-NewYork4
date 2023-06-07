@@ -7,7 +7,10 @@ class CardBroker(private val serviceProxies: List<ServiceProxy>) {
     fun getCards(artistName: String): List<Card> {
         val cards: MutableList<Card> = ArrayList()
         for (proxy in serviceProxies) {
-            cards.add(proxy.getCard(artistName))
+            val card = proxy.getCard(artistName)
+            card?.let {
+                cards.add(it)
+            }
         }
         return cards
     }

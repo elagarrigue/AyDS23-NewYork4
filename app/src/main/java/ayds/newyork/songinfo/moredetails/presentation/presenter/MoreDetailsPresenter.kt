@@ -30,8 +30,8 @@ class MoreDetailsPresenterImpl(
     }
 
     private fun updateUiState(cards: List<Card>, artistName: String) {
-        for (card: Card in cards){
-            card.description = cardDescriptionHelper.getCardDescriptionText(card, artistName)
+        cards.map {
+            it.description = cardDescriptionHelper.getCardDescriptionText(it, artistName)
         }
         uiState = uiState.copy(
             cards = cards
