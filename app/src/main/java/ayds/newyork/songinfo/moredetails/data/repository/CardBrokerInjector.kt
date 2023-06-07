@@ -20,24 +20,18 @@ object CardBrokerInjector {
     }
 
     private fun initArtistProxies() {
-        nyTimesServiceProxy = NYTimesServiceProxy(
-            NYTimesArtistInjector.nyTimesArtistService,
-        )
-
-        wikipediaServiceProxy = WikipediaServiceProxy(
-            WikipediaInjector.wikipediaService,
-        )
-        lastFMServiceProxy = LastFMServiceProxy(
-            LastFMInjector.getLastFMService(),
-
-        )
+        nyTimesServiceProxy = NYTimesServiceProxy(NYTimesArtistInjector.nyTimesArtistService)
+        wikipediaServiceProxy = WikipediaServiceProxy(WikipediaInjector.wikipediaService)
+        lastFMServiceProxy = LastFMServiceProxy(LastFMInjector.getLastFMService())
     }
 
     private fun initCardBroker() {
-        cardBroker = CardBroker(nyTimesServiceProxy, wikipediaServiceProxy, lastFMServiceProxy)
+        val proxies: MutableList<ServiceProxy> = ArrayList()
+        proxies.add(nyTimesServiceProxy)
+        proxies.add(wikipediaServiceProxy)
+        proxies.add(lastFMServiceProxy)
+        cardBroker = CardBroker(proxies)
     }
 
-    fun getCardBroker(): CardBroker {
-        return cardBroker
-    }
+    fun getCardBroker(): CardBroker = cardBroker
 }

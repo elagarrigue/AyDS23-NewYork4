@@ -6,14 +6,9 @@ import ayds.newyork.songinfo.moredetails.domain.entities.Card
 class CardBroker(private val serviceProxies: List<ServiceProxy>) {
     fun getCards(artistName: String): List<Card> {
         val cards: MutableList<Card> = ArrayList()
-
         for (proxy in serviceProxies) {
-            val card = proxy.getCard(artistName)
-            if (card != null) {
-                cards.add(card)
-            }
+            cards.add(proxy.getCard(artistName))
         }
-
         return cards
     }
 }

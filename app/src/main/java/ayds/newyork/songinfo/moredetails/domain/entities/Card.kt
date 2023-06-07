@@ -2,9 +2,9 @@ package ayds.newyork.songinfo.moredetails.domain.entities
 
 data class Card(
     var description: String,
-    var infoUrl: String? = null,
+    var infoUrl: String,
     var source: Source,
-    var sourceLogoUrl: String = "",
+    var sourceLogoUrl: String,
     var isLocallyStored: Boolean = false,
 )
 

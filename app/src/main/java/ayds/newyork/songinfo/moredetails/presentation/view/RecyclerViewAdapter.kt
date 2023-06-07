@@ -1,5 +1,6 @@
 package ayds.newyork.songinfo.moredetails.presentation.view
 
+import android.os.Build
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
@@ -26,13 +27,17 @@ class RecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val card = items[position]
         imageLoader.loadImageIntoView(card.sourceLogoUrl, holder.logoView)
-        holder.descriptionView.text = Html.fromHtml(card.description)
+        if(Build.VERSION.SDK_INT <= 23){
+            holder.descriptionView.text = Html.fromHtml(card.description)
+        } else {
+            holder.descriptionView.text = Html.fromHtml(card.description, Html.FROM_HTML_MODE_LEGACY)
+        }
         holder.urlView.setOnClickListener {
-            card.infoUrl?.let {
-                navigationUtils.openExternalUrl(activity, it)
+            if(card.infoUrl.isNotEmpty()) {
+                navigationUtils.openExternalUrl(activity, card.infoUrl)
             }
         }
-        holder.urlView.isEnabled = card.infoUrl != null
+        holder.urlView.isEnabled = card.infoUrl.isNotEmpty()
     }
 
     override fun getItemCount(): Int {

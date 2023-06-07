@@ -7,7 +7,7 @@ import ayds.newyork.songinfo.moredetails.domain.entities.Card
 internal class CardRepositoryImpl(
     private val cardLocalStorage: CardLocalStorage,
     private val cardBroker: CardBroker
-): CardRepository {
+) : CardRepository {
 
     override fun getCardsByArtist(artistName: String): List<Card> {
         var cards = cardLocalStorage.getCards(artistName)
@@ -30,7 +30,7 @@ internal class CardRepositoryImpl(
     }
 
     private fun saveCards(artistName: String, cards: List<Card>) {
-        for(card in cards) {
+        for (card in cards) {
             cardLocalStorage.saveCard(artistName, card)
         }
     }

@@ -35,7 +35,7 @@ internal class CardLocalStorageImpl(
         )
     }
 
-    private fun createContentValues(artistName: String, description: String, url: String?, source: Source, logoUrl: String): ContentValues {
+    private fun createContentValues(artistName: String, description: String, url: String, source: Source, logoUrl: String): ContentValues {
         return ContentValues().apply {
             put(COLUMN_ARTIST, artistName)
             put(COLUMN_INFO, description)

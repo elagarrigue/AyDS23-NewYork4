@@ -8,6 +8,8 @@ import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.CursorToCar
 import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.CardLocalStorageImpl
 import ayds.newyork.songinfo.moredetails.data.repository.CardBrokerInjector
 import ayds.newyork.songinfo.moredetails.domain.repository.CardRepository
+import ayds.newyork.songinfo.moredetails.presentation.presenter.CardDescriptionHelper
+import ayds.newyork.songinfo.moredetails.presentation.presenter.CardDescriptionHelperImpl
 import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsPresenter
 import ayds.newyork.songinfo.moredetails.presentation.presenter.MoreDetailsPresenterImpl
 

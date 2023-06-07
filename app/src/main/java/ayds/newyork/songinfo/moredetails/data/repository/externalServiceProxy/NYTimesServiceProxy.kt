@@ -9,10 +9,15 @@ import ayds.newyork.songinfo.moredetails.domain.entities.Source
 class NYTimesServiceProxy(
     private val nyTimesArtistService: NYTimesArtistService,
 ) : ServiceProxy {
-    override fun getCard(artistName: String): Card? {
+    override fun getCard(artistName: String): Card {
         val nyTimesArtist = nyTimesArtistService.getArtist(artistName)
-        return nyTimesArtist?.let { createNYTimesArtistCard(nyTimesArtist) }
+        return if(nyTimesArtist == null){
+            createEmptyCard()
+        } else {
+            createNYTimesArtistCard(nyTimesArtist)
+        }
     }
+
     private fun createNYTimesArtistCard(nyTimesArtist: Artist.NYTimesArtist): Card {
         return Card(
             nyTimesArtist.info,
@@ -22,4 +27,12 @@ class NYTimesServiceProxy(
         )
     }
 
+    private fun createEmptyCard(): Card {
+        return Card(
+            description = "",
+            infoUrl = "",
+            source = Source.NYTimes,
+            sourceLogoUrl = NY_TIMES_LOGO_URL
+        )
+    }
 }
