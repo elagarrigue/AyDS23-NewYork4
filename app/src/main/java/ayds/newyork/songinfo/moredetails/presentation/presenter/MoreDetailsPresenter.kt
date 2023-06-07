@@ -21,16 +21,9 @@ class MoreDetailsPresenterImpl(
     override val uiStateObservable = Subject<MoreDetailsUiState>()
 
     override fun updateArtistCards(artistName: String) {
-        updateNoResultsUiState()
         val cards = getCards(artistName)
         updateUiState(cards, artistName)
         uiStateObservable.notify(uiState)
-    }
-
-    private fun updateNoResultsUiState() {
-        uiState = uiState.copy(
-            cards = emptyList()
-        )
     }
 
     private fun getCards(artistName: String): List<Card> {

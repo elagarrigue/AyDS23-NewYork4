@@ -1,29 +1,17 @@
 package ayds.newyork.songinfo.moredetails.data.repository
 
-import ayds.newyork.songinfo.moredetails.data.repository.externalServiceProxy.ArtistProxy
+import ayds.newyork.songinfo.moredetails.data.repository.externalServiceProxy.ServiceProxy
 import ayds.newyork.songinfo.moredetails.domain.entities.Card
 
-class CardBroker(
-    private val nyTimesArtistProxy: ArtistProxy,
-    private val wikipediaArtistProxy: ArtistProxy,
-    private val lastFMArtistProxy: ArtistProxy
-) {
+class CardBroker(private val serviceProxies: List<ServiceProxy>) {
     fun getCards(artistName: String): List<Card> {
         val cards: MutableList<Card> = ArrayList()
 
-        val nyTimesCard = nyTimesArtistProxy.getCard(artistName)
-        if (nyTimesCard != null) {
-            cards.add(nyTimesCard)
-        }
-
-        val wikiCard = wikipediaArtistProxy.getCard(artistName)
-        if (wikiCard != null) {
-            cards.add(wikiCard)
-        }
-
-        val lastFMCard = lastFMArtistProxy.getCard(artistName)
-        if (lastFMCard != null) {
-            cards.add(lastFMCard)
+        for (proxy in serviceProxies) {
+            val card = proxy.getCard(artistName)
+            if (card != null) {
+                cards.add(card)
+            }
         }
 
         return cards
