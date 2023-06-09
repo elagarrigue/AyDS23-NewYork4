@@ -6,7 +6,7 @@ import ayds.observer.Observable
 import ayds.observer.Subject
 
 interface MoreDetailsPresenter {
-    var uiState: MoreDetailsUiState
+    val uiState: MoreDetailsUiState
     val uiStateObservable: Observable<MoreDetailsUiState>
 
     fun updateArtistCards(artistName: String)
