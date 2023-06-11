@@ -1,10 +1,10 @@
-package ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb
+package ayds.newyork.songinfo.moredetails.data.repository.local.sqlitedb
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import ayds.newyork.songinfo.moredetails.data.local.nytimes.CardLocalStorage
+import ayds.newyork.songinfo.moredetails.data.repository.local.CardLocalStorage
 import ayds.newyork.songinfo.moredetails.domain.entities.Source
 import ayds.newyork.songinfo.moredetails.domain.entities.Card
 

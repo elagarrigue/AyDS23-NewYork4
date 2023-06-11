@@ -2,7 +2,7 @@ package ayds.newyork.songinfo.moredetails.data
 
 import ayds.newYork4.artist.external.entities.NY_TIMES_LOGO_URL
 import ayds.newyork.songinfo.moredetails.domain.repository.CardRepository
-import ayds.newyork.songinfo.moredetails.data.local.nytimes.CardLocalStorage
+import ayds.newyork.songinfo.moredetails.data.repository.local.CardLocalStorage
 import ayds.newyork.songinfo.moredetails.data.repository.CardRepositoryImpl
 import ayds.newyork.songinfo.moredetails.data.repository.CardBroker
 import ayds.newyork.songinfo.moredetails.domain.entities.Card

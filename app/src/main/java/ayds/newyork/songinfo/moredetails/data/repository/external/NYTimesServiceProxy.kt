@@ -1,4 +1,4 @@
-package ayds.newyork.songinfo.moredetails.data.repository.externalServiceProxy
+package ayds.newyork.songinfo.moredetails.data.repository.external
 
 import ayds.newYork4.artist.external.NYTimesArtistService
 import ayds.newYork4.artist.external.entities.Artist

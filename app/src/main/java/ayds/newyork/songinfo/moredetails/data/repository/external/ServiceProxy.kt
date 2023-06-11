@@ -1,4 +1,4 @@
-package ayds.newyork.songinfo.moredetails.data.repository.externalServiceProxy
+package ayds.newyork.songinfo.moredetails.data.repository.external
 
 import ayds.newyork.songinfo.moredetails.domain.entities.Card
 

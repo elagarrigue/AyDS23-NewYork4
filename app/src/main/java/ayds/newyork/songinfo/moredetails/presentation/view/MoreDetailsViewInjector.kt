@@ -2,10 +2,10 @@ package ayds.newyork.songinfo.moredetails.presentation.view
 
 import androidx.appcompat.app.AppCompatActivity
 import ayds.newyork.songinfo.moredetails.data.repository.CardRepositoryImpl
-import ayds.newyork.songinfo.moredetails.data.local.nytimes.CardLocalStorage
-import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.CursorToCardMapper
-import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.CursorToCardMapperImpl
-import ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb.CardLocalStorageImpl
+import ayds.newyork.songinfo.moredetails.data.repository.local.CardLocalStorage
+import ayds.newyork.songinfo.moredetails.data.repository.local.sqlitedb.CursorToCardMapper
+import ayds.newyork.songinfo.moredetails.data.repository.local.sqlitedb.CursorToCardMapperImpl
+import ayds.newyork.songinfo.moredetails.data.repository.local.sqlitedb.CardLocalStorageImpl
 import ayds.newyork.songinfo.moredetails.data.repository.CardBrokerInjector
 import ayds.newyork.songinfo.moredetails.domain.repository.CardRepository
 import ayds.newyork.songinfo.moredetails.presentation.presenter.CardDescriptionHelper

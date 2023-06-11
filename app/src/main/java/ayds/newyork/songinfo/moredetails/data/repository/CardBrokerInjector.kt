@@ -1,10 +1,10 @@
 package ayds.newyork.songinfo.moredetails.data.repository
 
 import ayds.lisboa1.lastfm.LastFMInjector
-import ayds.newyork.songinfo.moredetails.data.repository.externalServiceProxy.ServiceProxy
-import ayds.newyork.songinfo.moredetails.data.repository.externalServiceProxy.NYTimesServiceProxy
-import ayds.newyork.songinfo.moredetails.data.repository.externalServiceProxy.LastFMServiceProxy
-import ayds.newyork.songinfo.moredetails.data.repository.externalServiceProxy.WikipediaServiceProxy
+import ayds.newyork.songinfo.moredetails.data.repository.external.ServiceProxy
+import ayds.newyork.songinfo.moredetails.data.repository.external.NYTimesServiceProxy
+import ayds.newyork.songinfo.moredetails.data.repository.external.LastFMServiceProxy
+import ayds.newyork.songinfo.moredetails.data.repository.external.WikipediaServiceProxy
 import ayds.newYork4.artist.external.artists.NYTimesArtistInjector
 import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaInjector
 

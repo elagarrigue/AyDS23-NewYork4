@@ -1,6 +1,6 @@
 package ayds.newyork.songinfo.moredetails.data.repository
 
-import ayds.newyork.songinfo.moredetails.data.repository.externalServiceProxy.ServiceProxy
+import ayds.newyork.songinfo.moredetails.data.repository.external.ServiceProxy
 import ayds.newyork.songinfo.moredetails.domain.entities.Card
 
 class CardBroker(private val serviceProxies: List<ServiceProxy>) {

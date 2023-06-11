@@ -1,4 +1,4 @@
-package ayds.newyork.songinfo.moredetails.data.local.nytimes.sqlitedb
+package ayds.newyork.songinfo.moredetails.data.repository.local.sqlitedb
 
 const val ARTISTS_TABLE_NAME = "artists"
 const val COLUMN_ID = "id"

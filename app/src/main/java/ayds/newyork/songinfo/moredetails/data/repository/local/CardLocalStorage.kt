@@ -1,4 +1,4 @@
-package ayds.newyork.songinfo.moredetails.data.local.nytimes
+package ayds.newyork.songinfo.moredetails.data.repository.local
 
 import ayds.newyork.songinfo.moredetails.domain.entities.Card
 
