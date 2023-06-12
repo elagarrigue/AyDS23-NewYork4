@@ -22,7 +22,6 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 compileKotlin {
@@ -36,3 +35,5 @@ compileTestKotlin {
         jvmTarget = "1.8"
     }
 }
+
+java.targetCompatibility = JavaVersion.VERSION_1_8

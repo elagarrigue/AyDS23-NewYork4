@@ -1,57 +1,40 @@
 package ayds.newyork.songinfo.moredetails.presentation.presenter
 
-import ayds.newyork.songinfo.moredetails.domain.entities.Artist
-import ayds.newyork.songinfo.moredetails.domain.entities.Artist.NYTimesArtist
-import ayds.newyork.songinfo.moredetails.domain.entities.Artist.EmptyArtist
-import ayds.newyork.songinfo.moredetails.domain.repository.ArtistRepository
-import ayds.newyork.songinfo.moredetails.presentation.view.ArtistInfoHelper
-import ayds.newyork.songinfo.moredetails.presentation.view.MoreDetailsViewInjector
+import ayds.newyork.songinfo.moredetails.domain.entities.Card
+import ayds.newyork.songinfo.moredetails.domain.repository.CardRepository
 import ayds.observer.Observable
 import ayds.observer.Subject
 
 interface MoreDetailsPresenter {
-    var uiState: MoreDetailsUiState
+    val uiState: MoreDetailsUiState
     val uiStateObservable: Observable<MoreDetailsUiState>
 
-    fun updateArtist(artistName: String)
+    fun updateArtistCards(artistName: String)
 }
 
 class MoreDetailsPresenterImpl(
-    private val repository: ArtistRepository,
-    private val artistHelper: ArtistInfoHelper
+    private val repository: CardRepository,
+    private val cardDescriptionHelper: CardDescriptionHelper
 ): MoreDetailsPresenter {
-    override var uiState: MoreDetailsUiState = MoreDetailsUiState()
+    override var uiState = MoreDetailsUiState()
     override val uiStateObservable = Subject<MoreDetailsUiState>()
-    override var uiState= MoreDetailsUiState()
-    override fun updateArtist(artistName: String) {
-        updateUiState(getArtist(artistName))
+
+    override fun updateArtistCards(artistName: String) {
+        val cards = getCards(artistName)
+        updateUiState(cards, artistName)
         uiStateObservable.notify(uiState)
     }
 
-    private fun getArtist(artistName: String):Artist {
-        return repository.getArtist(artistName)
+    private fun getCards(artistName: String): List<Card> {
+        return repository.getCardsByArtist(artistName)
     }
 
-    private fun updateUiState(artist: Artist) {
-        when (artist) {
-            is NYTimesArtist -> updateArtistUiState(artist)
-            EmptyArtist -> updateNoResultsUiState()
+    private fun updateUiState(cards: List<Card>, artistName: String) {
+        cards.map {
+            it.description = cardDescriptionHelper.getCardDescriptionText(it, artistName)
         }
-    }
-
-    private fun updateArtistUiState(artist: NYTimesArtist) {
         uiState = uiState.copy(
-            artistDescription = artistHelper.getArtistText(artist),
-            artistUrl = artist.url,
-            actionsEnabled = artist.url != null
-        )
-    }
-
-    private fun updateNoResultsUiState() {
-        uiState = uiState.copy(
-            artistDescription = artistHelper.getArtistText(),
-            artistUrl = null,
-            actionsEnabled = false
+            cards = cards
         )
     }
 }
